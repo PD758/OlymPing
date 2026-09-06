@@ -1,0 +1,21 @@
+calendar_version: 1
+events:
+  - id: other:ctf-cup-russia-2026
+    source_kind: OTHER
+    title: "Кубок CTF России 2026"
+    description: "Всероссийское командное соревнование по информационной безопасности."
+    category: cybersecurity
+    tags: [ctf, cybersecurity, russia, team]
+    url: https://ctfcup.ru/
+    source_url: https://ctfcup.ru/
+    status: confirmed
+    format: "Attack-Defense"
+    milestones:
+      - id: other:ctf-cup-russia-2026:qualifier
+        kind: qualifier
+        title: "Отборочный тур"
+        starts_at: "2026-10-31T00:00:00+03:00"
+        ends_at: "2026-11-02T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ctfcup.ru/

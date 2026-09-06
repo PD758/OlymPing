@@ -1,0 +1,88 @@
+calendar_version: 1
+events:
+  - id: npk:engineers-of-the-future-2026
+    source_kind: NPK
+    title: "Открытая городская НПК «Инженеры будущего»"
+    description: "Московская научно-практическая конференция инженерной и ИТ-направленности для учащихся 7–11 классов. Календарь цикла 2026/27 ещё не опубликован."
+    category: engineering
+    tags: [npk, moscow, engineering, it, minpros, gir]
+    url: https://conf.profil.mos.ru/inj/
+    source_url: https://conf.profil.mos.ru/inj/
+    status: tbd
+    location: "Москва"
+    restrictions: "7–11 классы"
+    min_grade: 7
+    max_grade: 11
+    milestones:
+      - id: npk:engineers-of-the-future-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание приёма проектов — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://conf.profil.mos.ru/inj/
+      - id: npk:engineers-of-the-future-2026:final
+        kind: final
+        title: "Очный заключительный этап — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://conf.profil.mos.ru/inj/
+
+  - id: other:intellectual-megapolis-potential-2026
+    source_kind: OTHER
+    title: "Интеллектуальный мегаполис. Потенциал"
+    description: "Московский конкурс межпредметных навыков и знаний для предпрофессиональных классов. Календарь цикла 2026/27 ещё не опубликован."
+    category: preprofessional
+    tags: [moscow, preprofessional, engineering, it, minpros, gir]
+    url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
+    source_url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
+    status: tbd
+    location: "Москва"
+    restrictions: "11 класс; учащиеся предпрофессиональных классов"
+    min_grade: 11
+    max_grade: 11
+    milestones:
+      - id: other:intellectual-megapolis-potential-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
+      - id: other:intellectual-megapolis-potential-2026:competition
+        kind: competition
+        title: "Конкурс — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
+
+  - id: rsosh:technocup-2026
+    source_kind: RSOSH
+    title: "Олимпиада по программированию «Технокубок»"
+    description: "Олимпиада по алгоритмическому программированию для 8–11 классов; организаторы указывают II уровень РСОШ. Регистрация на цикл 2026/27 открыта, подробный график ещё не опубликован."
+    category: informatics
+    tags: [rsosh, rsosh-level-2, programming, algorithms, mipt, bmstu, vk]
+    url: https://techno-cup.ru/
+    source_url: https://techno-cup.ru/
+    status: confirmed
+    format: "отбор онлайн, заключительный этап очно"
+    restrictions: "8–11 классы"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: rsosh:technocup-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://techno-cup.ru/
+      - id: rsosh:technocup-2026:qualifier
+        kind: qualifier
+        title: "Отборочные этапы — расписание уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://techno-cup.ru/
+      - id: rsosh:technocup-2026:final
+        kind: final
+        title: "Заключительный этап — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://techno-cup.ru/

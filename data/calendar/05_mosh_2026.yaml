@@ -1,0 +1,619 @@
+calendar_version: 1
+events:
+  - id: mosh:arabic-2026
+    source_kind: MOSH
+    title: "МОШ — арабский язык"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: languages
+    tags: [mosh, arabic]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
+    milestones:
+      - id: mosh:arabic-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:astronomy-2026
+    source_kind: MOSH
+    title: "МОШ — астрономия"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, astronomy]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    milestones:
+      - id: mosh:astronomy-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:biology-2026
+    source_kind: MOSH
+    title: "МОШ — биология"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, biology]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–8 классы"
+    milestones:
+      - id: mosh:biology-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:bioeconomics-2026
+    source_kind: MOSH
+    title: "МОШ — биоэкономика"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, bioeconomics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 9–11 классы"
+    milestones:
+      - id: mosh:bioeconomics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:probability-statistics-2026
+    source_kind: MOSH
+    title: "МОШ — вероятность и статистика"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: mathematics
+    tags: [mosh, probability, statistics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
+    milestones:
+      - id: mosh:probability-statistics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:genetics-2026
+    source_kind: MOSH
+    title: "МОШ — генетика"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, genetics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 9–11 классы"
+    milestones:
+      - id: mosh:genetics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:geography-2026
+    source_kind: MOSH
+    title: "МОШ — география"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, geography]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 6–11 классы"
+    milestones:
+      - id: mosh:geography-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:fine-art-2026
+    source_kind: MOSH
+    title: "МОШ — изобразительное искусство"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: arts
+    tags: [mosh, fine-art]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    milestones:
+      - id: mosh:fine-art-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:informatics-10-11-2026
+    source_kind: MOSH
+    title: "МОШ — информатика (10–11 классы)"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: informatics
+    tags: [mosh, informatics, programming]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "10–11 классы"
+    min_grade: 10
+    max_grade: 11
+    milestones:
+      - id: mosh:informatics-10-11-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:informatics-6-9-2026
+    source_kind: MOSH
+    title: "МОШ — информатика (6–9 классы)"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: informatics
+    tags: [mosh, informatics, programming]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "6–9 классы"
+    min_grade: 6
+    max_grade: 9
+    milestones:
+      - id: mosh:informatics-6-9-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:information-security-2026
+    source_kind: MOSH
+    title: "МОШ — информационная безопасность"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: cybersecurity
+    tags: [mosh, cybersecurity, information-security]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–8 классы"
+    milestones:
+      - id: mosh:information-security-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:history-2026
+    source_kind: MOSH
+    title: "МОШ — история"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: humanities
+    tags: [mosh, history]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    milestones:
+      - id: mosh:history-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:art-history-2026
+    source_kind: MOSH
+    title: "МОШ — история искусств"
+    description: "Направление Московской олимпиады школьников 2026/27; опубликованы даты отборочного этапа."
+    category: arts
+    tags: [mosh, art-history]
+    url: https://mos.olimpiada.ru/olymp/amxk
+    source_url: https://mos.olimpiada.ru/news/4596
+    status: confirmed
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются."
+    milestones:
+      - id: mosh:art-history-2026:schedule
+        kind: qualifier
+        title: "Отборочный этап"
+        starts_at: "2026-11-14T00:00:00+03:00"
+        ends_at: "2026-11-22T23:59:59+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://mos.olimpiada.ru/news/4596
+
+  - id: mosh:complex-security-2026
+    source_kind: MOSH
+    title: "МОШ — комплексная безопасность"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: safety
+    tags: [mosh, complex-security, obzh, obzr]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–8 классы"
+    milestones:
+      - id: mosh:complex-security-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:linguistics-2026
+    source_kind: MOSH
+    title: "МОШ — лингвистика"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: linguistics
+    tags: [mosh, linguistics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:linguistics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:math-festival-2026
+    source_kind: MOSH
+    title: "МОШ — Математический праздник"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: mathematics
+    tags: [mosh, mathematics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 6–7 классы"
+    milestones:
+      - id: mosh:math-festival-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:moscow-mathematics-2026
+    source_kind: MOSH
+    title: "Московская математическая олимпиада"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: mathematics
+    tags: [mosh, mathematics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:moscow-mathematics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:social-science-2026
+    source_kind: MOSH
+    title: "МОШ — обществознание"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: social-science
+    tags: [mosh, social-science]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:social-science-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:law-2026
+    source_kind: MOSH
+    title: "МОШ — право"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: law
+    tags: [mosh, law]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:law-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:preprofessional-engineering-2026
+    source_kind: MOSH
+    title: "Московская предпрофессиональная олимпиада — инженерия"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: engineering
+    tags: [mosh, preprofessional, engineering]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:preprofessional-engineering-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:preprofessional-it-2026
+    source_kind: MOSH
+    title: "Московская предпрофессиональная олимпиада — информационные технологии"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: informatics
+    tags: [mosh, preprofessional, it]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:preprofessional-it-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:preprofessional-research-2026
+    source_kind: MOSH
+    title: "Московская предпрофессиональная олимпиада — исследования"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: research
+    tags: [mosh, preprofessional, research]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:preprofessional-research-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:robotics-5-8-2026
+    source_kind: MOSH
+    title: "МОШ — робототехника (5–8 классы)"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: robotics
+    tags: [mosh, robotics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "5–8 классы"
+    min_grade: 5
+    max_grade: 8
+    milestones:
+      - id: mosh:robotics-5-8-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:robotics-9-11-2026
+    source_kind: MOSH
+    title: "МОШ — робототехника (9–11 классы)"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: robotics
+    tags: [mosh, robotics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: mosh:robotics-9-11-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:technology-home-2026
+    source_kind: MOSH
+    title: "МОШ по труду — культура дома, дизайн и технологии"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: technology
+    tags: [mosh, technology, design]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–8 классы"
+    milestones:
+      - id: mosh:technology-home-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:technology-technical-2026
+    source_kind: MOSH
+    title: "МОШ по труду — техника, технологии и техническое творчество"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: technology
+    tags: [mosh, technology, engineering]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–8 классы"
+    milestones:
+      - id: mosh:technology-technical-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:physics-2026
+    source_kind: MOSH
+    title: "МОШ — физика"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, physics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
+    milestones:
+      - id: mosh:physics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:philology-2026
+    source_kind: MOSH
+    title: "МОШ — филология"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: humanities
+    tags: [mosh, philology]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
+    milestones:
+      - id: mosh:philology-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:financial-literacy-2026
+    source_kind: MOSH
+    title: "МОШ — финансовая грамотность"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: economics
+    tags: [mosh, financial-literacy]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    milestones:
+      - id: mosh:financial-literacy-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:chemistry-2026
+    source_kind: MOSH
+    title: "МОШ — химия"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, chemistry]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
+    milestones:
+      - id: mosh:chemistry-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:ecology-2026
+    source_kind: MOSH
+    title: "МОШ — экология"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: natural-science
+    tags: [mosh, ecology]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    milestones:
+      - id: mosh:ecology-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:economics-2026
+    source_kind: MOSH
+    title: "МОШ — экономика"
+    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    category: economics
+    tags: [mosh, economics]
+    url: https://mos.olimpiada.ru/olimpiads
+    source_url: https://mos.olimpiada.ru/schedule
+    status: tbd
+    location: "Москва"
+    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    milestones:
+      - id: mosh:economics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mos.olimpiada.ru/schedule

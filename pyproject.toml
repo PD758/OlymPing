@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "olymping"
+version = "0.1.0"
+description = "Personal Telegram calendar for olympiads and CTF events"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "OlymPing contributors" }]
+dependencies = [
+  "aiogram>=3.20,<4",
+  "aiosqlite>=0.21,<1",
+  "alembic>=1.15,<2",
+  "httpx[socks]>=0.28,<1",
+  "pydantic>=2.11,<3",
+  "pydantic-settings>=2.9,<3",
+  "PyYAML>=6.0,<7",
+  "SQLAlchemy>=2.0.40,<3",
+]
+
+[project.scripts]
+olymping = "olymping.cli:main"
+
+[dependency-groups]
+dev = [
+  "mypy>=1.15,<2",
+  "pytest>=8.3,<9",
+  "pytest-asyncio>=0.26,<1",
+  "pyright>=1.1.405,<2",
+  "ruff>=0.11,<1",
+  "types-PyYAML>=6.0,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/olymping"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC", "SIM", "RUF"]
+ignore = [
+  "ASYNC240", # Calendar imports are tiny startup files; async filesystem adds no value here.
+  "RUF001",   # The Telegram interface intentionally contains Cyrillic text.
+]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["olymping"]
+plugins = ["pydantic.mypy"]
+
+[tool.pyright]
+include = ["src", "tests"]
+exclude = ["alembic"]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"
+reportUnnecessaryTypeIgnoreComment = "error"
+reportUnusedFunction = "none" # aiogram registers nested handlers through decorators.
+
+[[tool.mypy.overrides]]
+module = ["yaml"]
+ignore_missing_imports = true

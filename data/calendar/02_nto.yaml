@@ -1,0 +1,105 @@
+calendar_version: 1
+events:
+  - id: nto:information-security-2026
+    source_kind: NTO
+    title: "НТО — информационная безопасность"
+    description: "Профиль старшего трека Национальной технологической олимпиады."
+    category: cybersecurity
+    tags: [nto, cybersecurity, team]
+    url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
+    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
+    status: confirmed
+    restrictions: "8–11 классы"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: nto:information-security-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации старшего трека"
+        starts_at: "2026-08-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:information-security-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации старшего трека"
+        starts_at: "2026-10-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:information-security-2026:schedule
+        kind: qualifier
+        title: "I этап — индивидуальный"
+        starts_at: "2026-09-17T00:00:00+03:00"
+        ends_at: "2026-10-24T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
+      - id: nto:information-security-2026:stage-2
+        kind: team_stage
+        title: "II этап — командный"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-12-12T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
+      - id: nto:information-security-2026:final
+        kind: final
+        title: "Период проведения финала"
+        starts_at: "2027-02-15T00:00:00+03:00"
+        ends_at: "2027-04-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
+
+  - id: nto:pift-2026
+    source_kind: NTO
+    title: "НТО — программная инженерия в финансовых технологиях"
+    description: "Профиль НТО по программной инженерии, анализу данных и финансовым технологиям."
+    category: fintech
+    tags: [nto, informatics, fintech, team]
+    url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
+    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
+    status: confirmed
+    restrictions: "8–11 классы"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: nto:pift-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации старшего трека"
+        starts_at: "2026-08-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:pift-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации старшего трека"
+        starts_at: "2026-10-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:pift-2026:stage-1
+        kind: qualifier
+        title: "I этап — индивидуальный"
+        starts_at: "2026-09-17T00:00:00+03:00"
+        ends_at: "2026-10-24T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
+      - id: nto:pift-2026:stage-2
+        kind: team_stage
+        title: "II этап — командный"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-12-12T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
+      - id: nto:pift-2026:final
+        kind: final
+        title: "Период проведения финала"
+        starts_at: "2027-02-15T00:00:00+03:00"
+        ends_at: "2027-04-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
