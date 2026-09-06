@@ -196,7 +196,20 @@ Before the first Docker launch, prepare the backup directory with
 See [operations and restore instructions](docs/operations.md).
 
 The database is stored in the `olymping-data` volume. The calendar directory is mounted
-read-only, so a normal update is:
+read-only from the production checkout. For calendar-only changes, commit and push the
+updated `data/calendar/*.yaml` files, then run on production:
+
+```bash
+git pull --ff-only
+```
+
+Send `/sync` to the bot as administrator. It imports the updated files immediately and
+prepares any broadcasts for approval in `/reviews`. No image rebuild or restart is needed
+for calendar-only changes. `/sync` does not fetch Git changes or research olympiad websites;
+it reads the local YAML calendar and synchronizes the CTFtime API.
+
+If application code, dependencies, migrations or deployment configuration changed, rebuild
+and restart the services as well:
 
 ```bash
 git pull --ff-only

@@ -32,6 +32,18 @@ docker compose run --rm --no-deps backup \
   python -m olymping.services.backups verify --path /backups/olymping-YYYYMMDDTHHMMSSZ.db
 ```
 
+## Calendar updates
+
+Commit and push reviewed changes to `data/calendar/*.yaml`. In the production checkout,
+run `git pull --ff-only`, then send `/sync` to the bot as administrator. Compose mounts
+that directory into the running container, so calendar-only changes need no rebuild or
+restart. The calendar updates immediately; use `/reviews` to approve a personalized
+broadcast or save without sending. `/sync` does not run Git or research source websites.
+
+For changes to application code, dependencies, migrations or Compose configuration, run
+`docker compose up -d --build` after pulling. Startup applies migrations and imports the
+calendar; broadcasts still require review.
+
 ## Restore
 
 Restoration must happen with the bot stopped, so it cannot poll Telegram or
