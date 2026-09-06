@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import html
 import logging
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
-from sqlalchemy import or_, select
+from sqlalchemy import select
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -136,7 +135,6 @@ async def queue_open_event_notices(session: AsyncSession, *, now: datetime | Non
                     CatalogNotice.event_id,
                 ).where(
                     CatalogNotice.kind == "registration_open_digest",
-                    CatalogNotice.sent_at.is_not(None),
                 )
             )
         ).all()
@@ -179,65 +177,12 @@ async def dispatch_open_event_notices(
     send: SendMessage,
     now: datetime | None = None,
 ) -> int:
-    now = _utc(now or datetime.now(UTC))
-    profile = await session.get(UserProfile, owner_id)
-    if profile is None or profile.access_status != AccessStatus.ACTIVE.value:
-        return 0
-    notices = list(
-        await session.scalars(
-            select(OpenEventNotice)
-            .where(
-                OpenEventNotice.telegram_user_id == owner_id,
-                OpenEventNotice.status == "pending",
-                or_(
-                    OpenEventNotice.next_attempt_at.is_(None),
-                    OpenEventNotice.next_attempt_at <= now,
-                ),
-            )
-            .order_by(OpenEventNotice.id)
-            .limit(40)
-        )
+    from olymping.services.reviews import dispatch_reviewed_notices
+
+    return await dispatch_reviewed_notices(
+        session,
+        owner_id=owner_id,
+        send=send,
+        now=now,
+        open_only=True,
     )
-    pending: list[tuple[OpenEventNotice, str]] = []
-    for notice in notices:
-        event = await session.scalar(
-            select(Event).options(selectinload(Event.milestones)).where(Event.id == notice.event_id)
-        )
-        pref = await session.get(EventPreference, (owner_id, notice.event_id))
-        if event is None or not _allowed(
-            profile,
-            event,
-            pref.interest if pref else None,
-            notice.phase,
-        ):
-            notice.status = "skipped"
-            continue
-        phase = next((p for p in open_phases(event, now) if p.phase == notice.phase), None)
-        if phase is None:
-            notice.status = "skipped"
-            continue
-        link = html.escape(event.url or event.source_url, quote=True)
-        # One entry per message: bounded even with long titles and links.
-        text = (
-            f"🟢 <b>{html.escape(event.title)}</b>\n"
-            f"{html.escape(phase.title)}\n"
-            f'<a href="{link}">Открыть страницу события</a>'
-        )
-        pending.append((notice, text))
-    await session.commit()
-    sent = 0
-    for notice, text in pending:
-        notice.attempts += 1
-        try:
-            await send(owner_id, text)
-        except Exception as exc:
-            logger.warning("Open-event notice %s failed (%s)", notice.id, type(exc).__name__)
-            notice.next_attempt_at = now + timedelta(minutes=min(60, 2**notice.attempts))
-            if notice.attempts >= 5:
-                notice.status = "failed"
-        else:
-            notice.sent_at = now
-            notice.status = "sent"
-            sent += 1
-        await session.commit()
-    return sent

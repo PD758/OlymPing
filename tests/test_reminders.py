@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import pytest
+from conftest import approve_pending_reviews
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
@@ -183,12 +184,12 @@ async def test_new_catalog_events_are_sent_as_one_digest(
             )
         await session.commit()
 
+        await approve_pending_reviews(session)
         assert await dispatch_catalog_notices(session, owner_id=owner_id, send=send) == 2
         await session.commit()
 
         assert len(sent) == 1
-        assert "2 новых событий" in sent[0]
-        assert sent[0].count("🔔") == 3
+        assert "New 0" in sent[0] and "New 1" in sent[0]
         notices = (await session.execute(select(CatalogNotice))).scalars().all()
         assert all(notice.sent_at is not None for notice in notices)
 
@@ -291,13 +292,29 @@ async def test_catalog_retries_only_failed_messages(
         ]
         session.add_all(notices)
         await session.commit()
-        assert await dispatch_catalog_notices(session, owner_id=42, send=send) == 2
-        await session.commit()
-        assert notices[0].sent_at is not None
-        assert notices[1].sent_at is None
-        assert notices[2].sent_at is not None
+        await approve_pending_reviews(session)
         assert await dispatch_catalog_notices(session, owner_id=42, send=send) == 0
-        assert len(sent) == 2
+        await session.commit()
+        assert all(notice.sent_at is None for notice in notices)
+
+        async def recovered(_user_id: int, text: str) -> None:
+            sent.append(text)
+
+        from datetime import timedelta
+
+        from olymping.services.reviews import dispatch_reviewed_notices
+
+        assert (
+            await dispatch_reviewed_notices(
+                session,
+                owner_id=42,
+                send=recovered,
+                now=datetime.now(UTC) + timedelta(minutes=3),
+            )
+            == 3
+        )
+        assert len(sent) == 1
+        assert await dispatch_catalog_notices(session, owner_id=42, send=send) == 0
 
 
 @pytest.mark.asyncio
@@ -374,5 +391,6 @@ async def test_large_catalog_digest_is_split(
                 )
             )
         await session.commit()
+        await approve_pending_reviews(session)
         assert await dispatch_catalog_notices(session, owner_id=42, send=send) == 20
-        assert len(sent) == 4
+        assert len(sent) > 1

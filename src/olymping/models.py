@@ -285,6 +285,9 @@ class CatalogNotice(TimestampMixin, Base):
     kind: Mapped[str] = mapped_column(String(30))
     summary: Mapped[str] = mapped_column(Text)
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    review_batch_id: Mapped[int | None] = mapped_column(
+        ForeignKey("notification_reviews.id"), nullable=True, index=True
+    )
 
 
 class OpenEventNotice(TimestampMixin, Base):
@@ -307,6 +310,46 @@ class OpenEventNotice(TimestampMixin, Base):
     attempts: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     next_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    review_batch_id: Mapped[int | None] = mapped_column(
+        ForeignKey("notification_reviews.id"), nullable=True, index=True
+    )
+
+
+class NotificationReview(TimestampMixin, Base):
+    __tablename__ = "notification_reviews"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    status: Mapped[str] = mapped_column(String(20), default="pending", server_default="pending")
+    notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    decided_by: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+
+
+class ReviewSelection(Base):
+    __tablename__ = "review_selections"
+
+    review_batch_id: Mapped[int] = mapped_column(
+        ForeignKey("notification_reviews.id", ondelete="CASCADE"), primary_key=True
+    )
+    event_id: Mapped[str] = mapped_column(
+        ForeignKey("events.id", ondelete="CASCADE"), primary_key=True
+    )
+    selected: Mapped[bool] = mapped_column(Boolean, default=True, server_default="1")
+    snapshot_hash: Mapped[str] = mapped_column(String(64))
+    summary: Mapped[str] = mapped_column(Text)
+
+
+class ReviewDelivery(Base):
+    __tablename__ = "review_deliveries"
+    review_batch_id: Mapped[int] = mapped_column(
+        ForeignKey("notification_reviews.id", ondelete="CASCADE"), primary_key=True
+    )
+    telegram_user_id: Mapped[int] = mapped_column(
+        ForeignKey("user_profiles.telegram_user_id", ondelete="CASCADE"), primary_key=True
+    )
+    attempts: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    status: Mapped[str] = mapped_column(String(20), default="pending", server_default="pending")
+    next_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class SyncRun(Base):

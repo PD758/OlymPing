@@ -1,6 +1,6 @@
 services:
   bot:
-    image: olymping:${OLYMPING_VERSION:-0.1.0}
+    image: olymping:${OLYMPING_VERSION:-0.2.0}
     build: .
     env_file: .env
     environment:
@@ -14,7 +14,7 @@ services:
       - no-new-privileges:true
 
   backup:
-    image: olymping:${OLYMPING_VERSION:-0.1.0}
+    image: olymping:${OLYMPING_VERSION:-0.2.0}
     build: .
     depends_on:
       bot:

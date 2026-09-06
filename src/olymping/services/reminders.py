@@ -20,7 +20,6 @@ from olymping.models import (
     EventPreference,
     Milestone,
     MilestoneKind,
-    NoticeKind,
     NotificationDelivery,
     OpenEventNotice,
     RecordStatus,
@@ -29,7 +28,7 @@ from olymping.models import (
     UserProfile,
 )
 from olymping.presentation import telegram_time
-from olymping.services.availability import dispatch_open_event_notices, registration_deadline
+from olymping.services.availability import registration_deadline
 from olymping.services.filters import event_is_enabled
 
 logger = logging.getLogger(__name__)
@@ -257,78 +256,9 @@ async def dispatch_catalog_notices(
     send: SendMessage,
     limit: int = 20,
 ) -> int:
-    profile = await session.get(UserProfile, owner_id)
-    if profile is None or profile.access_status != AccessStatus.ACTIVE.value:
-        return 0
-    result = await session.execute(
-        select(CatalogNotice)
-        .where(
-            CatalogNotice.telegram_user_id == owner_id,
-            CatalogNotice.sent_at.is_(None),
-            CatalogNotice.kind != REGISTRATION_DIGEST,
-        )
-        .order_by(CatalogNotice.created_at)
-        .limit(limit)
-    )
-    notices = list(result.scalars())
-    new_event_lines: list[str] = []
-    new_event_notices: list[CatalogNotice] = []
-    for notice in notices:
-        event = await session.get(Event, notice.event_id)
-        if event is None:
-            notice.sent_at = datetime.now(UTC)
-            continue
-        enabled = (
-            profile.notify_new_events
-            if notice.kind == NoticeKind.NEW_EVENT.value
-            else profile.notify_event_updates
-        )
-        if not enabled or not event_is_enabled(profile, event):
-            notice.sent_at = datetime.now(UTC)
-            continue
-        if notice.kind == NoticeKind.NEW_EVENT.value:
-            preference = await session.get(EventPreference, (owner_id, event.id))
-            subscribed = preference is not None and preference.interest in {
-                EventInterest.WATCHING.value,
-                EventInterest.REGISTERED.value,
-            }
-            link = html.escape(event.url or event.source_url, quote=True)
-            title = html.escape(event.title)
-            subscription = "🔔" if subscribed else "▫️"
-            new_event_lines.append(
-                f'{subscription} <a href="{link}">{title}</a> · {event.source_kind}'
-            )
-            new_event_notices.append(notice)
-            continue
-        text = (
-            "🔄 <b>Обновление календаря</b>\n"
-            f"<blockquote>{html.escape(notice.summary)}</blockquote>"
-        )
-        try:
-            await send(owner_id, text)
-        except Exception:
-            logger.exception("Failed to send catalog notice %s", notice.id)
-            continue
-        notice.sent_at = datetime.now(UTC)
-    # Five maximum-length titles also fit when each character uses two UTF-16 units.
-    for start in range(0, len(new_event_lines), 5):
-        lines = new_event_lines[start : start + 5]
-        batch = new_event_notices[start : start + 5]
-        count = len(lines)
-        text = (
-            f"🆕 <b>В каталоге {count} новых событий</b>\n"
-            + "\n".join(lines)
-            + "\n\n🔔 — автоподписка включена"
-        )
-        try:
-            await send(owner_id, text)
-        except Exception:
-            logger.exception("Failed to send new-event digest for user %s", owner_id)
-            return sum(notice.sent_at is not None for notice in notices)
-        sent_at = datetime.now(UTC)
-        for notice in batch:
-            notice.sent_at = sent_at
-    return sum(notice.sent_at is not None for notice in notices)
+    from olymping.services.reviews import dispatch_reviewed_notices
+
+    return await dispatch_reviewed_notices(session, owner_id=owner_id, send=send, catalog_only=True)
 
 
 async def dispatch_registration_digest(
@@ -367,7 +297,6 @@ async def dispatch_registration_digest(
             select(CatalogNotice.event_id).where(
                 CatalogNotice.telegram_user_id == owner_id,
                 CatalogNotice.kind == REGISTRATION_DIGEST,
-                CatalogNotice.sent_at.is_not(None),
             )
         )
     )
@@ -380,7 +309,6 @@ async def dispatch_registration_digest(
             )
         )
     )
-    lines: list[str] = []
     events: list[Event] = []
     for opening in openings:
         assert opening.starts_at is not None
@@ -405,47 +333,19 @@ async def dispatch_registration_digest(
         ]
         if deadlines and min(deadlines) <= now:
             continue
-        link = html.escape(event.url or event.source_url, quote=True)
-        line = f'• <a href="{link}">{html.escape(event.title)}</a>'
-        if deadlines:
-            closing = next(
-                stage
-                for stage in event.milestones
-                if stage.kind == MilestoneKind.REGISTRATION_DEADLINE.value
-                and stage.starts_at is not None
-                and registration_deadline(stage) == min(deadlines)
-            )
-            assert closing.starts_at is not None
-            if closing.precision == "date":
-                label = aware_utc(closing.starts_at).astimezone(ZoneInfo("Europe/Moscow"))
-                line += f" — до {label:%d.%m.%Y} включительно"
-            else:
-                line += f" — до {telegram_time(closing.starts_at, 'Europe/Moscow')} (МСК)"
-        lines.append(line)
         events.append(event)
         notified.add(event.id)
-    sent = 0
-    for start in range(0, len(lines), 4):
-        text = "📝 <b>За сутки открылась регистрация</b>\n\n" + "\n".join(lines[start : start + 4])
-        try:
-            await send(owner_id, text)
-        except Exception:
-            logger.exception("Failed to send registration digest for user %s", owner_id)
-            break
-        for event in events[start : start + 4]:
-            session.add(
-                CatalogNotice(
-                    telegram_user_id=owner_id,
-                    event_id=event.id,
-                    kind=REGISTRATION_DIGEST,
-                    summary="Открылась регистрация",
-                    sent_at=now,
-                )
+    for event in events:
+        session.add(
+            CatalogNotice(
+                telegram_user_id=owner_id,
+                event_id=event.id,
+                kind=REGISTRATION_DIGEST,
+                summary="Открылась регистрация за последние сутки.",
             )
-            sent += 1
-        # Persist each delivered batch before attempting the next one.
-        await session.commit()
-    return sent
+        )
+    await session.commit()
+    return len(events)
 
 
 async def run_notification_cycle(
@@ -460,9 +360,12 @@ async def run_notification_cycle(
         reminders = await dispatch_due_reminders(
             session, owner_id=owner_id, send=send, grace_hours=grace_hours
         )
-        changes = await dispatch_catalog_notices(session, owner_id=owner_id, send=send)
         await session.commit()
         if registration_digest:
             await dispatch_registration_digest(session, owner_id=owner_id, send=send)
-        changes += await dispatch_open_event_notices(session, owner_id=owner_id, send=send)
+        from olymping.services.reviews import collect_review_batch, dispatch_reviewed_notices
+
+        await collect_review_batch(session)
+        await session.commit()
+        changes = await dispatch_reviewed_notices(session, owner_id=owner_id, send=send)
         return reminders, changes

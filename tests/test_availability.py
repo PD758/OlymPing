@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from conftest import approve_pending_reviews
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
@@ -90,13 +91,14 @@ async def test_sync_queues_old_openings_per_user_without_duplicates(
         assert await queue_open_event_notices(session, now=NOW) == 4
         await session.commit()
         assert await queue_open_event_notices(session, now=NOW) == 0
+        await approve_pending_reviews(session)
         assert await dispatch_open_event_notices(session, owner_id=1, send=send, now=NOW) == 2
         assert await dispatch_open_event_notices(session, owner_id=2, send=send, now=NOW) == 2
         assert all("&lt;NTO&gt;" in text for _, text in sent)
     async with factory() as session:
         assert await queue_open_event_notices(session, now=NOW) == 0
         assert await dispatch_open_event_notices(session, owner_id=1, send=send, now=NOW) == 0
-        assert len(sent) == 4
+        assert len(sent) == 2
 
 
 @pytest.mark.asyncio
@@ -116,6 +118,7 @@ async def test_delivery_retry_and_changed_preferences(
         await seed(session)
         assert await queue_open_event_notices(session, now=NOW) == 4
         await session.commit()
+        await approve_pending_reviews(session)
         assert await dispatch_open_event_notices(session, owner_id=1, send=fail, now=NOW) == 0
         assert await dispatch_open_event_notices(session, owner_id=1, send=send, now=NOW) == 0
         assert (

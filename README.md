@@ -20,10 +20,11 @@ a reminder for an unconfirmed milestone.
 - independent notifications for newly indexed events, automatic subscription, and schedule changes;
 - paginated catalog navigation with previous/next arrows that preserve the current filters;
 - compact Telegram menus with colored actions, localized dates, and expandable details;
+- school-grade and subject onboarding that subscribes to matching existing olympiads;
 - school-grade, topic-tag, source, and CTFtime filters;
 - multiple category defaults or per-event reminder overrides;
 - idempotent YAML patches with source provenance;
-- durable notification delivery and change notices after schedule updates;
+- administrator review of grouped broadcasts, personalized delivery, and readable date changes;
 - SQLite storage, Docker Compose deployment, tests, linting, and type checking.
 
 ## Quick start
@@ -58,13 +59,14 @@ uv run pyright
 
 ## Telegram commands
 
-The administrator receives a daily registration digest at 09:00 Moscow time. It includes
+At 09:00 Moscow time the bot prepares a daily registration digest for administrator review. It includes
 confirmed registration openings in the preceding 24-hour window that match their filters,
 excluding ignored, registered, cancelled, or already closed events. Empty digests are silent;
 delivered events are recorded in SQLite to avoid repeats after a restart. Events without
 a confirmed opening date are not included. This digest is independent of new-event notices.
 
-- `/start` — main menu;
+- `/start` — onboarding for new users, otherwise the main menu;
+- `/onboarding` — choose class and subjects again and select matching calendar events;
 - `/today`, `/week` — calendar views;
 - `/all` — all tracked olympiads, including schedules marked `tbd`;
 - `/mine` — only subscribed or registered olympiads;
@@ -79,19 +81,30 @@ Administrator-only commands:
 - `/invite` — create a one-time invitation link valid for seven days;
 - `/users` — show users and block or unblock their access;
 - `/revoke TELEGRAM_ID` — block a user while preserving their data;
-- `/sync` — reload YAML, synchronize CTFtime, and announce newly discovered open registration
-  and ongoing stages to active users according to their personal filters.
+- `/sync` — reload YAML, synchronize CTFtime, and prepare a review of changes and currently
+  open registration or participation windows;
+- `/reviews` — review pending broadcasts, select olympiads, approve delivery or save silently.
 
 `Открытая регистрация и участие` in settings controls these notices and the administrator's
-daily registration digest. Notifications are stored in SQLite and sent by the background
-worker, normally within one minute. Repeated `/sync` does not repeat delivered notices;
+daily registration digest. Calendar data changes immediately, but every catalog, availability,
+and digest broadcast requires administrator approval. The administrator receives one grouped
+review (paginated for large updates), can exclude individual olympiads, then approve the rest
+or save everything without a broadcast. Each recipient receives a personalized combined
+message, split only when required by Telegram limits. Ordinary scheduled reminders continue
+without review. Approved notifications are stored in SQLite and sent by the background
+worker, normally within one minute. If reviewed data changes, approval requires refreshing
+the review first; stale approved items are suppressed. Repeated `/sync` does not repeat delivered notices;
 each participation stage and distinct registration opening is tracked separately. Ignored
 events are excluded, and users already registered do not receive registration notices.
 Only confirmed windows are announced. A participation stage needs a known end date;
 unconfirmed dates are never inferred. The same check runs after startup and automatic sync.
 If CTFtime is unavailable, the reviewed YAML calendar still updates.
 
-A friend opens the invitation link and chooses their school grade and topics. The invitation
+A friend opens the invitation link and chooses their school grade and subjects, or explicitly
+selects all subjects. Finishing the questionnaire subscribes them to matching existing
+olympiads, visible in `/mine`. Existing registered or ignored choices are preserved. The
+questionnaire can be reopened through `/onboarding` or settings. It adds matching subscriptions
+without deleting previous choices; current filters control visibility and reminders. The invitation
 cannot be reused. All later changes to class, filters, subscriptions, reminders, and stage results
 belong only to that Telegram account. Blocking stops access and notifications without deleting
 the profile, so `/users` can restore it later.
@@ -154,7 +167,9 @@ events:
 ```
 
 Import is transactional and idempotent. A later file may repeat the same IDs with updated
-values. Omitting an event does not delete it; use `status: cancelled` explicitly. A changed
+values. All files are validated and consolidated before computing changes against SQLite,
+so intermediate values in older patches do not create repeated notifications. Date changes
+show the old and new dates, including the shift in days where applicable. Omitting an event does not delete it; use `status: cancelled` explicitly. A changed
 confirmed date supersedes unsent reminders and creates notices for matching active users.
 
 Allowed source kinds are `VOSH`, `RSOSH`, `MOSH`, `NPK`, `NTO`, `CTF`, and `OTHER`. `NPK` is used
@@ -202,7 +217,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.1.0 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.2.0 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.

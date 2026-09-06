@@ -46,6 +46,7 @@ from olymping.models import (
     UserRole,
 )
 from olymping.presentation import telegram_time
+from olymping.review_ui import notify_pending_review, register_review_handlers
 from olymping.services.availability import queue_open_event_notices
 from olymping.services.calendar import (
     all_olympiads,
@@ -56,6 +57,7 @@ from olymping.services.calendar import (
 )
 from olymping.services.ctftime import sync_ctftime
 from olymping.services.importer import CalendarImportError, import_data_directory
+from olymping.services.onboarding import complete_onboarding
 from olymping.services.reminders import (
     REMINDER_CUSTOM,
     REMINDER_MUTED,
@@ -173,7 +175,8 @@ class AccessMiddleware(BaseMiddleware):
             return None
         if not profile.onboarding_completed:
             onboarding_action = (
-                isinstance(event, Message) and (event.text or "").startswith("/start")
+                isinstance(event, Message)
+                and (event.text or "").startswith(("/start", "/onboarding"))
             ) or (isinstance(event, CallbackQuery) and (event.data or "").startswith("onboard:"))
             if not onboarding_action:
                 if isinstance(event, CallbackQuery):
@@ -450,6 +453,7 @@ def settings_keyboard(profile: UserProfile) -> InlineKeyboardMarkup:
                     style="primary",
                 )
             ],
+            [InlineKeyboardButton(text="Анкета и подбор олимпиад", callback_data="onboard:back")],
             [InlineKeyboardButton(text="Главное меню", callback_data="home")],
         ]
     )
@@ -621,12 +625,14 @@ def _onboarding_tag_keyboard(profile: UserProfile, page: int) -> InlineKeyboardM
     rows.append(
         [
             InlineKeyboardButton(
-                text="Готово — открыть каталог",
+                text="Подобрать мои олимпиады",
                 callback_data="onboard:done",
                 style="success",
             )
         ]
     )
+    rows.append([InlineKeyboardButton(text="Все предметы", callback_data="onboard:all")])
+    rows.append([InlineKeyboardButton(text="Назад к выбору класса", callback_data="onboard:back")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
@@ -990,7 +996,10 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
         await _answer_or_edit(
             callback,
             "🏷 <b>Какие направления интересны?</b>\n"
-            "Можно выбрать несколько или ничего — тогда будет виден весь каталог.",
+            f"Класс: {profile.school_grade or '—'}. "
+            f"Выбрано тем: {len(profile.tag_filters or [])}.\n"
+            "Выбери один или несколько предметов. По ним и классу подберём события "
+            "из календаря и включим напоминания. Или нажми «Все предметы».",
             reply_markup=_onboarding_tag_keyboard(profile, page),
         )
 
@@ -1104,6 +1113,11 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
         if payload == "noop":
             await callback.answer()
             return
+        if payload == "back":
+            await _answer_or_edit(
+                callback, "Выбери свой класс.", reply_markup=_onboarding_grade_keyboard()
+            )
+            return
         if payload.startswith("grade:"):
             grade = int(payload.removeprefix("grade:"))
             if not 1 <= grade <= 11:
@@ -1134,15 +1148,50 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                 await session.commit()
             await show_onboarding_tags(callback, int(page_value))
             return
-        if payload == "done":
+        if payload in {"done", "all"}:
             async with factory() as session:
                 profile = await ensure_user_profile(session, user_id, settings.timezone)
                 if profile.school_grade is None:
                     await callback.answer("Сначала выбери класс", show_alert=True)
                     return
-                profile.onboarding_completed = True
+                if payload == "all":
+                    profile.tag_filters = []
+                elif not profile.tag_filters:
+                    await callback.answer(
+                        "Выбери предметы или нажми «Все предметы»", show_alert=True
+                    )
+                    return
+                result = await complete_onboarding(session, user_id)
                 await session.commit()
-            await show_home(callback)
+            await _answer_or_edit(
+                callback,
+                f"✅ Анкета готова. Подходит событий: {result.matched}.\n"
+                f"Добавлено в твои подписки: {result.subscribed}.\n"
+                "Твои отметки регистрации и «Не интересно» сохранены."
+                if result.matched
+                else (
+                    "Пока нет событий по этим интересам и классу. "
+                    "Можно изменить выбор или ждать обновлений."
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [InlineKeyboardButton(text="Мои олимпиады", callback_data="list:mine")],
+                        [
+                            InlineKeyboardButton(
+                                text="Изменить анкету", callback_data="onboard:back"
+                            )
+                        ],
+                        [InlineKeyboardButton(text="Главное меню", callback_data="home")],
+                    ]
+                ),
+            )
+
+    @router.message(Command("onboarding"))
+    async def onboarding_command(message: Message) -> None:
+        await message.answer(
+            "Подберём твой календарь. Сначала выбери класс.",
+            reply_markup=_onboarding_grade_keyboard(),
+        )
 
     @router.message(Command("invite"))
     async def invite_handler(message: Message, bot: Bot) -> None:
@@ -1617,10 +1666,11 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                 event, "Не удалось прочитать календарь. Проверь файлы источников."
             )
             return
-        text = (
-            "Календарь обновлён.\n"
-            f"Уведомлений об открытой регистрации и участии: {result.open_notices}.\n"
-            "Они придут в ближайшие минуты по личным фильтрам и настройкам."
+        text = "Календарь обновлён.\n" + (
+            "Рассылка подготовлена на проверку. Пакет придёт отдельным сообщением; "
+            "его также можно открыть через /reviews."
+            if result.review_batch_id is not None
+            else "Новых рассылок нет."
         )
         if result.ctftime is None:
             text += "\nCTFtime временно недоступен; календарь олимпиад обновлён."
@@ -1637,6 +1687,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
     async def sync_callback(callback: CallbackQuery) -> None:
         await do_sync(callback)
 
+    register_review_handlers(router, factory)
     return router
 
 
@@ -1677,6 +1728,10 @@ async def _notification_loop(
                 logger.exception("Notification cycle failed for user %d", user_id)
         if users_loaded:
             record_heartbeat(settings, "notification")
+        try:
+            await notify_pending_review(bot, factory, settings.owner_telegram_id)
+        except Exception:
+            logger.exception("Administrator review notification failed")
         with contextlib.suppress(TimeoutError):
             await asyncio.wait_for(stop.wait(), timeout=settings.reminder_poll_seconds)
 
@@ -1759,6 +1814,7 @@ async def run_bot(settings: Settings) -> None:
             BotCommand(command="register", description="Открытая регистрация"),
             BotCommand(command="all", description="Все олимпиады"),
             BotCommand(command="settings", description="Фильтры и категории"),
+            BotCommand(command="onboarding", description="Анкета и подбор олимпиад"),
         ]
         await bot.set_my_commands(user_commands)
         await bot.set_my_commands(
@@ -1768,6 +1824,7 @@ async def run_bot(settings: Settings) -> None:
                 BotCommand(command="users", description="Управление доступом"),
                 BotCommand(command="revoke", description="Отозвать доступ по ID"),
                 BotCommand(command="sync", description="Обновить календарь"),
+                BotCommand(command="reviews", description="Проверить рассылки"),
             ],
             scope=BotCommandScopeChat(chat_id=settings.owner_telegram_id),
         )

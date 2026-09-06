@@ -1,10 +1,12 @@
 from datetime import UTC, datetime
 
 import pytest
+from conftest import approve_pending_reviews
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from olymping.models import AccessStatus, Event, Milestone
 from olymping.services.reminders import dispatch_registration_digest
+from olymping.services.reviews import dispatch_reviewed_notices
 from olymping.services.users import ensure_user_profile
 
 
@@ -72,8 +74,11 @@ async def test_digest_window_filters_retry_and_restart(
         assert await dispatch_registration_digest(session, owner_id=42, send=send, now=due) == 0
         profile.access_status = AccessStatus.ACTIVE.value
         await session.commit()
-        assert await dispatch_registration_digest(session, owner_id=42, send=fail, now=due) == 0
-        assert await dispatch_registration_digest(session, owner_id=42, send=send, now=due) == 1
+        assert await dispatch_registration_digest(session, owner_id=42, send=fail, now=due) == 1
+        assert not sent
+        assert await dispatch_registration_digest(session, owner_id=42, send=send, now=due) == 0
+        await approve_pending_reviews(session)
+        assert await dispatch_reviewed_notices(session, owner_id=42, send=send, now=due) == 1
         assert "Event &lt;0&gt;" in sent[0]
     async with factory() as session:
         assert await dispatch_registration_digest(session, owner_id=42, send=send, now=due) == 0
@@ -84,6 +89,11 @@ async def test_digest_window_filters_retry_and_restart(
                 send=send,
                 now=due.replace(day=7),
             )
+            == 1
+        )
+        await approve_pending_reviews(session)
+        assert (
+            await dispatch_reviewed_notices(session, owner_id=42, send=send, now=due.replace(day=7))
             == 1
         )
         assert "Event &lt;1&gt;" in sent[1]

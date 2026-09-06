@@ -11,6 +11,7 @@ from olymping.models import SyncRun
 from olymping.services.availability import queue_open_event_notices
 from olymping.services.ctftime import sync_ctftime
 from olymping.services.importer import ImportSummary, import_data_directory
+from olymping.services.reviews import collect_review_batch
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ class SynchronizationResult:
     imported: ImportSummary
     ctftime: ImportSummary | None
     open_notices: int
+    review_batch_id: int | None
 
 
 async def synchronize_calendar(
@@ -55,5 +57,6 @@ async def synchronize_calendar(
             await session.commit()
     async with factory() as session:
         open_notices = await queue_open_event_notices(session)
+        review_batch_id = await collect_review_batch(session)
         await session.commit()
-    return SynchronizationResult(imported, ctftime, open_notices)
+    return SynchronizationResult(imported, ctftime, open_notices, review_batch_id)

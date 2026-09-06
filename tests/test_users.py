@@ -45,8 +45,17 @@ async def test_admin_profile_is_bootstrapped_from_settings(
 
         assert profile.role == UserRole.ADMIN.value
         assert profile.access_status == AccessStatus.ACTIVE.value
-        assert profile.onboarding_completed is True
-        assert profile.school_grade == 11
+        assert profile.onboarding_completed is False
+        assert profile.school_grade is None
+        assert await active_user_ids(session) == []
+        profile.school_grade = 9
+        profile.tag_filters = ["informatics"]
+        profile.onboarding_completed = True
+        await session.commit()
+        restored = await ensure_admin_profile(session, 100, "Europe/Moscow")
+        assert restored.school_grade == 9
+        assert restored.tag_filters == ["informatics"]
+        assert restored.onboarding_completed is True
 
 
 @pytest.mark.asyncio
@@ -196,11 +205,11 @@ async def test_users_have_isolated_preferences_and_blocked_users_are_inactive(
         assert [(item.telegram_user_id, item.interest) for item in preferences] == [
             (200, EventInterest.REGISTERED.value)
         ]
-        assert await active_user_ids(session) == [100, 200, 300]
+        assert await active_user_ids(session) == [200, 300]
 
         second.access_status = AccessStatus.BLOCKED.value
         await session.commit()
-        assert await active_user_ids(session) == [100, 200]
+        assert await active_user_ids(session) == [200]
 
 
 @pytest.mark.asyncio

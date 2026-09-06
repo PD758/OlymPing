@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import yaml
 from pydantic import ValidationError
@@ -122,11 +123,57 @@ def _comparable_value(value: Any) -> Any:
     return value
 
 
-def _format_change(title: str, changed: dict[str, tuple[Any, Any]]) -> str:
-    important = {"starts_at", "ends_at", "status", "title"}
-    fields = [name for name in changed if name in important]
-    details = ", ".join(fields) if fields else "данные источника"
-    return f"Обновлено событие «{title}»: {details}."
+def format_calendar_value(value: Any) -> str:
+    if value is None:
+        return "дата уточняется"
+    if isinstance(value, datetime):
+        aware = value.replace(tzinfo=UTC) if value.tzinfo is None else value
+        local = aware.astimezone(ZoneInfo("Europe/Moscow"))
+        return local.strftime(
+            "%d.%m.%Y" if local.hour == local.minute == 0 else "%d.%m.%Y %H:%M МСК"
+        )
+    return {
+        "confirmed": "подтверждено",
+        "tentative": "предварительно",
+        "tbd": "уточняется",
+        "cancelled": "отменено",
+    }.get(str(value), str(value))
+
+
+def _format_change(title: str, changed: dict[str, tuple[Any, Any]], *, window: bool = False) -> str:
+    labels = {
+        "starts_at": "Начало",
+        "ends_at": "Окончание",
+        "status": "Статус",
+        "title": "Название",
+    }
+    lines = [f"{title}:"]
+    for field, (old, new) in changed.items():
+        if field not in labels:
+            continue
+        display_old, display_new = old, new
+        if window and field == "ends_at":
+
+            def inclusive_day(value: Any) -> Any:
+                if isinstance(value, datetime):
+                    local = _comparable_value(value).astimezone(ZoneInfo("Europe/Moscow"))
+                    if local.hour == local.minute == local.second == 0:
+                        return value - timedelta(days=1)
+                return value
+
+            display_old, display_new = inclusive_day(old), inclusive_day(new)
+        line = (
+            f"{labels[field]}: {format_calendar_value(display_old)} → "
+            f"{format_calendar_value(display_new)}"
+        )
+        if isinstance(old, datetime) and isinstance(new, datetime):
+            seconds = (_comparable_value(new) - _comparable_value(old)).total_seconds()
+            if seconds and seconds % 86400 == 0:
+                line += (
+                    f" (на {int(abs(seconds) / 86400)} дн. {'позже' if seconds > 0 else 'раньше'})"
+                )
+        lines.append(line)
+    return "\n".join(lines)
 
 
 async def _profiles(session: AsyncSession) -> list[UserProfile]:
@@ -237,6 +284,16 @@ async def upsert_event(
         if milestone is None:
             session.add(Milestone(id=milestone_seed.id, **values_m))
             summary.created_milestones += 1
+            if create_update_notices and event_existed:
+                await session.flush()
+                summary.notices += await _create_update_notices(
+                    session,
+                    event,
+                    f"Добавлен этап «{milestone_seed.title}». "
+                    f"Начало: {format_calendar_value(milestone_seed.starts_at)}; "
+                    f"статус: {format_calendar_value(milestone_seed.status.value)}.",
+                    milestone_id=milestone_seed.id,
+                )
             continue
         changed = _changed_fields(milestone, values_m)
         for field, value in values_m.items():
@@ -260,7 +317,7 @@ async def upsert_event(
             summary.notices += await _create_update_notices(
                 session,
                 event,
-                _format_change(event.title, changed),
+                _format_change(milestone.title, changed, window=milestone.precision == "window"),
                 milestone_id=milestone.id,
             )
     return summary
@@ -303,14 +360,20 @@ async def import_data_directory(
     create_new_event_notices: bool = True,
 ) -> ImportSummary:
     paths = calendar_paths(data_dir)
-    total = ImportSummary()
+    # Resolve patches first: notify about the final result, never intermediate flips.
+    seeds: dict[str, EventSeed] = {}
     for path in paths:
         document = load_calendar_document(path)
-        result = await import_document(
-            session,
-            document,
-            create_new_event_notices=create_new_event_notices,
-        )
-        result.files = 1
-        total.merge(result)
+        for seed in document.events:
+            if seed.id in seeds:
+                milestones = {stage.id: stage for stage in seeds[seed.id].milestones}
+                milestones.update({stage.id: stage for stage in seed.milestones})
+                seed = seed.model_copy(update={"milestones": list(milestones.values())})
+            seeds[seed.id] = seed
+    total = await import_document(
+        session,
+        CalendarDocument(calendar_version=1, events=list(seeds.values())),
+        create_new_event_notices=create_new_event_notices,
+    )
+    total.files = len(paths)
     return total

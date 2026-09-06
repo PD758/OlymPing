@@ -109,14 +109,9 @@ async def ensure_admin_profile(
         telegram_user_id,
         timezone,
         role=UserRole.ADMIN,
-        onboarding_completed=True,
-        school_grade=11,
     )
     profile.role = UserRole.ADMIN.value
     profile.access_status = AccessStatus.ACTIVE.value
-    profile.onboarding_completed = True
-    if profile.school_grade is None:
-        profile.school_grade = 11
     return profile
 
 
