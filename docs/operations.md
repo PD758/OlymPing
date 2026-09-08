@@ -67,6 +67,23 @@ the image from another machine before starting Compose with `--no-build`.
 
 ## Restore
 
+For ordinary process restarts and upgrades, pending broadcasts stay pending and dismissed
+batches stay dismissed. Approved unfinished broadcasts resume; scheduled reminders may
+catch up within the configured grace period. The administrator can receive a pending-review
+preview, but users do not receive an unapproved catalog broadcast. Keep the existing database
+volume when upgrading: creating a fresh database discards delivery history.
+
+Telegram flood-control deadlines persist in `olymping.telegram-cooldown.json` next to SQLite.
+Keep that file when restarting or deploying. It contains only a deadline, no token. The
+SQLite backup utility backs up the database itself, so the cooldown file must be copied
+separately if moving hosts during an active Telegram pause. Only one polling process may
+use the token; the in-process pacing is shared by all sends in that instance.
+
+Delivery is paced at 10 messages/second by default (`TELEGRAM_MESSAGES_PER_SECOND`, 1–20).
+A `429` defers background deliveries rather than exhausting their retry budgets or holding
+a database transaction open throughout the cooldown. Lowering the rate stretches all
+outgoing text messages, including reviewed broadcasts and daily digests.
+
 Restoration must happen with the bot stopped, so it cannot poll Telegram or
 write SQLite during replacement. This also avoids two bot instances when the
 replacement starts.

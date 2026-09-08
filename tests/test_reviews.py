@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from olymping.models import CatalogNotice, Event, NotificationReview, UserProfile
 from olymping.review_ui import review_page
 from olymping.schemas import CalendarDocument
+from olymping.services.delivery import DeliveryDeferred
 from olymping.services.importer import import_data_directory, import_document
 from olymping.services.reviews import (
     StaleReviewError,
@@ -56,6 +57,43 @@ async def seed_review(session: AsyncSession) -> int:
     assert batch_id is not None
     await session.commit()
     return batch_id
+
+
+@pytest.mark.asyncio
+async def test_flood_wait_keeps_approved_notices_and_attempt_budget(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    from olymping.models import ReviewDelivery
+
+    _, factory = database
+
+    async def limited(_user: int, _text: str) -> None:
+        raise DeliveryDeferred(120)
+
+    async with factory() as session:
+        batch = await seed_review(session)
+        await decide_review(session, batch_id=batch, actor_id=1, approve=True)
+        await session.commit()
+        with pytest.raises(DeliveryDeferred):
+            await dispatch_reviewed_notices(session, owner_id=1, send=limited)
+    sent: list[str] = []
+
+    async def recovered(_user: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        delivery = await session.get(ReviewDelivery, (batch, 1))
+        assert delivery is not None and delivery.attempts == 0
+        assert delivery.next_attempt_at is not None
+        assert await dispatch_reviewed_notices(session, owner_id=1, send=recovered) == 0
+        assert not sent
+        assert (
+            await dispatch_reviewed_notices(
+                session, owner_id=1, send=recovered, now=datetime.now(UTC) + timedelta(seconds=121)
+            )
+            == 2
+        )
+        assert len(sent) == 1
 
 
 @pytest.mark.asyncio

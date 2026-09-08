@@ -48,6 +48,7 @@ from olymping.models import (
 from olymping.presentation import telegram_time
 from olymping.review_ui import notify_pending_review, register_review_handlers
 from olymping.services.availability import queue_open_event_notices
+from olymping.services.backups import sqlite_path
 from olymping.services.calendar import (
     all_olympiads,
     get_event,
@@ -56,6 +57,7 @@ from olymping.services.calendar import (
     upcoming_events,
 )
 from olymping.services.ctftime import sync_ctftime
+from olymping.services.delivery import DeliveryDeferred, background_delivery
 from olymping.services.importer import CalendarImportError, import_data_directory
 from olymping.services.onboarding import complete_onboarding
 from olymping.services.reminders import (
@@ -83,6 +85,7 @@ from olymping.services.users import (
     redeem_invitation,
     set_user_access,
 )
+from olymping.telegram_delivery import PacedMessages
 
 logger = logging.getLogger(__name__)
 
@@ -1704,7 +1707,12 @@ async def _notification_loop(
     stop: asyncio.Event,
 ) -> None:
     async def send(user_id: int, text: str) -> None:
-        await bot.send_message(user_id, text)
+        token = background_delivery.set(True)
+        try:
+            record_heartbeat(settings, "notification")
+            await bot.send_message(user_id, text)
+        finally:
+            background_delivery.reset(token)
 
     while not stop.is_set():
         try:
@@ -1716,6 +1724,8 @@ async def _notification_loop(
             user_ids = []
             users_loaded = False
         for user_id in user_ids:
+            if stop.is_set():
+                break
             try:
                 counts = await run_notification_cycle(
                     factory,
@@ -1730,14 +1740,21 @@ async def _notification_loop(
                         user_id,
                         *counts,
                     )
+            except DeliveryDeferred as exc:
+                logger.info("Broadcasts paused by Telegram for %.1fs", exc.retry_after)
+                break
             except Exception:
                 logger.exception("Notification cycle failed for user %d", user_id)
+            record_heartbeat(settings, "notification")
         if users_loaded:
             record_heartbeat(settings, "notification")
+        token = background_delivery.set(True)
         try:
             await notify_pending_review(bot, factory, settings.owner_telegram_id)
         except Exception:
             logger.exception("Administrator review notification failed")
+        finally:
+            background_delivery.reset(token)
         with contextlib.suppress(TimeoutError):
             await asyncio.wait_for(stop.wait(), timeout=settings.reminder_poll_seconds)
 
@@ -1810,6 +1827,12 @@ async def run_bot(settings: Settings) -> None:
             ),
         )
         bot.session.middleware(PollingHeartbeatMiddleware(settings))
+        bot.session.middleware(
+            PacedMessages(
+                sqlite_path(settings.database_url).with_suffix(".telegram-cooldown.json"),
+                messages_per_second=settings.telegram_messages_per_second,
+            )
+        )
         dispatcher = Dispatcher()
         dispatcher.include_router(create_router(factory, settings))
         user_commands = [

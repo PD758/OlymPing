@@ -116,6 +116,10 @@ sources. Group selection works even when event subject tags are missing. Explici
 sources remain disabled. These choices are also available in the subject settings and apply
 to future matching events, notifications and reminders.
 
+New profiles start with the `CTF` source disabled. They can enable it in source settings;
+existing profiles retain their previous choices. The separately curated Russian CTF Cup
+uses `OTHER`, so it is not controlled by the CTFtime source switch.
+
 Open an olympiad and choose `Этапы и результаты` to record whether you participated,
 passed to the next stage, did not pass, or skipped a particular stage. `Не интересно`
 mutes the whole olympiad while keeping it visible in `/all` so the choice can be reverted.
@@ -237,7 +241,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.2.1 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.2.2 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.
@@ -246,6 +250,21 @@ Telegram sends and SQLite commits cannot form one transaction. An abrupt crash i
 after a send can repeat that message; normal retries and restarts use persisted delivery
 records. Registration digests cover the prior 24-hour window; `/sync` also discovers older
 registrations that are still open, but does not announce already closed windows.
+
+A restart or code deployment never approves pending broadcasts. Previously approved,
+unfinished deliveries resume; already recorded deliveries do not repeat. Scheduled reminders
+continue, including unsent occurrences within `REMINDER_GRACE_HOURS` (24 hours by default).
+The administrator may receive a previously unannounced pending-review preview after restart.
+
+All `sendMessage` calls share pacing: 10 messages/second by default, at least 1.1 seconds
+between messages in a private chat and 3.1 seconds in a group. Configure
+`TELEGRAM_MESSAGES_PER_SECOND` between 1 and 20. Daily digests, approved `/sync` broadcasts,
+reminders and administrator previews use this same budget. Telegram `retry_after` pauses
+are saved beside the database as `*.telegram-cooldown.json` and survive process restarts.
+Background delivery is deferred without consuming retry attempts; polling stays active.
+The bot does not enable paid broadcasts. These conservative limits follow the
+[Telegram FAQ](https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+and still honor the [API's dynamic flood-control response](https://core.telegram.org/bots/api#responseparameters).
 
 CTFtime is queried at a low frequency and cached locally. OlymPing is a personal notification
 tool, not a CTFtime clone; descriptions are truncated and every event links to its source.

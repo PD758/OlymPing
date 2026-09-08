@@ -29,6 +29,7 @@ from olymping.models import (
 )
 from olymping.presentation import telegram_time
 from olymping.services.availability import registration_deadline
+from olymping.services.delivery import DeliveryDeferred
 from olymping.services.filters import event_is_enabled
 
 logger = logging.getLogger(__name__)
@@ -242,10 +243,18 @@ async def dispatch_due_reminders(
                 delivery.sent_at = now
                 delivery.error = None
                 sent += 1
+            except DeliveryDeferred:
+                delivery.attempts -= 1
+                delivery.status = DeliveryStatus.PENDING.value
+                delivery.error = None
+                await session.commit()
+                raise
             except Exception as exc:
                 delivery.status = DeliveryStatus.FAILED.value
                 delivery.error = f"{type(exc).__name__}: {exc}"[:2000]
                 logger.exception("Failed to send reminder %s", delivery.id)
+            # Persist each outcome before pacing or attempting the next message.
+            await session.commit()
     return sent
 
 

@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     ctftime_lookahead_days: int = Field(default=180, ge=7, le=730)
     reminder_poll_seconds: int = Field(default=60, ge=10, le=3600)
     reminder_grace_hours: int = Field(default=24, ge=1, le=168)
+    telegram_messages_per_second: float = Field(default=10, ge=1, le=20)
     log_level: str = "INFO"
 
     @field_validator("timezone")

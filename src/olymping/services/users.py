@@ -21,7 +21,7 @@ from olymping.models import (
     UserRole,
 )
 
-DEFAULT_CATEGORY_SETTINGS = {kind.value: True for kind in SourceKind}
+DEFAULT_CATEGORY_SETTINGS = {kind.value: kind != SourceKind.CTF for kind in SourceKind}
 DEFAULT_CTF_FILTERS: dict[str, Any] = {
     "online": "all",
     "restrictions": "all",
@@ -61,7 +61,11 @@ async def ensure_user_profile(
 ) -> UserProfile:
     profile = await session.get(UserProfile, telegram_user_id)
     if profile is not None:
-        category_settings = {**DEFAULT_CATEGORY_SETTINGS, **profile.category_settings}
+        # Existing missing keys historically meant enabled; preserve that choice.
+        category_settings = {
+            **dict.fromkeys((kind.value for kind in SourceKind), True),
+            **profile.category_settings,
+        }
         if category_settings != profile.category_settings:
             profile.category_settings = category_settings
         configured_result = await session.execute(

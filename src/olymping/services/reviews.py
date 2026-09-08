@@ -23,6 +23,7 @@ from olymping.models import (
     UserProfile,
 )
 from olymping.services.availability import open_phases
+from olymping.services.delivery import DeliveryDeferred
 from olymping.services.filters import event_is_enabled
 from olymping.services.importer import format_calendar_value
 from olymping.services.users import require_admin_profile
@@ -444,6 +445,11 @@ async def dispatch_reviewed_notices(
             delivery.attempts += 1
             try:
                 await send(owner_id, text)
+            except DeliveryDeferred as exc:
+                delivery.attempts -= 1
+                delivery.next_attempt_at = datetime.now(UTC) + timedelta(seconds=exc.retry_after)
+                await session.commit()
+                raise
             except Exception as exc:
                 logger.warning("Review batch %s delivery failed (%s)", batch.id, type(exc).__name__)
                 delivery.next_attempt_at = now + timedelta(minutes=min(60, 2**delivery.attempts))

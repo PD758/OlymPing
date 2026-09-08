@@ -88,6 +88,7 @@ async def test_invitation_is_single_use_and_starts_personal_onboarding(
         assert friend.role == UserRole.USER.value
         assert friend.school_grade is None
         assert friend.onboarding_completed is False
+        assert friend.category_settings["CTF"] is False
         used_invitation = await session.get(Invitation, token)
         assert used_invitation is not None
         await session.refresh(used_invitation)
@@ -103,6 +104,27 @@ async def test_invitation_is_single_use_and_starts_personal_onboarding(
             display_name="Second friend",
         )
         assert second_friend is None
+
+
+@pytest.mark.asyncio
+async def test_ctf_default_does_not_overwrite_existing_preferences(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        new = await ensure_user_profile(session, 200, "Europe/Moscow")
+        assert new.category_settings["CTF"] is False
+        assert new.category_settings["NTO"] is True
+        new.category_settings = {**new.category_settings, "CTF": True}
+        old = await ensure_user_profile(session, 300, "Europe/Moscow")
+        old.category_settings = {"MOSH": False}
+        await session.commit()
+    async with factory() as session:
+        opted_in = await ensure_user_profile(session, 200, "Europe/Moscow")
+        legacy = await ensure_user_profile(session, 300, "Europe/Moscow")
+        assert opted_in.category_settings["CTF"] is True
+        assert legacy.category_settings["CTF"] is True
+        assert legacy.category_settings["MOSH"] is False
 
 
 @pytest.mark.asyncio
