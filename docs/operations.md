@@ -34,6 +34,11 @@ docker compose run --rm --no-deps backup \
 
 ## Calendar updates
 
+Calendar-only changes do not bump the application version, Docker image tag or
+`calendar_version` (which describes the YAML schema). Commit the reviewed YAML and
+source notes as an ordinary data update. Bump the application release only when
+changing application code, dependencies or deployment behavior.
+
 Commit and push reviewed changes to `data/calendar/*.yaml`. In the production checkout,
 run `git pull --ff-only`, then send `/sync` to the bot as administrator. Compose mounts
 that directory into the running container, so calendar-only changes need no rebuild or

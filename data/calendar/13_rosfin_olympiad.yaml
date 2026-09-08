@@ -1,0 +1,62 @@
+calendar_version: 1
+events:
+  - id: other:rosfin-olympiad-2026
+    source_kind: OTHER
+    title: Международная олимпиада по финансовой безопасности
+    description: >-
+      Школьный профиль «финансовая безопасность». Отборочный этап 2026 года
+      проводился для 8–10 классов; финальный этап предназначен только для
+      участников, прошедших отбор, и включает деление заданий для 9, 10 и 11 классов.
+      I тур 14 марта: 10 класс — 10:00–14:00, 9 класс — 12:00–16:00,
+      8 класс — 14:00–18:00 МСК.
+    category: economics
+    tags: [financial-literacy]
+    url: https://rosfinolymp.ru/for-participants
+    source_url: https://rosfinolymp.ru/for-participants
+    status: confirmed
+    format: онлайн-отбор; финал для прошедших отбор
+    restrictions: "Отбор: 8–10 классы; финал — для прошедших отбор, с заданиями для 9–11 классов"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: other:rosfin-olympiad-2026:round-1
+        kind: qualifier
+        title: I тур отборочного этапа для школьников
+        starts_at: "2026-03-14T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://rosfinolymp.ru/stages
+      - id: other:rosfin-olympiad-2026:round-2
+        kind: qualifier
+        title: II тур отборочного этапа для школьников
+        starts_at: "2026-04-19T10:00:00+03:00"
+        ends_at: "2026-04-19T14:00:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: true
+        source_url: https://rosfinolymp.ru/stages
+      - id: other:rosfin-olympiad-2026:motivation-letters
+        kind: other
+        title: Квалификационный этап — сбор мотивационных писем школьников
+        starts_at: "2026-06-01T00:00:00+03:00"
+        ends_at: "2026-09-03T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://rosfinolymp.ru/stages
+      - id: other:rosfin-olympiad-2026:qualification-selection
+        kind: qualifier
+        title: Квалификационный этап — отбор школьников в финал
+        starts_at: "2026-09-02T00:00:00+03:00"
+        ends_at: "2026-09-04T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://rosfinolymp.ru/stages
+      - id: other:rosfin-olympiad-2026:final
+        kind: final
+        title: Финальный этап — для участников, прошедших отбор
+        starts_at: "2026-09-27T00:00:00+03:00"
+        ends_at: "2026-10-03T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://rosfinolymp.ru/stages

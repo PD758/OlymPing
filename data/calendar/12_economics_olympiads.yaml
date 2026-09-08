@@ -1,0 +1,239 @@
+calendar_version: 1
+events:
+  - id: other:hse-economics-2026
+    source_kind: OTHER
+    title: "Высшая проба — экономика"
+    description: "Профиль «Экономика» Всероссийской олимпиады школьников «Высшая проба» в 2026/27 учебном году."
+    category: economics
+    tags: [economics, hse]
+    url: https://olymp.hse.ru/mmo/eco
+    source_url: https://olymp.hse.ru/mmo/eco
+    status: confirmed
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: other:hse-economics-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-08-20T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/
+      - id: other:hse-economics-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-09-21T14:00:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/
+      - id: other:hse-economics-2026:qualifier-1
+        kind: qualifier
+        title: "Первый тур — первый вариант даты (проект)"
+        starts_at: "2026-09-26T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable/
+      - id: other:hse-economics-2026:qualifier-1b
+        kind: qualifier
+        title: "Первый тур — второй вариант даты (проект)"
+        starts_at: "2026-09-30T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable/
+      - id: other:hse-economics-2026:qualifier-2
+        kind: qualifier
+        title: "Второй тур отборочного этапа"
+        starts_at: "2026-11-13T00:00:00+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable1
+      - id: other:hse-economics-2026:final
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-02-05T00:00:00+03:00"
+        ends_at: "2027-02-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://olymp.hse.ru/mmo/
+
+  - id: other:hse-financial-literacy-2026
+    source_kind: OTHER
+    title: "Высшая проба — финансовая грамотность"
+    description: "Профиль «Финансовая грамотность» Всероссийской олимпиады школьников «Высшая проба» в 2026/27 учебном году."
+    category: economics
+    tags: [economics, financial-literacy, hse]
+    url: https://olymp.hse.ru/mmo/finance
+    source_url: https://olymp.hse.ru/mmo/finance
+    status: confirmed
+    restrictions: "7–11 классы"
+    min_grade: 7
+    max_grade: 11
+    milestones:
+      - id: other:hse-financial-literacy-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-08-20T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/
+      - id: other:hse-financial-literacy-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-09-21T14:00:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/
+      - id: other:hse-financial-literacy-2026:qualifier-1
+        kind: qualifier
+        title: "Первый тур отборочного этапа (проект)"
+        starts_at: "2026-10-04T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable/
+      - id: other:hse-financial-literacy-2026:qualifier-2
+        kind: qualifier
+        title: "Второй тур отборочного этапа"
+        starts_at: "2026-11-13T00:00:00+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable1
+      - id: other:hse-financial-literacy-2026:final
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-02-05T00:00:00+03:00"
+        ends_at: "2027-02-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://olymp.hse.ru/mmo/
+
+  - id: other:hse-business-basics-2026
+    source_kind: OTHER
+    title: "Высшая проба — основы бизнеса"
+    description: "Профиль «Основы бизнеса» Всероссийской олимпиады школьников «Высшая проба» в 2026/27 учебном году."
+    category: economics
+    tags: [economics, business, hse]
+    url: https://olymp.hse.ru/mmo/business
+    source_url: https://olymp.hse.ru/mmo/business
+    status: confirmed
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: other:hse-business-basics-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-08-20T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/
+      - id: other:hse-business-basics-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-09-21T14:00:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/
+      - id: other:hse-business-basics-2026:qualifier-1
+        kind: qualifier
+        title: "Первый тур отборочного этапа (проект)"
+        starts_at: "2026-10-03T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable/
+      - id: other:hse-business-basics-2026:qualifier-2
+        kind: qualifier
+        title: "Второй тур отборочного этапа"
+        starts_at: "2026-11-13T00:00:00+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.hse.ru/mmo/timetable1
+      - id: other:hse-business-basics-2026:final
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-02-05T00:00:00+03:00"
+        ends_at: "2027-02-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://olymp.hse.ru/mmo/
+
+  - id: other:sibiriada-economics-2026
+    source_kind: OTHER
+    title: "Сибириада. Шаг в мечту — экономика"
+    description: "Олимпиада по экономике в рамках Международного экономического фестиваля школьников «Сибириада. Шаг в мечту». Организатор опубликовал календарный план 2026/27, но не точные даты туров."
+    category: economics
+    tags: [economics, sibiriada]
+    url: https://sibiriada.org/olymp.html
+    source_url: https://sibiriada.org/sroki_provedeniya.html
+    status: confirmed
+    milestones:
+      - id: other:sibiriada-economics-2026:qualifier-1
+        kind: qualifier
+        title: "Первый отборочный тур — дата уточняется (не позднее 31.12.2026)"
+        precision: unknown
+        status: tbd
+        is_online: true
+        source_url: https://sibiriada.org/sroki_provedeniya.html
+      - id: other:sibiriada-economics-2026:qualifier-2
+        kind: qualifier
+        title: "Второй отборочный тур — дата уточняется (не позднее 31.01.2027)"
+        precision: unknown
+        status: tbd
+        source_url: https://sibiriada.org/sroki_provedeniya.html
+      - id: other:sibiriada-economics-2026:final
+        kind: final
+        title: "Заключительный этап в Бердске — дата уточняется (до 31.03.2027)"
+        precision: unknown
+        status: tbd
+        location: "Бердск, Новосибирская область"
+        source_url: https://sibiriada.org/sroki_provedeniya.html
+
+  - id: other:lomonosov-economics-2026
+    source_kind: OTHER
+    title: "Ломоносов — экономика"
+    description: "Профиль по экономике олимпиады школьников «Ломоносов». Расписание сезона 2026/27 на дату проверки не опубликовано."
+    category: economics
+    tags: [economics, lomonosov, msu]
+    url: https://olymp.msu.ru/
+    source_url: https://olymp.msu.ru/
+    status: tbd
+    milestones:
+      - id: other:lomonosov-economics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27 — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://olymp.msu.ru/
+
+  - id: other:spbu-economics-2026
+    source_kind: OTHER
+    title: "Олимпиада СПбГУ — экономика"
+    description: "Профиль по экономике олимпиады школьников Санкт-Петербургского государственного университета. Расписание сезона 2026/27 на дату проверки не опубликовано."
+    category: economics
+    tags: [economics, spbu]
+    url: https://olympiada.spbu.ru/
+    source_url: https://olympiada.spbu.ru/
+    status: tbd
+    milestones:
+      - id: other:spbu-economics-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27 — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://olympiada.spbu.ru/

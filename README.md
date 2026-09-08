@@ -216,7 +216,9 @@ git pull --ff-only
 
 Send `/sync` to the bot as administrator. It imports the updated files immediately and
 prepares any broadcasts for approval in `/reviews`. No image rebuild or restart is needed
-for calendar-only changes. `/sync` does not fetch Git changes or research olympiad websites;
+for calendar-only changes, and the application version stays unchanged. `calendar_version`
+is the YAML schema version and also stays unchanged when editing events or dates.
+`/sync` does not fetch Git changes or research olympiad websites;
 it reads the local YAML calendar and synchronizes the CTFtime API.
 
 If application code, dependencies, migrations or deployment configuration changed, rebuild
