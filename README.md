@@ -124,6 +124,12 @@ Open an olympiad and choose `Этапы и результаты` to record wheth
 passed to the next stage, did not pass, or skipped a particular stage. `Не интересно`
 mutes the whole olympiad while keeping it visible in `/all` so the choice can be reverted.
 
+Personal views (`Сегодня`, `7 дней`, `30 дней`, and `Открыта регистрация`) exclude
+events marked `Не интересно` by that user and events outside their current subject,
+group, grade or source filters. Matching events need not already have a subscription
+to appear. Limits apply after personal filtering; registrations are ordered by their
+nearest deadline before truncating the list. Another user's choices have no effect.
+
 Each event card contains one reminder toggle. `🔔 Напоминания: обычные` uses source defaults,
 `⚙️ Напоминания: свои` means `/remind` overrides exist, and `🔕 Напоминания: выключены`
 suppresses the event. Muting preserves custom rules so they can be restored with one tap.
@@ -243,7 +249,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.2.2 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.2.3 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.

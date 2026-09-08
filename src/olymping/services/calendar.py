@@ -6,7 +6,15 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from olymping.models import Event, Milestone, RecordStatus, SourceKind, UserProfile
+from olymping.models import (
+    Event,
+    EventInterest,
+    EventPreference,
+    Milestone,
+    RecordStatus,
+    SourceKind,
+    UserProfile,
+)
 from olymping.services.availability import registration_deadline
 from olymping.services.filters import event_is_enabled
 from olymping.services.reminders import aware_utc
@@ -20,6 +28,8 @@ async def upcoming_events(
     ends_at: datetime,
     limit: int = 30,
 ) -> list[tuple[Event, Milestone]]:
+    if limit <= 0:
+        return []
     start_utc = aware_utc(starts_at).astimezone(UTC)
     end_utc = aware_utc(ends_at).astimezone(UTC)
     result = await session.execute(
@@ -29,9 +39,14 @@ async def upcoming_events(
             Milestone.status == RecordStatus.CONFIRMED.value,
             Milestone.starts_at >= start_utc,
             Milestone.starts_at < end_utc,
+            Milestone.event_id.not_in(
+                select(EventPreference.event_id).where(
+                    EventPreference.telegram_user_id == profile.telegram_user_id,
+                    EventPreference.interest == EventInterest.IGNORED.value,
+                )
+            ),
         )
-        .order_by(Milestone.starts_at)
-        .limit(limit * 3)
+        .order_by(Milestone.starts_at, Milestone.id)
     )
     items: list[tuple[Event, Milestone]] = []
     for milestone in result.scalars():
@@ -96,12 +111,26 @@ async def open_registration_events(
     now: datetime,
     limit: int = 500,
 ) -> list[Event]:
-    events = await all_olympiads(session, profile, limit=limit)
+    if limit <= 0:
+        return []
+    events = await session.scalars(
+        select(Event)
+        .options(selectinload(Event.milestones))
+        .where(
+            Event.source_kind != SourceKind.CTF.value,
+            Event.status != RecordStatus.CANCELLED.value,
+            Event.id.not_in(
+                select(EventPreference.event_id).where(
+                    EventPreference.telegram_user_id == profile.telegram_user_id,
+                    EventPreference.interest == EventInterest.IGNORED.value,
+                )
+            ),
+        )
+    )
     active = [
         event
         for event in events
-        if event.status != RecordStatus.CANCELLED.value
-        and registration_closes_at(event, now) is not None
+        if event_is_enabled(profile, event) and registration_closes_at(event, now) is not None
     ]
     return sorted(
         active,
@@ -109,4 +138,4 @@ async def open_registration_events(
             registration_closes_at(event, now) or datetime.max.replace(tzinfo=UTC),
             event.title,
         ),
-    )
+    )[:limit]
