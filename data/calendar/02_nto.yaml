@@ -103,3 +103,208 @@ events:
         precision: window
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
+
+  - id: nto:big-data-machine-learning-2026
+    source_kind: NTO
+    title: "НТО — большие данные и машинное обучение"
+    description: "Профиль старшего трека НТО по анализу больших данных и машинному обучению."
+    category: artificial-intelligence
+    tags: [nto, ai, artificial-intelligence, machine-learning, data-analysis, programming, informatics, team]
+    url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
+    source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
+    status: confirmed
+    restrictions: "8–11 классы и 1–2 курсы СПО"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: nto:big-data-machine-learning-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации старшего трека"
+        starts_at: "2026-08-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:big-data-machine-learning-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации старшего трека"
+        starts_at: "2026-10-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:big-data-machine-learning-2026:stage-1
+        kind: qualifier
+        title: "I этап — индивидуальный"
+        starts_at: "2026-09-17T00:00:00+03:00"
+        ends_at: "2026-10-24T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
+      - id: nto:big-data-machine-learning-2026:stage-2
+        kind: team_stage
+        title: "II этап — командный"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-12-12T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
+      - id: nto:big-data-machine-learning-2026:final
+        kind: final
+        title: "Период проведения финала"
+        starts_at: "2027-02-15T00:00:00+03:00"
+        ends_at: "2027-04-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
+
+  - id: nto:artificial-intelligence-2026
+    source_kind: NTO
+    title: "НТО — искусственный интеллект"
+    description: "Профиль старшего трека НТО по анализу данных и машинному обучению."
+    category: artificial-intelligence
+    tags: [nto, ai, artificial-intelligence, machine-learning, data-analysis, programming, informatics, team]
+    url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
+    source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
+    status: confirmed
+    restrictions: "8–11 классы и 1–2 курсы СПО"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: nto:artificial-intelligence-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации старшего трека"
+        starts_at: "2026-08-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:artificial-intelligence-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации старшего трека"
+        starts_at: "2026-10-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:artificial-intelligence-2026:stage-1
+        kind: qualifier
+        title: "I этап — индивидуальный"
+        starts_at: "2026-09-17T00:00:00+03:00"
+        ends_at: "2026-10-24T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
+      - id: nto:artificial-intelligence-2026:stage-2
+        kind: team_stage
+        title: "II этап — командный"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-12-12T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
+      - id: nto:artificial-intelligence-2026:final
+        kind: final
+        title: "Период проведения финала"
+        starts_at: "2027-02-15T00:00:00+03:00"
+        ends_at: "2027-04-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
+
+  - id: nto:data-analysis-decision-making-2026
+    source_kind: NTO
+    title: "НТО — анализ данных и принятие решений"
+    description: "Новый профиль старшего трека НТО по анализу данных, математическому моделированию и технологиям искусственного интеллекта."
+    category: artificial-intelligence
+    tags: [nto, ai, artificial-intelligence, data-analysis, machine-learning, programming, informatics, team]
+    url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
+    source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
+    status: confirmed
+    restrictions: "8–11 классы и 1–2 курсы СПО"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: nto:data-analysis-decision-making-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации старшего трека"
+        starts_at: "2026-08-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:data-analysis-decision-making-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации старшего трека"
+        starts_at: "2026-10-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://ntcontest.ru/participants/schedule/
+      - id: nto:data-analysis-decision-making-2026:stage-1
+        kind: qualifier
+        title: "I этап — индивидуальный"
+        starts_at: "2026-09-17T00:00:00+03:00"
+        ends_at: "2026-10-24T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
+      - id: nto:data-analysis-decision-making-2026:stage-2
+        kind: team_stage
+        title: "II этап — командный"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-12-12T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
+      - id: nto:data-analysis-decision-making-2026:final
+        kind: final
+        title: "Период проведения финала"
+        starts_at: "2027-02-15T00:00:00+03:00"
+        ends_at: "2027-04-16T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
+
+  - id: nto-junior:iitech-2026
+    source_kind: NTO
+    title: "НТО Junior — ИИтех"
+    description: "Сфера НТО Junior по искусственному интеллекту для школьников 5–7 классов."
+    category: artificial-intelligence
+    tags: [nto, nto-junior, ai, artificial-intelligence, informatics, team]
+    url: https://junior.ntcontest.ru/
+    source_url: https://junior.ntcontest.ru/
+    status: confirmed
+    restrictions: "5–7 классы"
+    min_grade: 5
+    max_grade: 7
+    milestones:
+      - id: nto-junior:iitech-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации и подготовительного этапа"
+        starts_at: "2026-08-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://junior.ntcontest.ru/
+      - id: nto-junior:iitech-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации и подготовительного этапа"
+        starts_at: "2026-11-09T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://junior.ntcontest.ru/
+      - id: nto-junior:iitech-2026:qualifier
+        kind: qualifier
+        title: "Отборочный онлайн-этап"
+        starts_at: "2026-10-20T00:00:00+03:00"
+        ends_at: "2026-11-11T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://junior.ntcontest.ru/
+      - id: nto-junior:iitech-2026:final
+        kind: final
+        title: "Заключительный этап в регионах"
+        starts_at: "2026-12-07T00:00:00+03:00"
+        ends_at: "2026-12-18T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        source_url: https://junior.ntcontest.ru/

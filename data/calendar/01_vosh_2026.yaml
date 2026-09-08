@@ -3,12 +3,12 @@ events:
   - id: vosh:german-2026
     source_kind: VOSH
     title: "ВсОШ — немецкий язык"
-    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; даты взяты из проекта официального графика."
+    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; регистрация открыта, сроки школьного этапа подтверждены организатором."
     category: languages
     tags: [vosh, german]
     url: https://vos.olimpiada.ru/subject/germ
-    source_url: https://vos.olimpiada.ru/2026/school#schedule
-    status: tentative
+    source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-nemetskomu-yazyku-2026-09-04
+    status: confirmed
     location: "Москва"
     restrictions: "Школьный: 5–11; муниципальный: 7–11; региональный/финал: 9–11. Можно выбрать старший класс."
     min_grade: 5
@@ -19,21 +19,21 @@ events:
         title: "Открытие регистрации на школьный этап"
         starts_at: "2026-09-04T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         format: "электронная регистрация"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-nemetskomu-yazyku-2026-09-04
       - id: vosh:german-2026:school-stage
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-11T09:00:00+03:00"
         ends_at: "2026-09-11T21:00:00+03:00"
         precision: exact
-        status: tentative
+        status: confirmed
         format: "электронная тестирующая система"
         location: "по месту обучения"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-nemetskomu-yazyku-2026-09-04
       - id: vosh:german-2026:municipal-stage
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
@@ -64,12 +64,12 @@ events:
   - id: vosh:literature-2026
     source_kind: VOSH
     title: "ВсОШ — литература"
-    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; даты взяты из проекта официального графика."
+    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; регистрация открыта, сроки школьного этапа подтверждены организатором."
     category: humanities
     tags: [vosh, literature]
     url: https://vos.olimpiada.ru/subject/litr
-    source_url: https://vos.olimpiada.ru/2026/school#schedule
-    status: tentative
+    source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-literature-2026-09-07
+    status: confirmed
     location: "Москва"
     restrictions: "Школьный: 5–11; муниципальный: 7–11; региональный/финал: 9–11. Можно выбрать старший класс."
     min_grade: 5
@@ -80,21 +80,21 @@ events:
         title: "Открытие регистрации на школьный этап"
         starts_at: "2026-09-07T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         format: "электронная регистрация"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-literature-2026-09-07
       - id: vosh:literature-2026:school-stage
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-14T09:00:00+03:00"
         ends_at: "2026-09-14T21:00:00+03:00"
         precision: exact
-        status: tentative
+        status: confirmed
         format: "электронная тестирующая система"
         location: "по месту обучения"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-literature-2026-09-07
       - id: vosh:literature-2026:municipal-stage
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"

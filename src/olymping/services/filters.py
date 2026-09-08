@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from olymping.models import Event, SourceKind, UserProfile
 
+GROUP_FILTERS = {
+    "group:vosh": SourceKind.VOSH.value,
+    "group:mosh": SourceKind.MOSH.value,
+}
+
 
 def event_is_enabled(profile: UserProfile, event: Event) -> bool:
     settings = profile.category_settings or {}
@@ -15,7 +20,12 @@ def event_is_enabled(profile: UserProfile, event: Event) -> bool:
         return False
     selected_tags = {tag.casefold() for tag in (profile.tag_filters or [])}
     event_tags = {tag.casefold() for tag in (event.tags or [])}
-    if selected_tags and selected_tags.isdisjoint(event_tags):
+    selected_group = any(
+        tag in selected_tags and event.source_kind == source
+        for tag, source in GROUP_FILTERS.items()
+    )
+    subject_tags = selected_tags - GROUP_FILTERS.keys()
+    if selected_tags and not selected_group and subject_tags.isdisjoint(event_tags):
         return False
     if event.source_kind != SourceKind.CTF.value:
         return True

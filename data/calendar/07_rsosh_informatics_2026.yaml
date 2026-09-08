@@ -263,3 +263,24 @@ events:
         precision: unknown
         status: tbd
         source_url: https://olymp.misis.ru/
+
+  - id: rsosh:hse-industrial-programming-2026
+    source_kind: RSOSH
+    title: "Высшая проба — промышленное программирование"
+    description: "Профиль Всероссийской олимпиады школьников «Высшая проба» для 9–11 классов: онлайн-отбор и очный заключительный этап. На дату проверки страница организатора указывает отдельную регистрацию, но не публикует календарь профиля."
+    category: informatics
+    tags: [rsosh, hse, informatics, programming]
+    url: https://olymp.hse.ru/mmo/devcode
+    source_url: https://olymp.hse.ru/mmo/devcode
+    status: tentative
+    format: "отбор онлайн, заключительный этап очно"
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: rsosh:hse-industrial-programming-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://olymp.hse.ru/mmo/devcode

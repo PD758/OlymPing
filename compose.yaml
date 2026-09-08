@@ -1,12 +1,15 @@
 services:
   bot:
-    image: olymping:${OLYMPING_VERSION:-0.2.0}
+    image: olymping:${OLYMPING_VERSION:-0.2.1}
     build: .
     env_file: .env
     environment:
       DATABASE_URL: sqlite+aiosqlite:////app/data/olymping.db
       DATA_DIR: /app/calendar
     restart: unless-stopped
+    mem_limit: ${BOT_MEMORY_LIMIT:-384m}
+    mem_reservation: 192m
+    pids_limit: 64
     volumes:
       - olymping-data:/app/data
       - ./data/calendar:/app/calendar:ro
@@ -14,7 +17,7 @@ services:
       - no-new-privileges:true
 
   backup:
-    image: olymping:${OLYMPING_VERSION:-0.2.0}
+    image: olymping:${OLYMPING_VERSION:-0.2.1}
     build: .
     depends_on:
       bot:
@@ -35,6 +38,9 @@ services:
       - --retention-count
       - "14"
     restart: unless-stopped
+    mem_limit: ${BACKUP_MEMORY_LIMIT:-64m}
+    mem_reservation: 16m
+    pids_limit: 16
     volumes:
       - olymping-data:/app/data:ro
       - ./backups:/backups

@@ -44,6 +44,27 @@ For changes to application code, dependencies, migrations or Compose configurati
 `docker compose up -d --build` after pulling. Startup applies migrations and imports the
 calendar; broadcasts still require review.
 
+## Memory budget
+
+For a small private group on a 2 GiB server, Compose limits the bot to 384 MiB and
+the backup service to 64 MiB. These are ceilings, not preallocated memory. Override
+`BOT_MEMORY_LIMIT` and `BACKUP_MEMORY_LIMIT` in `.env` if the measured workload requires
+more. Leave memory for the host, Docker and other services such as Xray/3x-ui.
+
+The backup loop uses only Python's standard library, sleeps between runs and does not
+load the Telegram framework. Sharing the application image does not mean sharing its
+full disk size in RAM. The health probe checks SQLite read-only and worker heartbeats
+without importing the bot or ORM. See [the memory audit](memory-audit-2026-09-08.md)
+for measured consumption and practical limitations.
+
+```sh
+docker stats --no-stream olymping-bot-1 olymping-backup-1
+```
+
+Container limits apply at runtime; building the image has a separate peak. If the
+production host cannot build comfortably alongside other services, build and transfer
+the image from another machine before starting Compose with `--no-build`.
+
 ## Restore
 
 Restoration must happen with the bot stopped, so it cannot poll Telegram or

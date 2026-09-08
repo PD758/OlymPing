@@ -31,8 +31,19 @@ def callback_update(user_id: int, data: str, update_id: int) -> Update:
     )
 
 
+@pytest.mark.parametrize(
+    ("selection", "source", "tags"),
+    [
+        ("mathematics", "RSOSH", ["mathematics"]),
+        ("group:vosh", "VOSH", ["literature"]),
+        ("group:mosh", "MOSH", []),
+    ],
+)
 @pytest.mark.asyncio
 async def test_real_onboarding_callbacks_populate_existing_subscriptions(
+    selection: str,
+    source: str,
+    tags: list[str],
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
     _, factory = database
@@ -42,8 +53,8 @@ async def test_real_onboarding_callbacks_populate_existing_subscriptions(
             Event(
                 id="test:math",
                 title="Math",
-                tags=["mathematics"],
-                source_kind="RSOSH",
+                tags=tags,
+                source_kind=source,
                 source_url="https://example.org/",
                 max_grade=11,
             )
@@ -57,14 +68,14 @@ async def test_real_onboarding_callbacks_populate_existing_subscriptions(
     try:
         with patch.object(Bot, "__call__", new=transport):
             for index, data in enumerate(
-                ("onboard:grade:9", "onboard:tag:0:mathematics", "onboard:done")
+                ("onboard:grade:9", f"onboard:tag:0:{selection}", "onboard:done")
             ):
                 await dispatcher.feed_update(bot, callback_update(2, data, index + 1))
         async with factory() as session:
             profile = await session.get(UserProfile, 2)
             preference = await session.get(EventPreference, (2, "test:math"))
             assert profile is not None and profile.onboarding_completed
-            assert profile.school_grade == 9 and profile.tag_filters == ["mathematics"]
+            assert profile.school_grade == 9 and profile.tag_filters == [selection]
             assert preference is not None and preference.interest == "watching"
         assert transport.await_count >= 3
     finally:

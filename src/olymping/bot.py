@@ -104,6 +104,8 @@ class PollingHeartbeatMiddleware(BaseRequestMiddleware):
 CATALOG_PAGE_SIZE = 8
 TAG_PAGE_SIZE = 8
 FILTERABLE_TAGS: tuple[tuple[str, str], ...] = (
+    ("group:vosh", "Вся группа ВсОШ"),
+    ("group:mosh", "Вся группа МОШ"),
     ("cybersecurity", "Информационная безопасность"),
     ("informatics", "Информатика"),
     ("programming", "Программирование"),
@@ -997,9 +999,11 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
             callback,
             "🏷 <b>Какие направления интересны?</b>\n"
             f"Класс: {profile.school_grade or '—'}. "
-            f"Выбрано тем: {len(profile.tag_filters or [])}.\n"
-            "Выбери один или несколько предметов. По ним и классу подберём события "
-            "из календаря и включим напоминания. Или нажми «Все предметы».",
+            f"Выбрано предметов и групп: {len(profile.tag_filters or [])}.\n"
+            "Выбери предметы или целые группы ВсОШ и МОШ. Группа добавляет все её "
+            "предметы по классу, даже если отдельно выбраны другие темы. "
+            "Подберём события из календаря и включим напоминания. "
+            "Или нажми «Все предметы».",
             reply_markup=_onboarding_tag_keyboard(profile, page),
         )
 
@@ -1158,7 +1162,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                     profile.tag_filters = []
                 elif not profile.tag_filters:
                     await callback.answer(
-                        "Выбери предметы или нажми «Все предметы»", show_alert=True
+                        "Выбери предметы, группы или нажми «Все предметы»", show_alert=True
                     )
                     return
                 result = await complete_onboarding(session, user_id)
@@ -1509,7 +1513,9 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                 text = (
                     "🏷 <b>Темы олимпиад</b>\n"
                     f"Выбрано: {html.escape(selected_text)}\n"
-                    "<blockquote>Фильтр работает по принципу «любая из выбранных».</blockquote>"
+                    "<blockquote>Достаточно любой выбранной темы или группы. "
+                    "Группа включает все её предметы по классу. Выключенные в настройках "
+                    "источники остаются скрытыми.</blockquote>"
                 )
             else:
                 keyboard = settings_keyboard(profile)

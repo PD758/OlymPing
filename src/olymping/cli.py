@@ -3,17 +3,13 @@ from __future__ import annotations
 import argparse
 import asyncio
 import logging
+import sqlite3
+from contextlib import closing
 from pathlib import Path
 
-from sqlalchemy import text
-
-from olymping.bot import run_bot
 from olymping.config import Settings
-from olymping.db import create_engine, create_session_factory, upgrade_schema
-from olymping.services.ctftime import sync_ctftime
-from olymping.services.importer import calendar_paths, import_data_directory, load_calendar_document
+from olymping.services.backups import sqlite_path
 from olymping.services.runtime_health import check_runtime_health
-from olymping.services.users import ensure_admin_profile
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -31,19 +27,34 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 async def _with_database(settings: Settings, command: str, path: Path | None = None) -> None:
-    if command != "healthcheck":
-        await upgrade_schema(settings.database_url)
+    if command == "healthcheck":
+        # A health probe must not load Telegram models or the ORM every minute.
+        uri = sqlite_path(settings.database_url).as_uri() + "?mode=ro"
+        with closing(sqlite3.connect(uri, uri=True, timeout=3)) as connection:
+            connection.execute("SELECT version_num FROM alembic_version LIMIT 1").fetchone()
+            connection.execute("SELECT 1").fetchone()
+        print("OK")
+        return
+
+    from sqlalchemy import text
+
+    from olymping.db import create_engine, create_session_factory, upgrade_schema
+    from olymping.services.ctftime import sync_ctftime
+    from olymping.services.importer import (
+        calendar_paths,
+        import_data_directory,
+        load_calendar_document,
+    )
+    from olymping.services.users import ensure_admin_profile
+
+    await upgrade_schema(settings.database_url)
     engine = create_engine(settings.database_url)
     factory = create_session_factory(engine)
     try:
         async with factory() as session:
-            if settings.owner_telegram_id > 0 and command != "healthcheck":
+            if settings.owner_telegram_id > 0:
                 await ensure_admin_profile(session, settings.owner_telegram_id, settings.timezone)
-            if command == "healthcheck":
-                await session.execute(text("SELECT version_num FROM alembic_version LIMIT 1"))
-                await session.execute(text("SELECT 1"))
-                print("OK")
-            elif command == "db-upgrade":
+            if command == "db-upgrade":
                 print("Database is at the latest revision")
             elif command == "import-data":
                 summary = await import_data_directory(session, path or settings.data_dir)
@@ -78,6 +89,8 @@ def main() -> None:
     )
     command = args.command or "bot"
     if command == "bot":
+        from olymping.bot import run_bot
+
         asyncio.run(run_bot(settings))
     else:
         asyncio.run(_with_database(settings, command, getattr(args, "path", None)))

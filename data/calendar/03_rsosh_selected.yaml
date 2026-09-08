@@ -61,12 +61,10 @@ events:
         status: confirmed
         source_url: https://olymp.hse.ru/mmo/
       - id: rsosh:hse-informatics-2026:qualifier-1
-        kind: qualifier
-        title: "Первый тур отбора"
-        starts_at: "2026-09-25T00:00:00+03:00"
-        ends_at: "2026-10-12T00:00:00+03:00"
-        precision: window
-        status: confirmed
+        kind: other
+        title: "Первый тур: для профиля «Информатика» не проводится"
+        precision: unknown
+        status: cancelled
         source_url: https://olymp.hse.ru/mmo/
       - id: rsosh:hse-informatics-2026:qualifier-2
         kind: qualifier

@@ -1,0 +1,79 @@
+calendar_version: 1
+events:
+  - id: other:keldysh-informatics-2026
+    source_kind: OTHER
+    title: "Олимпиада по информатике имени Мстислава Келдыша"
+    description: "Всероссийская олимпиада по информатике для школьников 5–8 классов, владеющих языком программирования и решающих алгоритмические задачи. Даты следующего сезона организатор на дату проверки не опубликовал."
+    category: informatics
+    tags: [informatics, programming, algorithms, keldysh]
+    url: https://education.tbank.ru/school/olympiads/
+    source_url: https://education.tbank.ru/school/olympiads/
+    status: tbd
+    restrictions: "5–8 классы"
+    min_grade: 5
+    max_grade: 8
+    milestones:
+      - id: other:keldysh-informatics-2026:schedule
+        kind: qualifier
+        title: "Расписание следующего сезона"
+        precision: unknown
+        status: tbd
+        source_url: https://education.tbank.ru/school/olympiads/
+
+  - id: other:vkoshp-2026
+    source_kind: OTHER
+    title: "Всероссийская командная олимпиада школьников по программированию"
+    description: "Открытая командная олимпиада по программированию; команда состоит из трёх школьников. Отбор проходит через региональные соревнования или централизованный интернет-тур. Расписание 2026/27 не опубликовано."
+    category: informatics
+    tags: [informatics, programming, algorithms, team, vkoshp, itmo]
+    url: https://nerc.itmo.ru/school/russia-team/
+    source_url: https://nerc.itmo.ru/school/information/about.html
+    status: tbd
+    format: "командная; региональный или интернет-отбор"
+    restrictions: "Команда из 3 школьников; возрастные границы 2026/27 не опубликованы"
+    milestones:
+      - id: other:vkoshp-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://nerc.itmo.ru/school/russia-team/
+
+  - id: other:vkoshp-junior-2026
+    source_kind: OTHER
+    title: "ВКОШП.Junior"
+    description: "Командная олимпиада по программированию для школьников 5–8 классов. Команда состоит из трёх участников; в прошлом сезоне отбор был онлайн, финал — очным. Даты следующего сезона не опубликованы."
+    category: informatics
+    tags: [informatics, programming, algorithms, team, vkoshp-junior]
+    url: https://education.tbank.ru/school/events/vkoshp-junior/
+    source_url: https://education.tbank.ru/school/events/vkoshp-junior/
+    status: tbd
+    format: "командная; отбор онлайн, финал очно"
+    restrictions: "5–8 классы, команда из 3 человек"
+    min_grade: 5
+    max_grade: 8
+    milestones:
+      - id: other:vkoshp-junior-2026:schedule
+        kind: qualifier
+        title: "Расписание следующего сезона"
+        precision: unknown
+        status: tbd
+        source_url: https://education.tbank.ru/school/events/vkoshp-junior/
+
+  - id: other:mkoshp-2026
+    source_kind: OTHER
+    title: "Московская командная олимпиада по программированию среди школьников"
+    description: "Командная олимпиада по программированию с квалификационным и финальным турами; победители приглашаются на ВКОШП. Расписание сезона 2026/27 на официальном сайте не опубликовано."
+    category: informatics
+    tags: [informatics, programming, algorithms, team, mkoshp, moscow]
+    url: https://mkoshp.ru/
+    source_url: https://mkoshp.ru/
+    status: tbd
+    format: "командная; квалификационный и финальный туры"
+    milestones:
+      - id: other:mkoshp-2026:schedule
+        kind: qualifier
+        title: "Расписание 2026/27"
+        precision: unknown
+        status: tbd
+        source_url: https://mkoshp.ru/

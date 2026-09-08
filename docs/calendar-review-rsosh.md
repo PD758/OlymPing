@@ -33,3 +33,27 @@ Official list status source: <https://rsr-olymp.ru/news/123>.
 | `rsosh:cognitive-technologies-2026` | <https://olymp.misis.ru/> | Organizer says 2025/26 is complete and information for the next year will appear in autumn 2026; 7–11 grades and level II are stated. | Retained `tbd`; removed unsupported November expectation. Project membership remains unconfirmed. |
 
 Coverage: 15 of 15 events reviewed; 2 events had official 2026/27 date corrections or confirmations; 11 have no official 2026/27 timetable published on the reviewed organizer page, and 1 retains previously sourced dates as `tentative` pending live re-verification. All 15 retain their existing IDs.
+
+## Follow-up review — 2026-09-08
+
+The RSOSH notice still describes the 2026/27 list as a *project*, not an approved
+list: <https://rsr-olymp.ru/news/123>. Consequently a profile added from that
+project is `tentative`; an absent calendar remains `tbd`.
+
+| Event ID | Official source checked | Result |
+| --- | --- | --- |
+| `rsosh:hse-informatics-2026` | <https://olymp.hse.ru/mmo/> and <https://olymp.hse.ru/mmo/timetable1> | Corrected the existing stable `:qualifier-1` record: the first tour is not held for the Informatics profile. All registered participants take the second online qualifying tour, 13–22 November 2026. Registration (until 21 September, 14:00 MSK) and the generic final period (5–15 February 2027) remain as published. |
+| `rsosh:hse-industrial-programming-2026` | <https://olymp.hse.ru/mmo/devcode> | Added the missing HSE profile. The organizer confirms 9–11 grades, online first stage and in-person final; its page has separate registration but no profile-specific 2026/27 dates. It is `tentative` because the RSOSH list is still a project and its schedule milestone is `tbd`. |
+
+## Programming olympiads outside the RSOSH patch set — 2026-09-08
+
+New file: `data/calendar/09_programming_olympiads.yaml`. These are school
+competitions rather than courses or news feeds. No future-season dates were
+inferred from a prior season.
+
+| Event ID | Official source checked | Verified facts and calendar treatment |
+| --- | --- | --- |
+| `other:keldysh-informatics-2026` | <https://education.tbank.ru/school/olympiads/> | The organizer lists the Olympiad named after Mstislav Keldysh among its informatics olympiads. It is for 5–8 grades; the next-season timetable is not published, therefore `tbd`. |
+| `other:vkoshp-2026` | <https://nerc.itmo.ru/school/information/about.html> and <https://nerc.itmo.ru/school/russia-team/> | Official ITMO material describes the open all-Russian team programming olympiad and its regional/internet selection. The available page is archived for 2025/26 and has no 2026/27 dates, therefore `tbd`; the record does not claim unannounced age limits. |
+| `other:vkoshp-junior-2026` | <https://education.tbank.ru/school/events/vkoshp-junior/> | The organizer confirms teams of three and grades 5–8, with an online qualifier and an in-person final in the completed 2026 season. Future dates are not published, therefore `tbd`. |
+| `other:mkoshp-2026` | <https://mkoshp.ru/> | The official page confirms the two-tour team format for the completed 2025 event. It contains no 2026/27 timetable, therefore `tbd`. |

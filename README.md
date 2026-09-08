@@ -4,8 +4,8 @@ OlymPing is an invitation-only Telegram calendar for school olympiads and CTF ev
 reviewed YAML calendar, synchronizes upcoming events through the official CTFtime JSON API,
 and sends persistent, customizable reminders.
 
-The calendar contains all ВсОШ and МОШ profiles, selected РСОШ/НТО/NPK events, and the
-Russian CTF Cup. The selected РСОШ catalog follows the preliminary 2026/27 list and marks
+The calendar contains all ВсОШ and МОШ profiles, all 34 senior НТО profiles, selected
+РСОШ/NPK events, programming and AI competitions, and the Russian CTF Cup. The selected РСОШ catalog follows the preliminary 2026/27 list and marks
 unconfirmed membership or dates as tentative or `tbd`; the bot never invents a date or sends
 a reminder for an unconfirmed milestone.
 
@@ -108,6 +108,13 @@ without deleting previous choices; current filters control visibility and remind
 cannot be reused. All later changes to class, filters, subscriptions, reminders, and stage results
 belong only to that Telegram account. Blocking stops access and notifications without deleting
 the profile, so `/users` can restore it later.
+
+`Вся группа ВсОШ` and `Вся группа МОШ` include every subject from the chosen source that
+passes the grade filter. Groups combine with individual subjects using OR: ВсОШ plus
+programming includes all suitable ВсОШ events and programming events from other enabled
+sources. Group selection works even when event subject tags are missing. Explicitly disabled
+sources remain disabled. These choices are also available in the subject settings and apply
+to future matching events, notifications and reminders.
 
 Open an olympiad and choose `Этапы и результаты` to record whether you participated,
 passed to the next stage, did not pass, or skipped a particular stage. `Не интересно`
@@ -230,7 +237,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.2.0 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.2.1 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.

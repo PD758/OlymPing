@@ -1,3 +1,6 @@
+import sqlite3
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -8,6 +11,30 @@ from olymping.config import Settings
 from olymping.db import create_engine, create_session_factory
 from olymping.models import Event
 from olymping.services.importer import CalendarImportError, calendar_paths, import_data_directory
+
+
+def test_cli_import_does_not_load_bot_or_orm() -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; import olymping.cli; "
+            "assert 'aiogram' not in sys.modules; assert 'sqlalchemy' not in sys.modules",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.asyncio
+async def test_health_probe_does_not_create_missing_database(tmp_path: Path) -> None:
+    path = tmp_path / "missing.db"
+    settings = Settings(database_url=f"sqlite+aiosqlite:///{path}")
+    with pytest.raises(sqlite3.OperationalError):
+        await _with_database(settings, "healthcheck")
+    assert not path.exists()
 
 
 def test_calendar_paths_rejects_missing_and_empty_directories(tmp_path: Path) -> None:
