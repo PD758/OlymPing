@@ -662,7 +662,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
         is_admin = profile is not None and profile.role == UserRole.ADMIN.value
         await _answer_or_edit(
             event,
-            "<b>OlymPing</b>\nПерсональный календарь олимпиад и CTF.",
+            "<b>OlymPing</b>",
             reply_markup=home_keyboard(is_admin=is_admin),
         )
 
