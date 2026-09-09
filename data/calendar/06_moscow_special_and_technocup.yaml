@@ -1,5 +1,30 @@
 calendar_version: 1
 events:
+  - id: npk:science-for-life-2026
+    source_kind: NPK
+    title: "Открытая городская НПК «Наука для жизни»"
+    description: "Московская научно-практическая конференция в рамках предпрофессиональных городских проектов. Даты цикла 2026/27 уточняются."
+    category: science
+    tags: [npk, moscow, research, science, preprofessional]
+    url: https://conf.profil.mos.ru/academ/index
+    source_url: https://conf.profil.mos.ru/academ/index
+    status: tbd
+    location: "Москва"
+    restrictions: "Возрастные ограничения и направления цикла 2026/27 уточняются"
+    milestones:
+      - id: npk:science-for-life-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание приёма работ — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://conf.profil.mos.ru/academ/index
+      - id: npk:science-for-life-2026:final
+        kind: final
+        title: "Заключительный этап — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://conf.profil.mos.ru/academ/index
+
   - id: npk:engineers-of-the-future-2026
     source_kind: NPK
     title: "Открытая городская НПК «Инженеры будущего»"

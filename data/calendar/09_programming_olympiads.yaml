@@ -1,5 +1,90 @@
 calendar_version: 1
 events:
+  - id: other:prod-2026
+    source_kind: OTHER
+    title: "Международная олимпиада по промышленной разработке PROD"
+    description: "Олимпиада по практической разработке для школьников: фронтенд, бэкенд, мобильная разработка и MLOps-инжиниринг. Официальная страница описывает этапы, но не публикует их точные даты для текущего цикла."
+    category: informatics
+    tags: [informatics, programming, software-engineering, frontend, backend, mobile, mlops, prod]
+    url: https://prodcontest.com/
+    source_url: https://prodcontest.com/
+    status: tbd
+    format: "отборочные этапы онлайн; заключительный командный тур очно"
+    restrictions: "8–11 классы; первый отборочный этап открыт всем желающим"
+    min_grade: 8
+    max_grade: 11
+    milestones:
+      - id: other:prod-2026:schedule
+        kind: qualifier
+        title: "Расписание текущего цикла — дата уточняется"
+        precision: unknown
+        status: tbd
+        source_url: https://prodcontest.com/
+
+  - id: other:dano-2026
+    source_kind: OTHER
+    title: "Национальная олимпиада по анализу данных DANO"
+    description: "Олимпиада НИУ ВШЭ по анализу данных: два индивидуальных отборочных этапа и заключительный этап с командным проектом."
+    category: data-analysis
+    tags: [data-analysis, mathematics, informatics, programming, research, team, dano, hse]
+    url: https://dano.hse.ru/
+    source_url: https://dano.hse.ru/
+    status: confirmed
+    format: "отборочные этапы онлайн; проектный тур очно в формате выездной школы"
+    location: "Москва (проектный тур)"
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: other:dano-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-08-31T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://dano.hse.ru/
+      - id: other:dano-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-10-05T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://dano.hse.ru/
+      - id: other:dano-2026:stage-1
+        kind: qualifier
+        title: "Первый отборочный этап"
+        starts_at: "2026-10-09T00:00:00+03:00"
+        ends_at: "2026-10-13T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://dano.hse.ru/
+      - id: other:dano-2026:stage-2
+        kind: qualifier
+        title: "Второй отборочный этап"
+        starts_at: "2026-11-01T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://dano.hse.ru/
+      - id: other:dano-2026:final-task
+        kind: final
+        title: "Задачный тур заключительного этапа"
+        starts_at: "2026-12-18T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://dano.hse.ru/
+      - id: other:dano-2026:final-project
+        kind: final
+        title: "Проектный тур заключительного этапа"
+        starts_at: "2026-12-18T00:00:00+03:00"
+        ends_at: "2026-12-24T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        location: "Москва"
+        source_url: https://dano.hse.ru/
+
   - id: other:keldysh-informatics-2026
     source_kind: OTHER
     title: "Олимпиада по информатике имени Мстислава Келдыша"
