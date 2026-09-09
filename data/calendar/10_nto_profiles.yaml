@@ -33,6 +33,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:automation-business-processes-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -41,6 +43,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/avtomatizatsiya-bisnes-protsessov/
   - id: nto:automation-business-processes-2026:stage-2
+    advancement_paths: [["nto:automation-business-processes-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -49,6 +53,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/avtomatizatsiya-bisnes-protsessov/
   - id: nto:automation-business-processes-2026:final
+    advancement_paths: [["nto:automation-business-processes-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -90,6 +96,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:intelligent-robotic-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -98,6 +106,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/intellektualnye-robototekhnicheskie-sistemy/
   - id: nto:intelligent-robotic-systems-2026:stage-2
+    advancement_paths: [["nto:intelligent-robotic-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -106,6 +116,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/intellektualnye-robototekhnicheskie-sistemy/
   - id: nto:intelligent-robotic-systems-2026:final
+    advancement_paths: [["nto:intelligent-robotic-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -147,6 +159,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:digital-sensor-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -155,6 +169,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/tsifrovye-sensornye-sistemy/
   - id: nto:digital-sensor-systems-2026:stage-2
+    advancement_paths: [["nto:digital-sensor-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -163,6 +179,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/tsifrovye-sensornye-sistemy/
   - id: nto:digital-sensor-systems-2026:final
+    advancement_paths: [["nto:digital-sensor-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -204,6 +222,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:water-robotic-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -212,6 +232,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/vodnye-robototekhnicheskie-sistemy/
   - id: nto:water-robotic-systems-2026:stage-2
+    advancement_paths: [["nto:water-robotic-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -220,6 +242,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/vodnye-robototekhnicheskie-sistemy/
   - id: nto:water-robotic-systems-2026:final
+    advancement_paths: [["nto:water-robotic-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -260,6 +284,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:flexible-molecular-electronics-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -268,6 +294,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/flexible-electronics/
   - id: nto:flexible-molecular-electronics-2026:stage-2
+    advancement_paths: [["nto:flexible-molecular-electronics-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -276,6 +304,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/flexible-electronics/
   - id: nto:flexible-molecular-electronics-2026:final
+    advancement_paths: [["nto:flexible-molecular-electronics-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-02-15T00:00:00+03:00'
@@ -316,6 +346,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:chemical-industrial-technologies-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -324,6 +356,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/khimicheskie-promtekhnologii/
   - id: nto:chemical-industrial-technologies-2026:stage-2
+    advancement_paths: [["nto:chemical-industrial-technologies-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -332,6 +366,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/khimicheskie-promtekhnologii/
   - id: nto:chemical-industrial-technologies-2026:final
+    advancement_paths: [["nto:chemical-industrial-technologies-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -372,6 +408,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:wireless-communications-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -380,6 +418,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/tekhnologii-besprovodnoy-svyazi/
   - id: nto:wireless-communications-2026:stage-2
+    advancement_paths: [["nto:wireless-communications-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -388,6 +428,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/tekhnologii-besprovodnoy-svyazi/
   - id: nto:wireless-communications-2026:final
+    advancement_paths: [["nto:wireless-communications-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -428,6 +470,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:genome-editing-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -436,6 +480,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/genomnoe-redaktirovanie/
   - id: nto:genome-editing-2026:stage-2
+    advancement_paths: [["nto:genome-editing-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -444,6 +490,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/genomnoe-redaktirovanie/
   - id: nto:genome-editing-2026:final
+    advancement_paths: [["nto:genome-editing-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -484,6 +532,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:nanosystems-chemical-engineering-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -492,6 +542,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/nanosistemy-i-khimicheskiy-inzhiniring/
   - id: nto:nanosystems-chemical-engineering-2026:stage-2
+    advancement_paths: [["nto:nanosystems-chemical-engineering-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -500,6 +552,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/nanosistemy-i-khimicheskiy-inzhiniring/
   - id: nto:nanosystems-chemical-engineering-2026:final
+    advancement_paths: [["nto:nanosystems-chemical-engineering-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -540,6 +594,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:rehabilitation-engineering-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -548,6 +604,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/reabilitatsionnaya-inzheneriya/
   - id: nto:rehabilitation-engineering-2026:stage-2
+    advancement_paths: [["nto:rehabilitation-engineering-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -556,6 +614,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/reabilitatsionnaya-inzheneriya/
   - id: nto:rehabilitation-engineering-2026:final
+    advancement_paths: [["nto:rehabilitation-engineering-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -596,6 +656,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:engineering-biological-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -604,6 +666,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/inzhenernye-biologicheskie-sistemy-agrobiotekhnologii/
   - id: nto:engineering-biological-systems-2026:stage-2
+    advancement_paths: [["nto:engineering-biological-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -612,6 +676,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/inzhenernye-biologicheskie-sistemy-agrobiotekhnologii/
   - id: nto:engineering-biological-systems-2026:final
+    advancement_paths: [["nto:engineering-biological-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -652,6 +718,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:urbanistics-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -660,6 +728,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/urbanistika/
   - id: nto:urbanistics-2026:stage-2
+    advancement_paths: [["nto:urbanistics-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -668,6 +738,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/urbanistika/
   - id: nto:urbanistics-2026:final
+    advancement_paths: [["nto:urbanistics-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -708,6 +780,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:urban-engineering-networks-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -716,6 +790,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/ingenet/
   - id: nto:urban-engineering-networks-2026:stage-2
+    advancement_paths: [["nto:urban-engineering-networks-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -724,6 +800,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/ingenet/
   - id: nto:urban-engineering-networks-2026:final
+    advancement_paths: [["nto:urban-engineering-networks-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -766,6 +844,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:modeling-biotechnologies-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -774,6 +854,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/biotech/
   - id: nto:modeling-biotechnologies-2026:stage-2
+    advancement_paths: [["nto:modeling-biotechnologies-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -782,6 +864,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/biotech/
   - id: nto:modeling-biotechnologies-2026:final
+    advancement_paths: [["nto:modeling-biotechnologies-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -822,6 +906,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:agroecological-control-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -830,6 +916,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/agroekologicheskiy-kontrol/
   - id: nto:agroecological-control-2026:stage-2
+    advancement_paths: [["nto:agroecological-control-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -838,6 +926,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/agroekologicheskiy-kontrol/
   - id: nto:agroecological-control-2026:final
+    advancement_paths: [["nto:agroecological-control-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -880,6 +970,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:infochemistry-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -888,6 +980,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/infokhimiya/
   - id: nto:infochemistry-2026:stage-2
+    advancement_paths: [["nto:infochemistry-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -896,6 +990,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/infokhimiya/
   - id: nto:infochemistry-2026:final
+    advancement_paths: [["nto:infochemistry-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -937,6 +1033,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:virtual-reality-technologies-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -945,6 +1043,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/vr/
   - id: nto:virtual-reality-technologies-2026:stage-2
+    advancement_paths: [["nto:virtual-reality-technologies-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -953,6 +1053,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/vr/
   - id: nto:virtual-reality-technologies-2026:final
+    advancement_paths: [["nto:virtual-reality-technologies-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -994,6 +1096,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:computer-game-development-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1002,6 +1106,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/razrabotka-komputernih-igr/
   - id: nto:computer-game-development-2026:stage-2
+    advancement_paths: [["nto:computer-game-development-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1010,6 +1116,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/razrabotka-komputernih-igr/
   - id: nto:computer-game-development-2026:final
+    advancement_paths: [["nto:computer-game-development-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1051,6 +1159,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:mobile-app-development-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1059,6 +1169,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/mobile-apps-dev/
   - id: nto:mobile-app-development-2026:stage-2
+    advancement_paths: [["nto:mobile-app-development-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1067,6 +1179,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/mobile-apps-dev/
   - id: nto:mobile-app-development-2026:final
+    advancement_paths: [["nto:mobile-app-development-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1108,6 +1222,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:intelligent-energy-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1116,6 +1232,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/intellektualnye-energeticheskie-sistemy/
   - id: nto:intelligent-energy-systems-2026:stage-2
+    advancement_paths: [["nto:intelligent-energy-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1124,6 +1242,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/intellektualnye-energeticheskie-sistemy/
   - id: nto:intelligent-energy-systems-2026:final
+    advancement_paths: [["nto:intelligent-energy-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1164,6 +1284,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:nuclear-technologies-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1172,6 +1294,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/yadernye-tekhnologii/
   - id: nto:nuclear-technologies-2026:stage-2
+    advancement_paths: [["nto:nuclear-technologies-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1180,6 +1304,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/yadernye-tekhnologii/
   - id: nto:nuclear-technologies-2026:final
+    advancement_paths: [["nto:nuclear-technologies-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1220,6 +1346,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:quantum-engineering-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1228,6 +1356,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/kvant-ingineering/
   - id: nto:quantum-engineering-2026:stage-2
+    advancement_paths: [["nto:quantum-engineering-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1236,6 +1366,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/kvant-ingineering/
   - id: nto:quantum-engineering-2026:final
+    advancement_paths: [["nto:quantum-engineering-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1276,6 +1408,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:chemical-power-sources-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1284,6 +1418,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/khimicheskie-istochniki-toka/
   - id: nto:chemical-power-sources-2026:stage-2
+    advancement_paths: [["nto:chemical-power-sources-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1292,6 +1428,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/khimicheskie-istochniki-toka/
   - id: nto:chemical-power-sources-2026:final
+    advancement_paths: [["nto:chemical-power-sources-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1336,6 +1474,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:space-imagery-geodata-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1344,6 +1484,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/analiz-kosmicheskikh-snimkov-i-geoprostranstvennykh-dannykh/
   - id: nto:space-imagery-geodata-2026:stage-2
+    advancement_paths: [["nto:space-imagery-geodata-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1352,6 +1494,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/analiz-kosmicheskikh-snimkov-i-geoprostranstvennykh-dannykh/
   - id: nto:space-imagery-geodata-2026:final
+    advancement_paths: [["nto:space-imagery-geodata-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1394,6 +1538,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:satellite-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1402,6 +1548,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/sputnikovye-sistemy/
   - id: nto:satellite-systems-2026:stage-2
+    advancement_paths: [["nto:satellite-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1410,6 +1558,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/sputnikovye-sistemy/
   - id: nto:satellite-systems-2026:final
+    advancement_paths: [["nto:satellite-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1452,6 +1602,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:aerospace-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1460,6 +1612,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/aerokosmicheskie-sistemy/
   - id: nto:aerospace-systems-2026:stage-2
+    advancement_paths: [["nto:aerospace-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1468,6 +1622,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/aerokosmicheskie-sistemy/
   - id: nto:aerospace-systems-2026:final
+    advancement_paths: [["nto:aerospace-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1511,6 +1667,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:autonomous-transport-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1519,6 +1677,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/avtonomnye-transportnye-sistemy/
   - id: nto:autonomous-transport-systems-2026:stage-2
+    advancement_paths: [["nto:autonomous-transport-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1527,6 +1687,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/avtonomnye-transportnye-sistemy/
   - id: nto:autonomous-transport-systems-2026:final
+    advancement_paths: [["nto:autonomous-transport-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1568,6 +1730,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:unmanned-aircraft-systems-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1576,6 +1740,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/bespilotnye-aviatsionnye-sistemy/
   - id: nto:unmanned-aircraft-systems-2026:stage-2
+    advancement_paths: [["nto:unmanned-aircraft-systems-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1584,6 +1750,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/bespilotnye-aviatsionnye-sistemy/
   - id: nto:unmanned-aircraft-systems-2026:final
+    advancement_paths: [["nto:unmanned-aircraft-systems-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'
@@ -1626,6 +1794,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:flying-robotics-2026:stage-1
+    advancement_paths: []
+    terminal: false
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
@@ -1634,6 +1804,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/letayushchaya-robototekhnika/
   - id: nto:flying-robotics-2026:stage-2
+    advancement_paths: [["nto:flying-robotics-2026:stage-1"]]
+    terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-11-05T00:00:00+03:00'
@@ -1642,6 +1814,8 @@ events:
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/letayushchaya-robototekhnika/
   - id: nto:flying-robotics-2026:final
+    advancement_paths: [["nto:flying-robotics-2026:stage-2"]]
+    terminal: true
     kind: final
     title: Финал (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2027-02-15T00:00:00+03:00'

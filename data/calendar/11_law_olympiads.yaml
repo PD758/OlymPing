@@ -53,6 +53,7 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable1
       - id: other:hse-highest-test-law-2026:final
+        terminal: true
         kind: final
         title: "Период заключительного этапа"
         starts_at: "2027-02-05T00:00:00+03:00"

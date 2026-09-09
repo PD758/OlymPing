@@ -49,6 +49,8 @@ def ctftime_to_seed(item: CTFtimeEvent) -> EventSeed:
             MilestoneSeed(
                 id=f"{event_id}:competition",
                 kind=MilestoneKind.COMPETITION,
+                advancement_paths=[],
+                terminal=True,
                 title="Соревнование",
                 starts_at=item.start,
                 ends_at=item.finish,

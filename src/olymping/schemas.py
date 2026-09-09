@@ -21,9 +21,16 @@ class MilestoneSeed(BaseModel):
     location: str | None = Field(default=None, max_length=300)
     is_online: bool | None = None
     source_url: HttpUrl | None = None
+    results_at: datetime | None = None
+    advancement_paths: list[list[str]] | None = None
+    terminal: bool | None = None
 
     @model_validator(mode="after")
     def validate_dates(self) -> MilestoneSeed:
+        if self.results_at is not None and self.results_at.tzinfo is None:
+            raise ValueError("results_at must contain a timezone offset")
+        if self.advancement_paths is not None and any(not path for path in self.advancement_paths):
+            raise ValueError("advancement paths must not contain an empty alternative")
         if self.starts_at is not None and self.starts_at.tzinfo is None:
             raise ValueError("starts_at must contain a timezone offset")
         if self.ends_at is not None and self.ends_at.tzinfo is None:

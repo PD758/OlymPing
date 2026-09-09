@@ -5,7 +5,7 @@ events:
     title: "Международная олимпиада по промышленной разработке PROD"
     description: "Олимпиада по практической разработке для школьников: фронтенд, бэкенд, мобильная разработка и MLOps-инжиниринг. Официальная страница описывает этапы, но не публикует их точные даты для текущего цикла."
     category: informatics
-    tags: [informatics, programming, software-engineering, frontend, backend, mobile, mlops, prod]
+    tags: ["informatics", "programming", "software-engineering", "frontend", "backend", "mobile", "mlops", "prod", "team"]
     url: https://prodcontest.com/
     source_url: https://prodcontest.com/
     status: tbd
@@ -51,6 +51,8 @@ events:
         status: confirmed
         source_url: https://dano.hse.ru/
       - id: other:dano-2026:stage-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый отборочный этап"
         starts_at: "2026-10-09T00:00:00+03:00"
@@ -60,6 +62,8 @@ events:
         is_online: true
         source_url: https://dano.hse.ru/
       - id: other:dano-2026:stage-2
+        advancement_paths: [["other:dano-2026:stage-1"]]
+        terminal: false
         kind: qualifier
         title: "Второй отборочный этап"
         starts_at: "2026-11-01T00:00:00+03:00"
@@ -68,6 +72,8 @@ events:
         is_online: true
         source_url: https://dano.hse.ru/
       - id: other:dano-2026:final-task
+        advancement_paths: [["other:dano-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Задачный тур заключительного этапа"
         starts_at: "2026-12-18T00:00:00+03:00"
@@ -75,6 +81,8 @@ events:
         status: confirmed
         source_url: https://dano.hse.ru/
       - id: other:dano-2026:final-project
+        advancement_paths: [["other:dano-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Проектный тур заключительного этапа"
         starts_at: "2026-12-18T00:00:00+03:00"

@@ -24,6 +24,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-nemetskomu-yazyku-2026-09-04
       - id: vosh:german-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-11T09:00:00+03:00"
@@ -35,6 +37,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-nemetskomu-yazyku-2026-09-04
       - id: vosh:german-2026:municipal-stage
+        advancement_paths: [["vosh:german-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -44,6 +48,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:german-2026:regional-stage
+        advancement_paths: [["vosh:german-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -53,6 +59,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:german-2026:final-stage
+        advancement_paths: [["vosh:german-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -85,6 +93,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-literature-2026-09-07
       - id: vosh:literature-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-14T09:00:00+03:00"
@@ -96,6 +106,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-literature-2026-09-07
       - id: vosh:literature-2026:municipal-stage
+        advancement_paths: [["vosh:literature-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -105,6 +117,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:literature-2026:regional-stage
+        advancement_paths: [["vosh:literature-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -114,6 +128,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:literature-2026:final-stage
+        advancement_paths: [["vosh:literature-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -146,6 +162,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:technology-home-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап — теоретический тур"
         starts_at: "2026-09-15T09:00:00+03:00"
@@ -168,6 +186,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:technology-home-2026:municipal-stage
+        advancement_paths: [["vosh:technology-home-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -177,6 +197,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:technology-home-2026:regional-stage
+        advancement_paths: [["vosh:technology-home-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -186,6 +208,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:technology-home-2026:final-stage
+        advancement_paths: [["vosh:technology-home-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -218,6 +242,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:technology-technical-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап — теоретический тур"
         starts_at: "2026-09-15T09:00:00+03:00"
@@ -240,6 +266,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:technology-technical-2026:municipal-stage
+        advancement_paths: [["vosh:technology-technical-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -249,6 +277,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:technology-technical-2026:regional-stage
+        advancement_paths: [["vosh:technology-technical-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -258,6 +288,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:technology-technical-2026:final-stage
+        advancement_paths: [["vosh:technology-technical-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -290,6 +322,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:english-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-16T09:00:00+03:00"
@@ -301,6 +335,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:english-2026:municipal-stage
+        advancement_paths: [["vosh:english-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -310,6 +346,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:english-2026:regional-stage
+        advancement_paths: [["vosh:english-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -319,6 +357,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:english-2026:final-stage
+        advancement_paths: [["vosh:english-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -351,6 +391,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:social-science-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-17T09:00:00+03:00"
@@ -362,6 +404,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:social-science-2026:municipal-stage
+        advancement_paths: [["vosh:social-science-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -371,6 +415,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:social-science-2026:regional-stage
+        advancement_paths: [["vosh:social-science-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -380,6 +426,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:social-science-2026:final-stage
+        advancement_paths: [["vosh:social-science-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -412,6 +460,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:obzr-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап — теоретический тур"
         starts_at: "2026-09-21T09:00:00+03:00"
@@ -434,6 +484,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:obzr-2026:municipal-stage
+        advancement_paths: [["vosh:obzr-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -443,6 +495,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:obzr-2026:regional-stage
+        advancement_paths: [["vosh:obzr-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -452,6 +506,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:obzr-2026:final-stage
+        advancement_paths: [["vosh:obzr-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -484,6 +540,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:russian-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-22T09:00:00+03:00"
@@ -495,6 +553,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:russian-2026:municipal-stage
+        advancement_paths: [["vosh:russian-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -504,6 +564,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:russian-2026:regional-stage
+        advancement_paths: [["vosh:russian-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -513,6 +575,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:russian-2026:final-stage
+        advancement_paths: [["vosh:russian-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -545,6 +609,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:astronomy-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-23T09:00:00+03:00"
@@ -556,6 +622,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:astronomy-2026:municipal-stage
+        advancement_paths: [["vosh:astronomy-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -565,6 +633,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:astronomy-2026:regional-stage
+        advancement_paths: [["vosh:astronomy-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -574,6 +644,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:astronomy-2026:final-stage
+        advancement_paths: [["vosh:astronomy-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -606,6 +678,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:physical-culture-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап — теоретический тур"
         starts_at: "2026-09-24T09:00:00+03:00"
@@ -628,6 +702,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:physical-culture-2026:municipal-stage
+        advancement_paths: [["vosh:physical-culture-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -637,6 +713,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:physical-culture-2026:regional-stage
+        advancement_paths: [["vosh:physical-culture-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -646,6 +724,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:physical-culture-2026:final-stage
+        advancement_paths: [["vosh:physical-culture-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -678,6 +758,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:history-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-25T09:00:00+03:00"
@@ -689,6 +771,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:history-2026:municipal-stage
+        advancement_paths: [["vosh:history-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -698,6 +782,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:history-2026:regional-stage
+        advancement_paths: [["vosh:history-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -707,6 +793,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:history-2026:final-stage
+        advancement_paths: [["vosh:history-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -739,6 +827,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:italian-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-28T09:00:00+03:00"
@@ -750,6 +840,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:italian-2026:municipal-stage
+        advancement_paths: [["vosh:italian-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -759,6 +851,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:italian-2026:regional-stage
+        advancement_paths: [["vosh:italian-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -768,6 +862,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:italian-2026:final-stage
+        advancement_paths: [["vosh:italian-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -800,6 +896,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:art-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-29T09:00:00+03:00"
@@ -811,6 +909,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:art-2026:municipal-stage
+        advancement_paths: [["vosh:art-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -820,6 +920,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:art-2026:regional-stage
+        advancement_paths: [["vosh:art-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -829,6 +931,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:art-2026:final-stage
+        advancement_paths: [["vosh:art-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -861,6 +965,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:physics-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-09-30T09:00:00+03:00"
@@ -872,6 +978,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:physics-2026:municipal-stage
+        advancement_paths: [["vosh:physics-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -881,6 +989,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:physics-2026:regional-stage
+        advancement_paths: [["vosh:physics-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -890,6 +1000,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:physics-2026:final-stage
+        advancement_paths: [["vosh:physics-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -922,6 +1034,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:spanish-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-01T09:00:00+03:00"
@@ -933,6 +1047,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:spanish-2026:municipal-stage
+        advancement_paths: [["vosh:spanish-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -942,6 +1058,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:spanish-2026:regional-stage
+        advancement_paths: [["vosh:spanish-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -951,6 +1069,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:spanish-2026:final-stage
+        advancement_paths: [["vosh:spanish-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -983,6 +1103,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-robotics-2026:schedule
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап — теоретический тур"
         starts_at: "2026-10-02T09:00:00+03:00"
@@ -1005,6 +1127,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-robotics-2026:municipal-stage
+        advancement_paths: [["vosh:informatics-robotics-2026:schedule"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1014,6 +1138,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-robotics-2026:regional-stage
+        advancement_paths: [["vosh:informatics-robotics-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1023,6 +1149,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-robotics-2026:final-stage
+        advancement_paths: [["vosh:informatics-robotics-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1055,6 +1183,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:geography-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-05T09:00:00+03:00"
@@ -1066,6 +1196,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:geography-2026:municipal-stage
+        advancement_paths: [["vosh:geography-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1075,6 +1207,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:geography-2026:regional-stage
+        advancement_paths: [["vosh:geography-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1084,6 +1218,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:geography-2026:final-stage
+        advancement_paths: [["vosh:geography-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1116,6 +1252,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:biology-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-06T09:00:00+03:00"
@@ -1127,6 +1265,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:biology-2026:municipal-stage
+        advancement_paths: [["vosh:biology-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1136,6 +1276,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:biology-2026:regional-stage
+        advancement_paths: [["vosh:biology-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1145,6 +1287,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:biology-2026:final-stage
+        advancement_paths: [["vosh:biology-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1177,6 +1321,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:french-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-07T09:00:00+03:00"
@@ -1188,6 +1334,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:french-2026:municipal-stage
+        advancement_paths: [["vosh:french-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1197,6 +1345,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:french-2026:regional-stage
+        advancement_paths: [["vosh:french-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1206,6 +1356,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:french-2026:final-stage
+        advancement_paths: [["vosh:french-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1238,6 +1390,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:ecology-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-08T09:00:00+03:00"
@@ -1249,6 +1403,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:ecology-2026:municipal-stage
+        advancement_paths: [["vosh:ecology-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1258,6 +1414,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:ecology-2026:regional-stage
+        advancement_paths: [["vosh:ecology-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1267,6 +1425,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:ecology-2026:final-stage
+        advancement_paths: [["vosh:ecology-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1299,6 +1459,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:mathematics-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-13T09:00:00+03:00"
@@ -1310,6 +1472,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:mathematics-2026:municipal-stage
+        advancement_paths: [["vosh:mathematics-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1319,6 +1483,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:mathematics-2026:regional-stage
+        advancement_paths: [["vosh:mathematics-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1328,6 +1494,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:mathematics-2026:final-stage
+        advancement_paths: [["vosh:mathematics-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1360,6 +1528,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:law-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-14T09:00:00+03:00"
@@ -1371,6 +1541,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:law-2026:municipal-stage
+        advancement_paths: [["vosh:law-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1380,6 +1552,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:law-2026:regional-stage
+        advancement_paths: [["vosh:law-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1389,6 +1563,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:law-2026:final-stage
+        advancement_paths: [["vosh:law-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1421,6 +1597,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:chemistry-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-15T09:00:00+03:00"
@@ -1432,6 +1610,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:chemistry-2026:municipal-stage
+        advancement_paths: [["vosh:chemistry-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1441,6 +1621,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:chemistry-2026:regional-stage
+        advancement_paths: [["vosh:chemistry-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1450,6 +1632,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:chemistry-2026:final-stage
+        advancement_paths: [["vosh:chemistry-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1482,6 +1666,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:chinese-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-16T09:00:00+03:00"
@@ -1493,6 +1679,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:chinese-2026:municipal-stage
+        advancement_paths: [["vosh:chinese-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1502,6 +1690,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:chinese-2026:regional-stage
+        advancement_paths: [["vosh:chinese-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1511,6 +1701,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:chinese-2026:final-stage
+        advancement_paths: [["vosh:chinese-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1543,6 +1735,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-programming-2026:schedule
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-20T09:00:00+03:00"
@@ -1554,6 +1748,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-programming-2026:municipal-stage
+        advancement_paths: [["vosh:informatics-programming-2026:schedule"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1563,6 +1759,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-programming-2026:regional-stage
+        advancement_paths: [["vosh:informatics-programming-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1572,6 +1770,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-programming-2026:final-stage
+        advancement_paths: [["vosh:informatics-programming-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1604,6 +1804,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-security-2026:schedule
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-21T09:00:00+03:00"
@@ -1615,6 +1817,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-security-2026:municipal-stage
+        advancement_paths: [["vosh:informatics-security-2026:schedule"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1624,6 +1828,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-security-2026:regional-stage
+        advancement_paths: [["vosh:informatics-security-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1633,6 +1839,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-security-2026:final-stage
+        advancement_paths: [["vosh:informatics-security-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1665,6 +1873,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:economics-2026:school-stage
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-22T09:00:00+03:00"
@@ -1676,6 +1886,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:economics-2026:municipal-stage
+        advancement_paths: [["vosh:economics-2026:school-stage"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1685,6 +1897,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:economics-2026:regional-stage
+        advancement_paths: [["vosh:economics-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1694,6 +1908,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:economics-2026:final-stage
+        advancement_paths: [["vosh:economics-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -1726,6 +1942,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-ai-2026:schedule
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Школьный этап (7–11 классы)"
         starts_at: "2026-10-23T09:00:00+03:00"
@@ -1737,6 +1955,8 @@ events:
         is_online: true
         source_url: https://vos.olimpiada.ru/2026/school#schedule
       - id: vosh:informatics-ai-2026:municipal-stage
+        advancement_paths: [["vosh:informatics-ai-2026:schedule"]]
+        terminal: false
         kind: qualifier
         title: "Муниципальный этап — дата уточняется"
         precision: unknown
@@ -1746,6 +1966,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-ai-2026:regional-stage
+        advancement_paths: [["vosh:informatics-ai-2026:municipal-stage"]]
+        terminal: false
         kind: qualifier
         title: "Региональный этап — дата уточняется"
         precision: unknown
@@ -1755,6 +1977,8 @@ events:
         is_online: false
         source_url: https://vos.olimpiada.ru/
       - id: vosh:informatics-ai-2026:final-stage
+        advancement_paths: [["vosh:informatics-ai-2026:regional-stage"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown

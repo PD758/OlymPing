@@ -28,6 +28,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/participants/schedule/
       - id: nto:information-security-2026:schedule
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "I этап — индивидуальный"
         starts_at: "2026-09-17T00:00:00+03:00"
@@ -36,6 +38,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
       - id: nto:information-security-2026:stage-2
+        advancement_paths: [["nto:information-security-2026:schedule"]]
+        terminal: false
         kind: team_stage
         title: "II этап — командный"
         starts_at: "2026-11-05T00:00:00+03:00"
@@ -44,6 +48,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/informatsionnaya-bezopasnost/
       - id: nto:information-security-2026:final
+        advancement_paths: [["nto:information-security-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Период проведения финала"
         starts_at: "2027-02-15T00:00:00+03:00"
@@ -80,6 +86,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/participants/schedule/
       - id: nto:pift-2026:stage-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "I этап — индивидуальный"
         starts_at: "2026-09-17T00:00:00+03:00"
@@ -88,6 +96,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
       - id: nto:pift-2026:stage-2
+        advancement_paths: [["nto:pift-2026:stage-1"]]
+        terminal: false
         kind: team_stage
         title: "II этап — командный"
         starts_at: "2026-11-05T00:00:00+03:00"
@@ -96,6 +106,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/financial-engineering/
       - id: nto:pift-2026:final
+        advancement_paths: [["nto:pift-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Период проведения финала"
         starts_at: "2027-02-15T00:00:00+03:00"
@@ -132,6 +144,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/participants/schedule/
       - id: nto:big-data-machine-learning-2026:stage-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "I этап — индивидуальный"
         starts_at: "2026-09-17T00:00:00+03:00"
@@ -141,6 +155,8 @@ events:
         is_online: true
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
       - id: nto:big-data-machine-learning-2026:stage-2
+        advancement_paths: [["nto:big-data-machine-learning-2026:stage-1"]]
+        terminal: false
         kind: team_stage
         title: "II этап — командный"
         starts_at: "2026-11-05T00:00:00+03:00"
@@ -149,6 +165,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/bolshie-dannye-i-mashinnoe-obuchenie/
       - id: nto:big-data-machine-learning-2026:final
+        advancement_paths: [["nto:big-data-machine-learning-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Период проведения финала"
         starts_at: "2027-02-15T00:00:00+03:00"
@@ -185,6 +203,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/participants/schedule/
       - id: nto:artificial-intelligence-2026:stage-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "I этап — индивидуальный"
         starts_at: "2026-09-17T00:00:00+03:00"
@@ -194,6 +214,8 @@ events:
         is_online: true
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
       - id: nto:artificial-intelligence-2026:stage-2
+        advancement_paths: [["nto:artificial-intelligence-2026:stage-1"]]
+        terminal: false
         kind: team_stage
         title: "II этап — командный"
         starts_at: "2026-11-05T00:00:00+03:00"
@@ -202,6 +224,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/iskusstvennyy-intellekt/
       - id: nto:artificial-intelligence-2026:final
+        advancement_paths: [["nto:artificial-intelligence-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Период проведения финала"
         starts_at: "2027-02-15T00:00:00+03:00"
@@ -238,6 +262,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/participants/schedule/
       - id: nto:data-analysis-decision-making-2026:stage-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "I этап — индивидуальный"
         starts_at: "2026-09-17T00:00:00+03:00"
@@ -247,6 +273,8 @@ events:
         is_online: true
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
       - id: nto:data-analysis-decision-making-2026:stage-2
+        advancement_paths: [["nto:data-analysis-decision-making-2026:stage-1"]]
+        terminal: false
         kind: team_stage
         title: "II этап — командный"
         starts_at: "2026-11-05T00:00:00+03:00"
@@ -255,6 +283,8 @@ events:
         status: confirmed
         source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/analiz-dannykh-i-prinyatie-resheniy/
       - id: nto:data-analysis-decision-making-2026:final
+        advancement_paths: [["nto:data-analysis-decision-making-2026:stage-2"]]
+        terminal: true
         kind: final
         title: "Период проведения финала"
         starts_at: "2027-02-15T00:00:00+03:00"
@@ -291,6 +321,8 @@ events:
         status: confirmed
         source_url: https://junior.ntcontest.ru/
       - id: nto-junior:iitech-2026:qualifier
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Отборочный онлайн-этап"
         starts_at: "2026-10-20T00:00:00+03:00"
@@ -300,6 +332,8 @@ events:
         is_online: true
         source_url: https://junior.ntcontest.ru/
       - id: nto-junior:iitech-2026:final
+        advancement_paths: [["nto-junior:iitech-2026:qualifier"]]
+        terminal: true
         kind: final
         title: "Заключительный этап в регионах"
         starts_at: "2026-12-07T00:00:00+03:00"

@@ -238,6 +238,14 @@ def test_upgrade_from_multi_user_preserves_catalog_and_reminder_history(tmp_path
                     "updated_at": timestamp,
                 },
             )
+            connection.execute(
+                sa.text(
+                    "INSERT INTO stage_progress "
+                    "(telegram_user_id, milestone_id, outcome, created_at, updated_at) "
+                    "VALUES (101, 'rsosh:migration-test:final', 'passed', :now, :now)"
+                ),
+                {"now": timestamp},
+            )
     finally:
         engine.dispose()
 
@@ -258,12 +266,28 @@ def test_upgrade_from_multi_user_preserves_catalog_and_reminder_history(tmp_path
                 == "watching"
             )
             assert (
+                connection.execute(sa.text("SELECT origin FROM event_preferences")).scalar_one()
+                == "manual"
+            )
+            assert (
+                connection.execute(sa.text("SELECT results_at FROM milestones")).scalar_one()
+                is None
+            )
+            assert (
+                connection.execute(sa.text("SELECT advancement_paths FROM milestones")).scalar_one()
+                is None
+            )
+            assert (
                 connection.execute(sa.text("SELECT id FROM reminder_rules")).scalar_one()
                 == "rule:migration-test"
             )
             assert (
                 connection.execute(sa.text("SELECT summary FROM catalog_notices")).scalar_one()
                 == "saved catalog history"
+            )
+            assert (
+                connection.execute(sa.text("SELECT outcome FROM stage_progress")).scalar_one()
+                == "passed"
             )
     finally:
         engine.dispose()

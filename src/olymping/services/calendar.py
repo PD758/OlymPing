@@ -17,6 +17,7 @@ from olymping.models import (
 )
 from olymping.services.availability import registration_deadline
 from olymping.services.filters import event_is_enabled
+from olymping.services.progression import completed_for_user, stage_access, user_outcomes
 from olymping.services.reminders import aware_utc
 
 
@@ -49,9 +50,23 @@ async def upcoming_events(
         .order_by(Milestone.starts_at, Milestone.id)
     )
     items: list[tuple[Event, Milestone]] = []
+    preferences = {
+        p.event_id: p
+        for p in await session.scalars(
+            select(EventPreference).where(
+                EventPreference.telegram_user_id == profile.telegram_user_id
+            )
+        )
+    }
+    outcomes = await user_outcomes(session, profile.telegram_user_id)
     for milestone in result.scalars():
+        if (
+            stage_access(milestone, {s.id: s for s in milestone.event.milestones}, outcomes)
+            == "blocked"
+        ):
+            continue
         if milestone.event.status != RecordStatus.CANCELLED.value and event_is_enabled(
-            profile, milestone.event
+            profile, milestone.event, preference=preferences.get(milestone.event_id)
         ):
             items.append((milestone.event, milestone))
         if len(items) >= limit:
@@ -76,7 +91,19 @@ async def all_olympiads(
         .order_by(Event.source_kind, Event.title)
         .limit(limit * 2)
     )
-    return [event for event in result.scalars() if event_is_enabled(profile, event)][:limit]
+    preferences = {
+        p.event_id: p
+        for p in await session.scalars(
+            select(EventPreference).where(
+                EventPreference.telegram_user_id == profile.telegram_user_id
+            )
+        )
+    }
+    return [
+        event
+        for event in result.scalars()
+        if event_is_enabled(profile, event, preference=preferences.get(event.id))
+    ][:limit]
 
 
 def registration_closes_at(event: Event, now: datetime) -> datetime | None:
@@ -127,10 +154,21 @@ async def open_registration_events(
             ),
         )
     )
+    preferences = {
+        p.event_id: p
+        for p in await session.scalars(
+            select(EventPreference).where(
+                EventPreference.telegram_user_id == profile.telegram_user_id
+            )
+        )
+    }
+    outcomes = await user_outcomes(session, profile.telegram_user_id)
     active = [
         event
         for event in events
-        if event_is_enabled(profile, event) and registration_closes_at(event, now) is not None
+        if event_is_enabled(profile, event, preference=preferences.get(event.id))
+        and not completed_for_user(event, outcomes, aware_utc(now))
+        and registration_closes_at(event, now) is not None
     ]
     return sorted(
         active,

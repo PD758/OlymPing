@@ -55,6 +55,7 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable1
       - id: other:hse-economics-2026:final
+        terminal: true
         kind: final
         title: "Заключительный этап"
         starts_at: "2027-02-05T00:00:00+03:00"
@@ -110,6 +111,7 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable1
       - id: other:hse-financial-literacy-2026:final
+        terminal: true
         kind: final
         title: "Заключительный этап"
         starts_at: "2027-02-05T00:00:00+03:00"
@@ -165,6 +167,7 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable1
       - id: other:hse-business-basics-2026:final
+        terminal: true
         kind: final
         title: "Заключительный этап"
         starts_at: "2027-02-05T00:00:00+03:00"
@@ -197,6 +200,7 @@ events:
         status: tbd
         source_url: https://sibiriada.org/sroki_provedeniya.html
       - id: other:sibiriada-economics-2026:final
+        terminal: true
         kind: final
         title: "Заключительный этап в Бердске — дата уточняется (до 31.03.2027)"
         precision: unknown

@@ -31,6 +31,7 @@ from olymping.presentation import telegram_time
 from olymping.services.availability import registration_deadline
 from olymping.services.delivery import DeliveryDeferred
 from olymping.services.filters import event_is_enabled
+from olymping.services.progression import completed_for_user, stage_access, user_outcomes
 
 logger = logging.getLogger(__name__)
 SendMessage = Callable[[int, str], Awaitable[None]]
@@ -192,7 +193,7 @@ async def dispatch_due_reminders(
         return 0
     milestone_result = await session.execute(
         select(Milestone)
-        .options(selectinload(Milestone.event))
+        .options(selectinload(Milestone.event).selectinload(Event.milestones))
         .where(
             Milestone.status == RecordStatus.CONFIRMED.value,
             Milestone.starts_at.is_not(None),
@@ -201,12 +202,20 @@ async def dispatch_due_reminders(
     preference_result = await session.execute(
         select(EventPreference).where(EventPreference.telegram_user_id == owner_id)
     )
-    preferences = {item.event_id: item.interest for item in preference_result.scalars()}
+    preferences = {item.event_id: item for item in preference_result.scalars()}
+    outcomes = await user_outcomes(session, owner_id)
     sent = 0
     for milestone in milestone_result.scalars():
         event = milestone.event
-        interest = preferences.get(event.id)
-        if event.status == RecordStatus.CANCELLED.value or not event_is_enabled(profile, event):
+        preference = preferences.get(event.id)
+        interest = preference.interest if preference else None
+        if completed_for_user(event, outcomes, now):
+            continue
+        if event.status == RecordStatus.CANCELLED.value or not event_is_enabled(
+            profile, event, preference=preference
+        ):
+            continue
+        if stage_access(milestone, {s.id: s for s in event.milestones}, outcomes) == "blocked":
             continue
         if interest not in {
             EventInterest.WATCHING.value,
@@ -340,9 +349,9 @@ async def dispatch_registration_digest(
         event = opening.event
         if event.id in notified or event.status == RecordStatus.CANCELLED.value:
             continue
-        if not event_is_enabled(profile, event):
-            continue
         preference = await session.get(EventPreference, (owner_id, event.id))
+        if not event_is_enabled(profile, event, preference=preference):
+            continue
         if preference is not None and preference.interest in {
             EventInterest.IGNORED.value,
             EventInterest.REGISTERED.value,
@@ -380,6 +389,7 @@ async def run_notification_cycle(
     send: SendMessage,
     grace_hours: int,
     registration_digest: bool = False,
+    send_with_actions: Callable[[int, str, list[str]], Awaitable[None]] | None = None,
 ) -> tuple[int, int]:
     async with factory() as session:
         reminders = await dispatch_due_reminders(
@@ -392,5 +402,7 @@ async def run_notification_cycle(
 
         await collect_review_batch(session)
         await session.commit()
-        changes = await dispatch_reviewed_notices(session, owner_id=owner_id, send=send)
+        changes = await dispatch_reviewed_notices(
+            session, owner_id=owner_id, send=send, send_with_actions=send_with_actions
+        )
         return reminders, changes

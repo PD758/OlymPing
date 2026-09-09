@@ -26,10 +26,12 @@ from olymping.services.availability import open_phases
 from olymping.services.delivery import DeliveryDeferred
 from olymping.services.filters import event_is_enabled
 from olymping.services.importer import format_calendar_value
+from olymping.services.progression import stage_access, user_outcomes
 from olymping.services.users import require_admin_profile
 
 logger = logging.getLogger(__name__)
 SendMessage = Callable[[int, str], Awaitable[None]]
+SendWithActions = Callable[[int, str, list[str]], Awaitable[None]]
 Notice = CatalogNotice | OpenEventNotice
 
 
@@ -110,7 +112,18 @@ def event_fingerprint(event: Event) -> str:
         "location",
         "is_online",
     )
-    stage_fields = ("id", "title", "kind", "status", "starts_at", "ends_at", "precision")
+    stage_fields = (
+        "id",
+        "title",
+        "kind",
+        "status",
+        "starts_at",
+        "ends_at",
+        "precision",
+        "results_at",
+        "advancement_paths",
+        "terminal",
+    )
     payload = {field: value(getattr(event, field)) for field in fields}
     payload["milestones"] = [
         {field: value(getattr(stage, field)) for field in stage_fields}
@@ -190,6 +203,9 @@ async def collect_review_batch(session: AsyncSession) -> int | None:
 
 
 def _notice_key(notice: Notice, snapshot: str) -> tuple[str, ...]:
+    if isinstance(notice, CatalogNotice) and notice.kind.startswith("subscription_"):
+        # Personal transitions are not global calendar facts, including repeated add/remove cycles.
+        return (notice.kind, str(notice.id))
     if isinstance(notice, OpenEventNotice):
         return (notice.event_id, snapshot, "open", notice.phase)
     # A title/summary rewrite does not make an existing event new again.
@@ -447,6 +463,7 @@ async def dispatch_reviewed_notices(
     now: datetime | None = None,
     catalog_only: bool = False,
     open_only: bool = False,
+    send_with_actions: SendWithActions | None = None,
 ) -> int:
     now = now or datetime.now(UTC)
     profile = await session.get(UserProfile, owner_id)
@@ -462,6 +479,7 @@ async def dispatch_reviewed_notices(
         )
     )
     sent = 0
+    outcomes = await user_outcomes(session, owner_id)
     for batch in batches:
         delivery = await session.get(ReviewDelivery, (batch.id, owner_id))
         if delivery is not None:
@@ -509,13 +527,24 @@ async def dispatch_reviewed_notices(
                 and selection.selected
                 and event is not None
                 and event_fingerprint(event) == selection.snapshot_hash
-                and event_is_enabled(profile, event)
                 and (pref is None or pref.interest != "ignored")
             )
             chosen: list[Notice] = []
             for notice in candidates:
-                allowed = valid
+                allowed = (
+                    valid
+                    and event is not None
+                    and event_is_enabled(profile, event, preference=pref)
+                )
                 if isinstance(notice, CatalogNotice):
+                    if notice.kind.startswith("subscription_"):
+                        allowed = valid and (
+                            pref is None
+                            if notice.kind == "subscription_removed"
+                            else pref is not None
+                            and pref.origin == "automatic"
+                            and pref.interest == "watching"
+                        )
                     enabled = (
                         profile.notify_new_events
                         if notice.kind == "new_event"
@@ -547,6 +576,16 @@ async def dispatch_reviewed_notices(
                             and pref.interest == "registered"
                         )
                     )
+                    if event is not None:
+                        stage = next(
+                            (s for s in event.milestones if s.id == notice.milestone_id), None
+                        )
+                        if (
+                            stage is not None
+                            and stage_access(stage, {s.id: s for s in event.milestones}, outcomes)
+                            == "blocked"
+                        ):
+                            allowed = False
                 if not allowed:
                     if isinstance(notice, CatalogNotice):
                         notice.sent_at = now
@@ -585,7 +624,17 @@ async def dispatch_reviewed_notices(
                 session.add(delivery)
             delivery.attempts += 1
             try:
-                await send(owner_id, text)
+                action_events = list(
+                    dict.fromkeys(
+                        n.event_id
+                        for n in delivered
+                        if isinstance(n, CatalogNotice) and n.kind.startswith("subscription_")
+                    )
+                )
+                if send_with_actions is not None and action_events:
+                    await send_with_actions(owner_id, text, action_events)
+                else:
+                    await send(owner_id, text)
             except DeliveryDeferred as exc:
                 delivery.attempts -= 1
                 delivery.next_attempt_at = datetime.now(UTC) + timedelta(seconds=exc.retry_after)

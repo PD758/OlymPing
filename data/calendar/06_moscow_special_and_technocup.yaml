@@ -19,6 +19,7 @@ events:
         status: tbd
         source_url: https://conf.profil.mos.ru/academ/index
       - id: npk:science-for-life-2026:final
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown
@@ -30,7 +31,7 @@ events:
     title: "Открытая городская НПК «Инженеры будущего»"
     description: "Московская научно-практическая конференция инженерной и ИТ-направленности для учащихся 7–11 классов. Календарь цикла 2026/27 ещё не опубликован."
     category: engineering
-    tags: [npk, moscow, engineering, it, minpros, gir]
+    tags: ["npk", "moscow", "engineering", "it", "minpros", "gir", "research", "preprofessional"]
     url: https://conf.profil.mos.ru/inj/
     source_url: https://conf.profil.mos.ru/inj/
     status: tbd
@@ -46,6 +47,7 @@ events:
         status: tbd
         source_url: https://conf.profil.mos.ru/inj/
       - id: npk:engineers-of-the-future-2026:final
+        terminal: true
         kind: final
         title: "Очный заключительный этап — дата уточняется"
         precision: unknown
@@ -100,12 +102,16 @@ events:
         status: tbd
         source_url: https://techno-cup.ru/
       - id: rsosh:technocup-2026:qualifier
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Отборочные этапы — расписание уточняется"
         precision: unknown
         status: tbd
         source_url: https://techno-cup.ru/
       - id: rsosh:technocup-2026:final
+        advancement_paths: [["rsosh:technocup-2026:qualifier"]]
+        terminal: true
         kind: final
         title: "Заключительный этап — дата уточняется"
         precision: unknown

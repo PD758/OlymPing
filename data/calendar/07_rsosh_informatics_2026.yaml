@@ -41,6 +41,7 @@ events:
         is_online: null
         source_url: https://ai.edu.gov.ru/
       - id: rsosh:all-russian-ai-2026:final
+        terminal: true
         kind: final
         title: "Заключительный этап"
         starts_at: "2026-11-16T00:00:00+03:00"
@@ -65,6 +66,8 @@ events:
     max_grade: 11
     milestones:
       - id: rsosh:all-siberian-informatics-2026:qualifier
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Отборочный этап"
         starts_at: "2026-11-08T00:00:00+07:00"
@@ -81,6 +84,8 @@ events:
         is_online: true
         source_url: https://sesc.nsu.ru/olymp/
       - id: rsosh:all-siberian-informatics-2026:final
+        advancement_paths: [["rsosh:all-siberian-informatics-2026:qualifier"]]
+        terminal: true
         kind: final
         title: "Заключительный этап"
         starts_at: "2027-02-21T00:00:00+07:00"
@@ -104,6 +109,8 @@ events:
     max_grade: 11
     milestones:
       - id: rsosh:izumrud-informatics-2026:qualifier
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Отборочный этап"
         starts_at: "2026-09-01T00:00:00+05:00"
@@ -113,6 +120,8 @@ events:
         is_online: true
         source_url: https://dovuz.urfu.ru/
       - id: rsosh:izumrud-informatics-2026:final
+        advancement_paths: [["rsosh:izumrud-informatics-2026:qualifier"]]
+        terminal: true
         kind: final
         title: "Заключительный этап"
         starts_at: "2027-01-30T00:00:00+05:00"

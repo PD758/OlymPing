@@ -84,6 +84,7 @@ Administrator-only commands:
 - `/sync` — reload YAML, synchronize CTFtime, and prepare a review of changes and currently
   open registration or participation windows;
 - `/reviews` — review pending broadcasts, select olympiads, approve delivery or save silently.
+- `/gaps` — administrator list of completed stages with missing continuation dates or links.
 
 `Открытая регистрация и участие` in settings controls these notices and the administrator's
 daily registration digest. Calendar data changes immediately, but every catalog, availability,
@@ -124,9 +125,31 @@ Open an olympiad and choose `Этапы и результаты` to record wheth
 passed to the next stage, did not pass, or skipped a particular stage. `Не интересно`
 mutes the whole olympiad while keeping it visible in `/all` so the choice can be reverted.
 
+Results now control explicitly linked stages. Failing a prerequisite hides only the dependent
+paths from upcoming views and reminders; another qualifying attempt can still unlock a final.
+Unknown results leave stages visible with “Проход не подтверждён”. Exhausted participation
+is marked 🏁 in the catalog and explained in the card; correcting a result restores the path.
+The bot asks subscribed participants after the published result time, or three days before
+the next confirmed stage at 20:00 in their timezone, never before the preceding stage ends.
+“Пока нет результатов” snoozes the question for one day. Silent users are not removed;
+automatic questions stop when the next stage starts. Event reminder muting also mutes these
+questions. Missing continuation dates produce a durable administrator alert and appear in
+`/gaps`, rather than a daily repeated alert.
+
+Subscriptions record their origin. Migration preserves **all legacy subscriptions as manual**.
+Onboarding and automatic subscriptions on import record `automatic`; manual actions record
+`manual`, including an explicit unsubscribe so the next import cannot undo it. Calendar imports
+(including `/sync` and startup) reconcile automatic subscriptions against the current questionnaire.
+Manual subscriptions and registrations bypass topic filters, but still respect disabled sources
+and the existing grade filter. Ignored events, registrations and results are preserved.
+Personal add/remove notices wait for normal administrator broadcast review. Removal notices
+explain changed topics and provide buttons for the event card and questionnaire; they can be
+delivered even when the event no longer matches the recipient's topics. Rejecting a broadcast
+does not undo the subscription changes. Repeating an unchanged import does not queue new notices.
+
 Personal views (`Сегодня`, `7 дней`, `30 дней`, and `Открыта регистрация`) exclude
-events marked `Не интересно` by that user and events outside their current subject,
-group, grade or source filters. Matching events need not already have a subscription
+events marked `Не интересно` by that user and events outside their current filters,
+with the manual subscription exception described above. Matching events need not have a subscription
 to appear. Limits apply after personal filtering; registrations are ordered by their
 nearest deadline before truncating the list. Another user's choices have no effect.
 
@@ -249,7 +272,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.2.4 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.3.0 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.

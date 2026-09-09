@@ -81,7 +81,7 @@ events:
     title: "МОШ — вероятность и статистика"
     description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
     category: mathematics
-    tags: [mosh, probability, statistics]
+    tags: ["mosh", "probability", "statistics", "mathematics"]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
     status: tbd
@@ -100,7 +100,7 @@ events:
     title: "МОШ — генетика"
     description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
     category: natural-science
-    tags: [mosh, genetics]
+    tags: ["mosh", "genetics", "biology"]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
     status: tbd
@@ -138,7 +138,7 @@ events:
     title: "МОШ — изобразительное искусство"
     description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
     category: arts
-    tags: [mosh, fine-art]
+    tags: ["mosh", "fine-art", "art"]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
     status: tbd
@@ -237,7 +237,7 @@ events:
     title: "МОШ — история искусств"
     description: "Направление Московской олимпиады школьников 2026/27; опубликованы даты отборочного этапа."
     category: arts
-    tags: [mosh, art-history]
+    tags: ["mosh", "art-history", "art"]
     url: https://mos.olimpiada.ru/olymp/amxk
     source_url: https://mos.olimpiada.ru/news/4596
     status: confirmed
@@ -391,7 +391,7 @@ events:
     title: "Московская предпрофессиональная олимпиада — информационные технологии"
     description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
     category: informatics
-    tags: [mosh, preprofessional, it]
+    tags: ["mosh", "preprofessional", "it", "informatics"]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
     status: tbd

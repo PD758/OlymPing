@@ -53,6 +53,7 @@ events:
         status: confirmed
         source_url: https://rosfinolymp.ru/stages
       - id: other:rosfin-olympiad-2026:final
+        terminal: true
         kind: final
         title: Финальный этап — для участников, прошедших отбор
         starts_at: "2026-09-27T00:00:00+03:00"

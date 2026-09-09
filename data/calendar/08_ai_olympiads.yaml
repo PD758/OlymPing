@@ -47,6 +47,7 @@ events:
         is_online: true
         source_url: https://aiijc.com/ru/faq/main_stage
       - id: other:ai-challenge-2026:final
+        terminal: true
         kind: final
         title: "Финальный этап"
         starts_at: "2026-10-12T00:00:00+03:00"
@@ -56,6 +57,7 @@ events:
         is_online: true
         source_url: https://aiijc.com/
       - id: other:ai-challenge-2026:defense
+        terminal: true
         kind: final
         title: "Защита решений финального этапа"
         starts_at: "2026-11-05T00:00:00+03:00"

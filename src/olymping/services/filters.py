@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from olymping.models import Event, SourceKind, UserProfile
+from olymping.models import Event, EventPreference, SourceKind, UserProfile
 
 GROUP_FILTERS = {
     "group:vosh": SourceKind.VOSH.value,
@@ -8,7 +8,9 @@ GROUP_FILTERS = {
 }
 
 
-def event_is_enabled(profile: UserProfile, event: Event) -> bool:
+def event_is_enabled(
+    profile: UserProfile, event: Event, *, preference: EventPreference | None = None
+) -> bool:
     settings = profile.category_settings or {}
     if not bool(settings.get(event.source_kind, True)):
         return False
@@ -25,7 +27,11 @@ def event_is_enabled(profile: UserProfile, event: Event) -> bool:
         for tag, source in GROUP_FILTERS.items()
     )
     subject_tags = selected_tags - GROUP_FILTERS.keys()
-    if selected_tags and not selected_group and subject_tags.isdisjoint(event_tags):
+    manual = preference is not None and (
+        preference.interest == "registered"
+        or (preference.origin == "manual" and preference.interest == "watching")
+    )
+    if not manual and selected_tags and not selected_group and subject_tags.isdisjoint(event_tags):
         return False
     if event.source_kind != SourceKind.CTF.value:
         return True

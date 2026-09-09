@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from olymping.models import (
@@ -9,6 +11,7 @@ from olymping.models import (
     Milestone,
     StageOutcome,
     StageProgress,
+    WorkflowNotice,
 )
 
 
@@ -36,9 +39,11 @@ async def toggle_event_interest(
         )
         return interest.value
     if record.interest == interest.value:
-        await session.delete(record)
+        record.interest = "unsubscribed"
+        record.origin = "manual"
         return None
     record.interest = interest.value
+    record.origin = "manual"
     return interest.value
 
 
@@ -48,9 +53,34 @@ async def set_stage_outcome(
     actor_id: int,
     milestone_id: str,
     outcome: StageOutcome | None,
+    now: datetime | None = None,
 ) -> str | None:
     if await session.get(Milestone, milestone_id) is None:
         raise StateTargetNotFoundError(milestone_id)
+    now = now or datetime.now(UTC)
+    notice = await session.get(WorkflowNotice, f"result:{actor_id}:{milestone_id}")
+    if notice is None and outcome == StageOutcome.AWAITING_RESULTS:
+        notice = WorkflowNotice(
+            key=f"result:{actor_id}:{milestone_id}",
+            telegram_user_id=actor_id,
+            milestone_id=milestone_id,
+            kind="result",
+            status="pending",
+            scheduled_for=now,
+        )
+        session.add(notice)
+    if notice is not None:
+        if outcome == StageOutcome.AWAITING_RESULTS:
+            notice.status = "pending"
+            notice.scheduled_for = now + timedelta(days=1)
+            notice.next_attempt_at = None
+            notice.attempts = 0
+        elif outcome in {StageOutcome.PASSED, StageOutcome.NOT_PASSED, StageOutcome.SKIPPED}:
+            notice.status = "resolved"
+        elif outcome is None:
+            notice.status = "pending"
+            notice.next_attempt_at = None
+            notice.attempts = 0
     record = await session.get(StageProgress, (actor_id, milestone_id))
     if outcome is None:
         if record is not None:

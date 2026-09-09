@@ -25,6 +25,7 @@ from olymping.models import (
 )
 from olymping.schemas import CalendarDocument, EventSeed, MilestoneSeed
 from olymping.services.filters import event_is_enabled
+from olymping.services.subscriptions import reapply_event
 
 
 @dataclass(slots=True)
@@ -99,6 +100,9 @@ def _milestone_values(seed: MilestoneSeed, event_id: str) -> dict[str, Any]:
         "location": seed.location,
         "is_online": seed.is_online,
         "source_url": str(seed.source_url) if seed.source_url else None,
+        "results_at": seed.results_at.astimezone(UTC) if seed.results_at else None,
+        "advancement_paths": seed.advancement_paths,
+        "terminal": seed.terminal,
     }
 
 
@@ -202,6 +206,7 @@ async def _handle_new_event(
                     telegram_user_id=profile.telegram_user_id,
                     event_id=event.id,
                     interest=EventInterest.WATCHING.value,
+                    origin="automatic",
                 )
             )
         if create_notice and profile.notify_new_events:
@@ -226,7 +231,10 @@ async def _create_update_notices(
 ) -> int:
     notices = 0
     for profile in await _profiles(session):
-        if not profile.notify_event_updates or not event_is_enabled(profile, event):
+        preference = await session.get(EventPreference, (profile.telegram_user_id, event.id))
+        if not profile.notify_event_updates or not event_is_enabled(
+            profile, event, preference=preference
+        ):
             continue
         session.add(
             CatalogNotice(
@@ -251,6 +259,7 @@ async def upsert_event(
 ) -> ImportSummary:
     summary = ImportSummary()
     event = await session.get(Event, seed.id)
+    old_tags = list(event.tags) if event is not None else list(seed.tags)
     values = _event_values(seed, checked_at)
     event_existed = event is not None
     if event is None:
@@ -320,6 +329,8 @@ async def upsert_event(
                 _format_change(milestone.title, changed, window=milestone.precision == "window"),
                 milestone_id=milestone.id,
             )
+    if event_existed:
+        summary.notices += await reapply_event(session, event, old_tags=old_tags)
     return summary
 
 
@@ -332,6 +343,8 @@ async def import_document(
 ) -> ImportSummary:
     checked_at = checked_at or datetime.now(UTC)
     summary = ImportSummary()
+    for seed in document.events:
+        validate_progression(seed)
     for seed in document.events:
         summary.merge(
             await upsert_event(
@@ -351,6 +364,30 @@ def calendar_paths(data_dir: Path) -> list[Path]:
     if not paths:
         raise CalendarImportError(f"no YAML calendar files found in {data_dir}")
     return paths
+
+
+def validate_progression(seed: EventSeed) -> None:
+    stages = {s.id: s for s in seed.milestones}
+    visited: set[str] = set()
+
+    def visit(stage_id: str, path: set[str]) -> None:
+        if stage_id in path:
+            raise CalendarImportError(f"cyclic advancement path in {seed.id}: {stage_id}")
+        if stage_id in visited:
+            return
+        for alternative in stages[stage_id].advancement_paths or []:
+            for parent in alternative:
+                if parent not in stages:
+                    raise CalendarImportError(f"unknown prerequisite in {seed.id}: {parent}")
+                if stages[parent].terminal:
+                    raise CalendarImportError(
+                        f"terminal milestone cannot have successors: {parent}"
+                    )
+                visit(parent, path | {stage_id})
+        visited.add(stage_id)
+
+    for stage_id in stages:
+        visit(stage_id, set())
 
 
 async def import_data_directory(

@@ -60,6 +60,14 @@ from olymping.services.ctftime import sync_ctftime
 from olymping.services.delivery import DeliveryDeferred, background_delivery
 from olymping.services.importer import CalendarImportError, import_data_directory
 from olymping.services.onboarding import complete_onboarding
+from olymping.services.progression import (
+    completed_for_user,
+    dispatch_workflow_notices,
+    missing_schedule,
+    reported_finished_stages,
+    stage_access,
+    user_outcomes,
+)
 from olymping.services.reminders import (
     REMINDER_CUSTOM,
     REMINDER_MUTED,
@@ -83,9 +91,11 @@ from olymping.services.users import (
     ensure_admin_profile,
     ensure_user_profile,
     redeem_invitation,
+    require_admin_profile,
     set_user_access,
 )
 from olymping.telegram_delivery import PacedMessages
+from olymping.topics import FILTERABLE_TAGS, TAG_LABELS
 
 logger = logging.getLogger(__name__)
 
@@ -106,39 +116,6 @@ class PollingHeartbeatMiddleware(BaseRequestMiddleware):
 
 CATALOG_PAGE_SIZE = 8
 TAG_PAGE_SIZE = 8
-FILTERABLE_TAGS: tuple[tuple[str, str], ...] = (
-    ("group:vosh", "Вся группа ВсОШ"),
-    ("group:mosh", "Вся группа МОШ"),
-    ("cybersecurity", "Информационная безопасность"),
-    ("informatics", "Информатика"),
-    ("programming", "Программирование"),
-    ("algorithms", "Алгоритмы"),
-    ("ai", "Искусственный интеллект"),
-    ("mathematics", "Математика"),
-    ("engineering", "Инженерия"),
-    ("robotics", "Робототехника"),
-    ("technology", "Технология"),
-    ("physics", "Физика"),
-    ("ecology", "Экология"),
-    ("law", "Право"),
-    ("obzr", "ОБЗР"),
-    ("social-science", "Обществознание"),
-    ("economics", "Экономика"),
-    ("financial-literacy", "Финграмотность"),
-    ("biology", "Биология"),
-    ("chemistry", "Химия"),
-    ("geography", "География"),
-    ("astronomy", "Астрономия"),
-    ("history", "История"),
-    ("literature", "Литература"),
-    ("linguistics", "Лингвистика"),
-    ("english", "Английский язык"),
-    ("art", "Искусство"),
-    ("research", "Исследования"),
-    ("preprofessional", "Предпрофиль"),
-    ("team", "Командные"),
-)
-TAG_LABELS: dict[str, str] = dict(FILTERABLE_TAGS)
 
 
 @dataclass(frozen=True, slots=True)
@@ -239,12 +216,14 @@ OUTCOME_LABELS = {
     StageOutcome.PASSED.value: "✅ Прошёл",
     StageOutcome.NOT_PASSED.value: "❌ Не прошёл",
     StageOutcome.SKIPPED.value: "⏭ Пропускаю",
+    StageOutcome.AWAITING_RESULTS.value: "⏳ Пока нет результатов",
 }
 OUTCOME_ICONS = {
     StageOutcome.PARTICIPATED.value: "📝",
     StageOutcome.PASSED.value: "✅",
     StageOutcome.NOT_PASSED.value: "❌",
     StageOutcome.SKIPPED.value: "⏭",
+    StageOutcome.AWAITING_RESULTS.value: "⏳",
 }
 
 
@@ -344,6 +323,10 @@ def format_event(
 ) -> str:
     status_icons = {"confirmed": "✅", "tentative": "⚠️", "tbd": "❔", "cancelled": "🚫"}
     lines = [f"<b>{html.escape(event.title)}</b>", f"Источник: {html.escape(event.source_kind)}"]
+    if completed_for_user(event, progress or {}, datetime.now(UTC)):
+        lines.append(
+            "🏁 Участие завершено — доступных путей продолжения нет. Результат можно исправить."
+        )
     if event.format:
         lines.append(f"Формат: {html.escape(event.format)}")
     if event.location:
@@ -396,6 +379,11 @@ def format_event(
         suffix = f" ({html.escape(', '.join(details))})" if details else ""
         outcome = (progress or {}).get(milestone.id)
         outcome_suffix = f" — {OUTCOME_LABELS[outcome]}" if outcome else ""
+        access = stage_access(milestone, {s.id: s for s in event.milestones}, progress or {})
+        if access == "blocked":
+            outcome_suffix += " — недоступен по результатам отбора"
+        elif access == "unknown" and milestone.advancement_paths:
+            outcome_suffix += " — проход не подтверждён"
         lines.append(f"{icon} {html.escape(milestone.title)}: {value}{suffix}{outcome_suffix}")
     if event.description:
         lines.append(f"<blockquote expandable>{html.escape(event.description)}</blockquote>")
@@ -702,6 +690,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
             items = await upcoming_events(
                 session, profile, starts_at=start, ends_at=start + timedelta(days=days), limit=20
             )
+            outcomes = await user_outcomes(session, user_id)
             await session.commit()
         if not items:
             await _answer_or_edit(
@@ -716,6 +705,12 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
             assert milestone.starts_at is not None
             when = telegram_time(milestone.starts_at, settings.timezone)
             lines.append(f"• {when} — {html.escape(item_event.title)}")
+            if (
+                milestone.advancement_paths
+                and stage_access(milestone, {s.id: s for s in item_event.milestones}, outcomes)
+                == "unknown"
+            ):
+                lines.append("  ⏳ Проход не подтверждён")
             label = (
                 item_event.title if len(item_event.title) <= 44 else f"{item_event.title[:41]}..."
             )
@@ -877,6 +872,12 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                 ],
                 [
                     InlineKeyboardButton(
+                        text="⏳ Пока нет результатов",
+                        callback_data=_context_callback("out:w", context, stage.id),
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
                         text="Назад к этапам",
                         callback_data=_context_callback("progress", context, stage.event_id),
                     )
@@ -903,6 +904,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
             items = await catalog_items(session, profile, mode)
             grade = profile.school_grade
             selected_tags = list(profile.tag_filters or [])
+            outcomes = await user_outcomes(session, user_id)
             await session.commit()
         status_icons = {"confirmed": "✅", "tentative": "⚠️", "tbd": "❔", "cancelled": "🚫"}
         pages = max(1, (len(items) + CATALOG_PAGE_SIZE - 1) // CATALOG_PAGE_SIZE)
@@ -922,6 +924,8 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
         buttons: list[list[InlineKeyboardButton]] = []
         for local_index, item in enumerate(visible_items):
             icon = status_icons.get(item.status, "•")
+            if completed_for_user(item, outcomes, datetime.now(UTC)):
+                icon = "🏁"
             if mode == "r":
                 closing = registration_closes_at(item, datetime.now(UTC))
                 prefix = (
@@ -1446,6 +1450,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
             "p": StageOutcome.PASSED,
             "n": StageOutcome.NOT_PASSED,
             "s": StageOutcome.SKIPPED,
+            "w": StageOutcome.AWAITING_RESULTS,
         }
         if action not in {*outcomes, "x"}:
             await callback.answer("Некорректное действие", show_alert=True)
@@ -1696,6 +1701,46 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
     async def sync_callback(callback: CallbackQuery) -> None:
         await do_sync(callback)
 
+    @router.message(Command("gaps"))
+    async def gaps_command(message: Message) -> None:
+        async with factory() as session:
+            try:
+                await require_admin_profile(session, actor_id(message))
+            except AccessDeniedError:
+                await message.answer("Список пробелов доступен администратору.")
+                return
+            events = list(await session.scalars(select(Event).where(Event.status != "cancelled")))
+            reported = await reported_finished_stages(session)
+            gaps = [
+                (event, stage)
+                for event in events
+                for stage in event.milestones
+                if missing_schedule(
+                    stage, event, datetime.now(UTC), reported_finished=stage.id in reported
+                )
+            ]
+        if not gaps:
+            await message.answer("Нет завершённых этапов с неизвестным продолжением.")
+        for start in range(0, len(gaps), 10):
+            chunk = gaps[start : start + 10]
+            await message.answer(
+                "📋 Нужно уточнить продолжение:\n\n"
+                + "\n".join(
+                    f"• {html.escape(event.title)} — {html.escape(stage.title)}"
+                    for event, stage in chunk
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [
+                            InlineKeyboardButton(
+                                text=event.title[:45], callback_data=f"evt:{event.id}"
+                            )
+                        ]
+                        for event, _stage in chunk
+                    ]
+                ),
+            )
+
     register_review_handlers(router, factory)
     return router
 
@@ -1711,6 +1756,60 @@ async def _notification_loop(
         try:
             record_heartbeat(settings, "notification")
             await bot.send_message(user_id, text)
+        finally:
+            background_delivery.reset(token)
+
+    async def send_actions(user_id: int, text: str, event_ids: list[str]) -> None:
+        token = background_delivery.set(True)
+        try:
+            record_heartbeat(settings, "notification")
+            await bot.send_message(
+                user_id,
+                text,
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        *[
+                            [
+                                InlineKeyboardButton(
+                                    text=f"Открыть олимпиаду {index + 1}",
+                                    callback_data=f"evt:{event_id}",
+                                )
+                            ]
+                            for index, event_id in enumerate(event_ids)
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text="Изменить анкету", callback_data="onboard:back"
+                            )
+                        ],
+                    ]
+                ),
+            )
+        finally:
+            background_delivery.reset(token)
+
+    async def send_workflow(user_id: int, text: str, stage_id: str, kind: str) -> None:
+        token = background_delivery.set(True)
+        try:
+            record_heartbeat(settings, "notification")
+            rows = [[InlineKeyboardButton(text="Открыть этап", callback_data=f"stage:{stage_id}")]]
+            if kind == "result":
+                rows = [
+                    [
+                        InlineKeyboardButton(text="✅ Прошёл", callback_data=f"out:p:{stage_id}"),
+                        InlineKeyboardButton(
+                            text="❌ Не прошёл", callback_data=f"out:n:{stage_id}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="⏳ Пока нет результатов", callback_data=f"out:w:{stage_id}"
+                        )
+                    ],
+                ]
+            await bot.send_message(
+                user_id, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows)
+            )
         finally:
             background_delivery.reset(token)
 
@@ -1733,7 +1832,15 @@ async def _notification_loop(
                     send=send,
                     grace_hours=settings.reminder_grace_hours,
                     registration_digest=user_id == settings.owner_telegram_id,
+                    send_with_actions=send_actions,
                 )
+                async with factory() as session:
+                    await dispatch_workflow_notices(
+                        session,
+                        user_id=user_id,
+                        admin_id=settings.owner_telegram_id,
+                        send=send_workflow,
+                    )
                 if any(counts):
                     logger.info(
                         "Notification cycle for %d: reminders=%d changes=%d",
@@ -1854,6 +1961,7 @@ async def run_bot(settings: Settings) -> None:
                 BotCommand(command="revoke", description="Отозвать доступ по ID"),
                 BotCommand(command="sync", description="Обновить календарь"),
                 BotCommand(command="reviews", description="Проверить рассылки"),
+                BotCommand(command="gaps", description="Пробелы в расписании этапов"),
             ],
             scope=BotCommandScopeChat(chat_id=settings.owner_telegram_id),
         )

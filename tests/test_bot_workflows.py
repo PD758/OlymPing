@@ -120,3 +120,49 @@ async def test_review_buttons_enforce_admin_and_are_idempotent(
             assert batch is not None and batch.status == "approved" and batch.decided_by == 1
     finally:
         await bot.session.close()
+
+
+@pytest.mark.asyncio
+async def test_result_buttons_persist_snooze_and_restore_paths(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    from test_progression import event_with_paths
+
+    from olymping.models import StageProgress, WorkflowNotice
+    from olymping.services.progression import stage_access, user_outcomes
+
+    _, factory = database
+    async with factory() as session:
+        await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        session.add(event_with_paths())
+        await session.commit()
+    bot = Bot(token="123456:test-token")
+    dispatcher = Dispatcher()
+    dispatcher.include_router(create_router(factory, Settings(owner_telegram_id=1)))
+    response = Message(message_id=77, date=datetime.now(UTC), chat=Chat(id=2, type="private"))
+    try:
+        with patch.object(Bot, "__call__", new=AsyncMock(return_value=response)):
+            for index, data in enumerate(["out:w:test:a", "out:n:test:a", "out:n:test:b"]):
+                await dispatcher.feed_update(bot, callback_update(2, data, index + 1))
+            async with factory() as session:
+                progress = await session.get(StageProgress, (2, "test:a"))
+                notice = await session.get(WorkflowNotice, "result:2:test:a")
+                assert progress is not None and progress.outcome == "not_passed"
+                assert notice is not None and notice.status == "resolved"
+                event = await session.get(Event, "test:paths")
+                assert event is not None
+                stages = {s.id: s for s in event.milestones}
+                assert (
+                    stage_access(stages["test:final"], stages, await user_outcomes(session, 2))
+                    == "blocked"
+                )
+            await dispatcher.feed_update(bot, callback_update(2, "out:p:test:b", 4))
+            await dispatcher.feed_update(bot, callback_update(2, "onboard:back", 5))
+            async with factory() as session:
+                assert (
+                    stage_access(stages["test:final"], stages, await user_outcomes(session, 2))
+                    == "eligible"
+                )
+                assert not await user_outcomes(session, 1)
+    finally:
+        await bot.session.close()

@@ -41,6 +41,7 @@ async def complete_onboarding(session: AsyncSession, user_id: int) -> Onboarding
                     telegram_user_id=user_id,
                     event_id=event.id,
                     interest="watching",
+                    origin="automatic",
                 )
             )
             subscribed += 1

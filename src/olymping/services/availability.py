@@ -100,12 +100,15 @@ def open_phases(event: Event, now: datetime) -> list[OpenPhase]:
     return result
 
 
-def _allowed(profile: UserProfile, event: Event, interest: str | None, phase: str) -> bool:
+def _allowed(
+    profile: UserProfile, event: Event, preference: EventPreference | None, phase: str
+) -> bool:
+    interest = preference.interest if preference else None
     return (
         profile.access_status == AccessStatus.ACTIVE.value
         and profile.onboarding_completed
         and profile.notify_open_events
-        and event_is_enabled(profile, event)
+        and event_is_enabled(profile, event, preference=preference)
         and interest != EventInterest.IGNORED.value
         and not (phase.startswith("registration:") and interest == EventInterest.REGISTERED.value)
     )
@@ -124,8 +127,7 @@ async def queue_open_event_notices(session: AsyncSession, *, now: datetime | Non
     )
     events = list(await session.scalars(select(Event).options(selectinload(Event.milestones))))
     preferences = {
-        (p.telegram_user_id, p.event_id): p.interest
-        for p in await session.scalars(select(EventPreference))
+        (p.telegram_user_id, p.event_id): p for p in await session.scalars(select(EventPreference))
     }
     digested = set(
         (
@@ -140,10 +142,21 @@ async def queue_open_event_notices(session: AsyncSession, *, now: datetime | Non
         ).all()
     )
     queued = 0
+    from olymping.services.progression import stage_access, user_outcomes
+
+    outcomes = {
+        p.telegram_user_id: await user_outcomes(session, p.telegram_user_id) for p in profiles
+    }
     for event in events:
         for phase in open_phases(event, now):
             for profile in profiles:
                 user_id = profile.telegram_user_id
+                stage = next(s for s in event.milestones if s.id == phase.milestone_id)
+                if (
+                    stage_access(stage, {s.id: s for s in event.milestones}, outcomes[user_id])
+                    == "blocked"
+                ):
+                    continue
                 if not _allowed(profile, event, preferences.get((user_id, event.id)), phase.phase):
                     continue
                 if phase.phase.startswith("registration:") and (user_id, event.id) in digested:

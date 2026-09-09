@@ -69,6 +69,7 @@ class StageOutcome(StrEnum):
     PASSED = "passed"
     NOT_PASSED = "not_passed"
     SKIPPED = "skipped"
+    AWAITING_RESULTS = "awaiting_results"
 
 
 class NoticeKind(StrEnum):
@@ -158,6 +159,10 @@ class Milestone(TimestampMixin, Base):
     location: Mapped[str | None] = mapped_column(String(300), nullable=True)
     is_online: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     source_url: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    results_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # OR between paths, AND within each path. None means not yet curated.
+    advancement_paths: Mapped[list[list[str]] | None] = mapped_column(JSON, nullable=True)
+    terminal: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
 
     event: Mapped[Event] = relationship(back_populates="milestones")
 
@@ -226,6 +231,7 @@ class EventPreference(TimestampMixin, Base):
         ForeignKey("events.id", ondelete="CASCADE"), primary_key=True
     )
     interest: Mapped[str] = mapped_column(String(20), default=EventInterest.WATCHING.value)
+    origin: Mapped[str] = mapped_column(String(20), default="manual", server_default="manual")
 
 
 class StageProgress(TimestampMixin, Base):
@@ -238,6 +244,24 @@ class StageProgress(TimestampMixin, Base):
         ForeignKey("milestones.id", ondelete="CASCADE"), primary_key=True
     )
     outcome: Mapped[str] = mapped_column(String(20))
+
+
+class WorkflowNotice(TimestampMixin, Base):
+    __tablename__ = "workflow_notices"
+
+    key: Mapped[str] = mapped_column(String(220), primary_key=True)
+    telegram_user_id: Mapped[int] = mapped_column(
+        ForeignKey("user_profiles.telegram_user_id", ondelete="CASCADE"), index=True
+    )
+    milestone_id: Mapped[str] = mapped_column(
+        ForeignKey("milestones.id", ondelete="CASCADE"), index=True
+    )
+    kind: Mapped[str] = mapped_column(String(20))
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    scheduled_for: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    next_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class NotificationDelivery(TimestampMixin, Base):
