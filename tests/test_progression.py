@@ -1,14 +1,20 @@
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import pytest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from olymping.models import Event, EventPreference, Milestone, StageOutcome, WorkflowNotice
-from olymping.schemas import EventSeed
+from olymping.schemas import CalendarDocument, EventSeed
 from olymping.services.calendar import upcoming_events
 from olymping.services.delivery import DeliveryDeferred
-from olymping.services.importer import CalendarImportError, validate_progression
+from olymping.services.importer import (
+    CalendarImportError,
+    import_document,
+    load_calendar_document,
+    validate_progression,
+)
 from olymping.services.progression import (
     completed_for_user,
     dispatch_workflow_notices,
@@ -20,6 +26,57 @@ from olymping.services.user_state import set_stage_outcome
 from olymping.services.users import ensure_admin_profile, ensure_user_profile
 
 NOW = datetime(2026, 10, 7, 17, tzinfo=UTC)
+
+
+@pytest.mark.asyncio
+async def test_rosfin_import_resolves_reported_gaps_without_repeating_alerts(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    current = load_calendar_document(Path("data/calendar/13_rosfin_olympiad.yaml"))
+    seed = current.events[0]
+    old = seed.model_copy(
+        update={
+            "milestones": [
+                stage.model_copy(update={"advancement_paths": None}) for stage in seed.milestones
+            ]
+        }
+    )
+    now = datetime(2026, 9, 9, 18, 44, tzinfo=UTC)
+    sent: list[str] = []
+
+    async def send(_user: int, _text: str, stage: str, kind: str) -> None:
+        assert kind == "gap"
+        sent.append(stage)
+
+    async with factory() as session:
+        admin = await ensure_admin_profile(session, 1, "Europe/Moscow")
+        admin.onboarding_completed = True
+        admin.auto_subscribe_new_events = False
+        await import_document(session, CalendarDocument(calendar_version=1, events=[old]))
+        await session.commit()
+        assert (
+            await dispatch_workflow_notices(session, user_id=1, admin_id=1, send=send, now=now) == 3
+        )
+    async with factory() as session:
+        await import_document(session, current)
+        await session.commit()
+        assert (
+            await dispatch_workflow_notices(session, user_id=1, admin_id=1, send=send, now=now) == 0
+        )
+        rows = list(await session.scalars(select(WorkflowNotice)))
+        assert len(rows) == 3 and all(row.status == "resolved" for row in rows)
+        event = await session.get(Event, seed.id)
+        assert event is not None
+        stages = {stage.id: stage for stage in event.milestones}
+        final = stages[f"{seed.id}:final"]
+        assert stage_access(final, stages, {f"{seed.id}:round-2": "not_passed"}) == "blocked"
+        assert (
+            stage_access(final, stages, {f"{seed.id}:qualification-selection": "passed"})
+            == "eligible"
+        )
+        assert (await import_document(session, current)).updated_milestones == 0
+    assert len(sent) == 3
 
 
 def event_with_paths() -> Event:

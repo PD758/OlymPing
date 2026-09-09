@@ -20,6 +20,8 @@ events:
     max_grade: 11
     milestones:
       - id: other:rosfin-olympiad-2026:round-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: I тур отборочного этапа для школьников
         starts_at: "2026-03-14T00:00:00+03:00"
@@ -28,6 +30,8 @@ events:
         is_online: true
         source_url: https://rosfinolymp.ru/stages
       - id: other:rosfin-olympiad-2026:round-2
+        advancement_paths: [[other:rosfin-olympiad-2026:round-1]]
+        terminal: false
         kind: qualifier
         title: II тур отборочного этапа для школьников
         starts_at: "2026-04-19T10:00:00+03:00"
@@ -37,6 +41,7 @@ events:
         is_online: true
         source_url: https://rosfinolymp.ru/stages
       - id: other:rosfin-olympiad-2026:motivation-letters
+        advancement_paths: [[other:rosfin-olympiad-2026:round-2]]
         kind: other
         title: Квалификационный этап — сбор мотивационных писем школьников
         starts_at: "2026-06-01T00:00:00+03:00"
@@ -45,6 +50,8 @@ events:
         status: confirmed
         source_url: https://rosfinolymp.ru/stages
       - id: other:rosfin-olympiad-2026:qualification-selection
+        advancement_paths: [[other:rosfin-olympiad-2026:round-2]]
+        terminal: false
         kind: qualifier
         title: Квалификационный этап — отбор школьников в финал
         starts_at: "2026-09-02T00:00:00+03:00"
@@ -53,6 +60,7 @@ events:
         status: confirmed
         source_url: https://rosfinolymp.ru/stages
       - id: other:rosfin-olympiad-2026:final
+        advancement_paths: [[other:rosfin-olympiad-2026:qualification-selection]]
         terminal: true
         kind: final
         title: Финальный этап — для участников, прошедших отбор

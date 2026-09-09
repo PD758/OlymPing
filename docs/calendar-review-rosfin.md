@@ -30,3 +30,18 @@ for a later cycle.
   offset (`+03:00`): 2 September becomes 3 September, 3 September becomes 4
   September, and 2 October becomes 3 October. The source warns that dates can
   be clarified in participants' personal accounts.
+
+## Progression correction — 9 September 2026
+
+The stage dates were present but their progression links were missing, producing three
+administrator gap alerts. Added round 1 → round 2 → qualification selection → final.
+The motivation-letter window also depends on round 2; it is an auxiliary `other` milestone,
+not a separately graded prerequisite requiring a fictional “passed” result.
+
+Checked the [2026 regulations linked by the organizer](https://rosfinolymp.ru/documents):
+section 2.9 confirms advancement from round 1 to round 2; sections 2.12–2.16 describe
+documents, consent and the motivation essay for qualification. A “passed” qualification
+result represents actual admission to the final, not merely uploading a letter.
+The [official stage schedule](https://rosfinolymp.ru/stages) supplies all continuation dates.
+No dates or application version changed. Importing this correction resolves the existing
+gap records automatically on the next notification cycle.
