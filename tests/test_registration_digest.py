@@ -4,10 +4,58 @@ import pytest
 from conftest import approve_pending_reviews
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
-from olymping.models import AccessStatus, Event, Milestone
+from olymping.models import AccessStatus, Event, Milestone, OpenEventNotice
 from olymping.services.reminders import dispatch_registration_digest
 from olymping.services.reviews import dispatch_reviewed_notices
 from olymping.services.users import ensure_user_profile
+
+
+@pytest.mark.asyncio
+async def test_digest_does_not_reannounce_skipped_registration(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    due = datetime(2026, 9, 9, 6, tzinfo=UTC)
+
+    async def send(_user: int, _text: str) -> None:
+        pytest.fail("A skipped fact must not generate another broadcast")
+
+    async with factory() as session:
+        await ensure_user_profile(session, 42, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:skipped", title="Skipped", source_kind="NTO", source_url="https://example.org/"
+        )
+        event.milestones = [
+            Milestone(
+                id="test:skipped:open",
+                kind="registration_open",
+                title="Open",
+                starts_at=due.replace(hour=5),
+                status="confirmed",
+            )
+        ]
+        session.add(event)
+        await session.flush()
+        session.add(
+            OpenEventNotice(
+                telegram_user_id=42,
+                event_id=event.id,
+                milestone_id="test:skipped:open",
+                phase="registration:test:skipped:open",
+                status="skipped",
+            )
+        )
+        await session.commit()
+    async with factory() as session:
+        assert (
+            await dispatch_registration_digest(
+                session,
+                owner_id=42,
+                send=send,
+                now=due,
+            )
+            == 0
+        )
 
 
 @pytest.mark.asyncio

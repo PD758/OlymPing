@@ -6,7 +6,15 @@ import yaml
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
-from olymping.models import CatalogNotice, Event, NotificationReview, UserProfile
+from olymping.models import (
+    CatalogNotice,
+    Event,
+    Milestone,
+    NotificationReview,
+    OpenEventNotice,
+    ReviewSelection,
+    UserProfile,
+)
 from olymping.review_ui import review_page
 from olymping.schemas import CalendarDocument
 from olymping.services.delivery import DeliveryDeferred
@@ -16,10 +24,129 @@ from olymping.services.reviews import (
     collect_review_batch,
     decide_review,
     dispatch_reviewed_notices,
+    event_fingerprint,
     refresh_review,
     toggle_review_event,
 )
 from olymping.services.users import AccessDeniedError, ensure_admin_profile, ensure_user_profile
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("approve", [True, False])
+async def test_reviewed_facts_do_not_return_for_new_recipient_or_old_duplicate_batch(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    approve: bool,
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        original = await seed_review(session)
+        event = await session.get(Event, "test:math")
+        assert event is not None
+        duplicate = NotificationReview()
+        session.add(duplicate)
+        await session.flush()
+        duplicate_id = duplicate.id
+        session.add(
+            ReviewSelection(
+                review_batch_id=duplicate_id,
+                event_id=event.id,
+                snapshot_hash=event_fingerprint(event),
+                summary="Добавлено в календарь.",
+            )
+        )
+        session.add(
+            CatalogNotice(
+                telegram_user_id=1,
+                event_id=event.id,
+                kind="new_event",
+                summary="old duplicate",
+                review_batch_id=duplicate_id,
+            )
+        )
+        await decide_review(session, batch_id=original, actor_id=1, approve=approve)
+        await session.commit()
+    async with factory() as session:
+        await ensure_user_profile(session, 3, "Europe/Moscow", onboarding_completed=True)
+        late = CatalogNotice(
+            telegram_user_id=3,
+            event_id="test:math",
+            kind="new_event",
+            summary="new wording",
+        )
+        session.add(late)
+        await session.flush()
+        assert await collect_review_batch(session) is None
+        assert late.sent_at is not None
+        batch = await session.get(NotificationReview, duplicate_id)
+        assert batch is not None and batch.status == "dismissed"
+        await session.commit()
+    async with factory() as session:
+        assert await collect_review_batch(session) is None
+        # A real change still requires a fresh decision.
+        event = await session.get(Event, "test:math")
+        assert event is not None
+        event.title = "New title"
+        session.add(
+            CatalogNotice(
+                telegram_user_id=1,
+                event_id=event.id,
+                kind="event_updated",
+                summary="Название: Mathematics → New title",
+            )
+        )
+        await session.flush()
+        assert await collect_review_batch(session) is not None
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("decided", [False, True])
+async def test_open_registration_review_is_shared_across_recipients(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    decided: bool,
+) -> None:
+    from olymping.services.availability import queue_open_event_notices
+
+    _, factory = database
+    now = datetime.now(UTC)
+    async with factory() as session:
+        admin = await ensure_admin_profile(session, 1, "Europe/Moscow")
+        admin.onboarding_completed = True
+        event = Event(
+            id="nto:review", title="NTO", source_kind="NTO", source_url="https://example.org/"
+        )
+        event.milestones = [
+            Milestone(
+                id="nto:review:open",
+                kind="registration_open",
+                title="Open",
+                starts_at=now - timedelta(hours=1),
+                status="confirmed",
+            )
+        ]
+        session.add(event)
+        await session.commit()
+        assert await queue_open_event_notices(session, now=now) == 1
+        original = await collect_review_batch(session)
+        assert original is not None
+        if decided:
+            await decide_review(session, batch_id=original, actor_id=1, approve=False)
+        await session.commit()
+    async with factory() as session:
+        await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        await session.commit()
+        assert await queue_open_event_notices(session, now=now + timedelta(days=1)) == 1
+        assert await collect_review_batch(session) is None
+        notice = await session.scalar(
+            select(OpenEventNotice).where(
+                OpenEventNotice.telegram_user_id == 2,
+            )
+        )
+        assert notice is not None
+        if decided:
+            assert notice.status == "skipped"
+        else:
+            assert notice.review_batch_id == original
+        await session.commit()
 
 
 def calendar() -> CalendarDocument:

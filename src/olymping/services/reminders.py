@@ -155,13 +155,25 @@ async def _rules_for_event(
     ]
 
 
-def _reminder_text(event: Event, milestone: Milestone, profile: UserProfile) -> str:
+def _reminder_text(event: Event, milestone: Milestone, profile: UserProfile, now: datetime) -> str:
     assert milestone.starts_at is not None
     when = telegram_time(milestone.starts_at, profile.timezone)
+    label = html.escape(milestone.title)
+    if milestone.kind == MilestoneKind.REGISTRATION_DEADLINE.value:
+        tz = ZoneInfo(profile.timezone)
+        deadline_date = aware_utc(milestone.starts_at).astimezone(tz).date()
+        tomorrow = now.astimezone(tz).date() + timedelta(days=1)
+        label = (
+            "Завтра заканчивается регистрация"
+            if deadline_date == tomorrow
+            else "Регистрация заканчивается"
+        )
+        if milestone.precision == "date":
+            when = deadline_date.strftime("%d.%m.%Y") + " включительно"
     link = html.escape(event.url or event.source_url, quote=True)
     return (
         f"⏰ <b>{html.escape(event.title)}</b>\n"
-        f"{html.escape(milestone.title)}: <b>{when}</b> ({profile.timezone})\n"
+        f"{label}: <b>{when}</b> ({profile.timezone})\n"
         f'<a href="{link}">Открыть источник</a>'
     )
 
@@ -206,6 +218,11 @@ async def dispatch_due_reminders(
             MilestoneKind.REGISTRATION_DEADLINE.value,
         }:
             continue
+        if (
+            milestone.kind == MilestoneKind.REGISTRATION_DEADLINE.value
+            and registration_deadline(milestone) <= now
+        ):
+            continue
         rules = await _rules_for_event(session, owner_id, event, milestone)
         for rule in rules:
             scheduled = schedule_rule(rule, milestone, profile.timezone)
@@ -238,7 +255,7 @@ async def dispatch_due_reminders(
                 continue
             delivery.attempts += 1
             try:
-                await send(owner_id, _reminder_text(event, milestone, profile))
+                await send(owner_id, _reminder_text(event, milestone, profile, now))
                 delivery.status = DeliveryStatus.SENT.value
                 delivery.sent_at = now
                 delivery.error = None
@@ -314,7 +331,6 @@ async def dispatch_registration_digest(
             select(OpenEventNotice.event_id).where(
                 OpenEventNotice.telegram_user_id == owner_id,
                 OpenEventNotice.phase.like("registration:%"),
-                OpenEventNotice.status.in_(["pending", "sent"]),
             )
         )
     )

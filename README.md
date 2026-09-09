@@ -249,7 +249,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.2.3 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.2.4 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.
@@ -263,6 +263,20 @@ A restart or code deployment never approves pending broadcasts. Previously appro
 unfinished deliveries resume; already recorded deliveries do not repeat. Scheduled reminders
 continue, including unsent occurrences within `REMINDER_GRACE_HOURS` (24 hours by default).
 The administrator may receive a previously unannounced pending-review preview after restart.
+
+Review deduplication compares facts across recipients and persists across restarts. Late
+copies join the original pending review; facts already approved or dismissed are consumed
+without a new review or retroactive broadcast to new recipients. Duplicate pending batches
+are reconciled automatically on the next notification cycle. Different changes and new
+participation phases still require review. Keep the persistent SQLite volume on deployment;
+the review and delivery history lives there.
+
+For subscribed olympiads, default reminders include 20:00 on the day before registration
+closes, in the user's timezone. No administrator review is needed for this personal reminder.
+The “registered” mark suppresses registration reminders; ignored events, disabled sources
+and muted event reminders are also respected. Custom event rules override the defaults.
+Date-only deadlines are displayed as inclusive dates, and expired registration reminders
+are not sent during catch-up after downtime.
 
 All `sendMessage` calls share pacing: 10 messages/second by default, at least 1.1 seconds
 between messages in a private chat and 3.1 seconds in a group. Configure

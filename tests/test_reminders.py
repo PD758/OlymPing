@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import pytest
 from conftest import approve_pending_reviews
@@ -32,6 +33,106 @@ from olymping.services.reminders import (
     set_event_reminders_muted,
 )
 from olymping.services.users import ensure_user_profile
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "interest,muted,expected",
+    [
+        ("watching", False, 1),
+        ("registered", False, 0),
+        ("ignored", False, 0),
+        (None, False, 0),
+        ("watching", True, 0),
+    ],
+)
+@pytest.mark.parametrize("timezone", ["Europe/Moscow", "Asia/Yekaterinburg"])
+async def test_default_deadline_reminder_on_previous_day_and_after_restart(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    interest: str | None,
+    muted: bool,
+    expected: int,
+    timezone: str,
+) -> None:
+    _, factory = database
+    tz = ZoneInfo(timezone)
+    due = datetime(2026, 9, 20, 20, tzinfo=tz).astimezone(UTC)
+    sent: list[str] = []
+
+    async def send(_user: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, 99, timezone, onboarding_completed=True)
+        event = Event(
+            id="test:closing",
+            title="Closing",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            status="confirmed",
+        )
+        event.milestones = [
+            Milestone(
+                id="test:closing:deadline",
+                kind="registration_deadline",
+                title="Deadline",
+                starts_at=datetime(2026, 9, 21, tzinfo=tz).astimezone(UTC),
+                precision="date",
+                status="confirmed",
+            )
+        ]
+        session.add(event)
+        await session.flush()
+        if interest is not None:
+            session.add(EventPreference(telegram_user_id=99, event_id=event.id, interest=interest))
+        if muted:
+            await set_event_reminders_muted(session, user_id=99, event_id=event.id, muted=True)
+        await session.commit()
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=send,
+                now=due - timedelta(minutes=1),
+                grace_hours=1,
+            )
+            == 0
+        )
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=send,
+                now=due,
+                grace_hours=1,
+            )
+            == expected
+        )
+    async with factory() as session:
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=send,
+                now=due + timedelta(minutes=1),
+                grace_hours=1,
+            )
+            == 0
+        )
+        # Do not catch up a missed morning reminder after registration is closed.
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=send,
+                now=due + timedelta(hours=29),
+            )
+            == 0
+        )
+    assert len(sent) == expected
+    if expected:
+        assert "Завтра заканчивается регистрация" in sent[0]
+        assert "21.09.2026 включительно" in sent[0]
 
 
 @pytest.mark.asyncio

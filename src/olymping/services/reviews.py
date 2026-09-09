@@ -137,6 +137,7 @@ async def collect_review_batch(session: AsyncSession) -> int | None:
     await session.execute(
         update(NotificationReview).where(NotificationReview.id == -1).values(status="pending")
     )
+    await _reconcile_duplicate_reviews(session)
     catalogs = list(
         await session.scalars(
             select(CatalogNotice).where(
@@ -186,6 +187,146 @@ async def collect_review_batch(session: AsyncSession) -> int | None:
         )
     await session.flush()
     return batch.id
+
+
+def _notice_key(notice: Notice, snapshot: str) -> tuple[str, ...]:
+    if isinstance(notice, OpenEventNotice):
+        return (notice.event_id, snapshot, "open", notice.phase)
+    # A title/summary rewrite does not make an existing event new again.
+    if notice.kind == "new_event":
+        return (notice.event_id, "new_event")
+    return (notice.event_id, snapshot, notice.kind, notice.milestone_id or "", notice.summary)
+
+
+async def _reconcile_duplicate_reviews(session: AsyncSession) -> None:
+    """Review facts once across recipients; never auto-approve late duplicates."""
+    pending = list(
+        await session.scalars(
+            select(NotificationReview)
+            .where(NotificationReview.status == "pending")
+            .order_by(NotificationReview.id)
+        )
+    )
+    pending_ids = {batch.id for batch in pending}
+    candidates: list[Notice] = [
+        *await session.scalars(
+            select(CatalogNotice).where(
+                CatalogNotice.sent_at.is_(None),
+                CatalogNotice.review_batch_id.is_(None)
+                | CatalogNotice.review_batch_id.in_(pending_ids),
+            )
+        ),
+        *await session.scalars(
+            select(OpenEventNotice).where(
+                OpenEventNotice.status == "pending",
+                OpenEventNotice.review_batch_id.is_(None)
+                | OpenEventNotice.review_batch_id.in_(pending_ids),
+            )
+        ),
+    ]
+    if not candidates:
+        return
+    event_ids = {notice.event_id for notice in candidates}
+    selections = list(
+        await session.scalars(
+            select(ReviewSelection).where(
+                ReviewSelection.event_id.in_(event_ids),
+            )
+        )
+    )
+    snapshots = {(s.review_batch_id, s.event_id): s.snapshot_hash for s in selections}
+    events = {
+        event.id: event
+        for event in await session.scalars(
+            select(Event)
+            .where(Event.id.in_(event_ids))
+            .options(selectinload(Event.milestones))
+            .execution_options(populate_existing=True)
+        )
+    }
+    history: list[Notice] = [
+        *await session.scalars(
+            select(CatalogNotice).where(
+                CatalogNotice.event_id.in_(event_ids),
+                CatalogNotice.review_batch_id.is_not(None),
+            )
+        ),
+        *await session.scalars(
+            select(OpenEventNotice).where(
+                OpenEventNotice.event_id.in_(event_ids),
+                OpenEventNotice.review_batch_id.is_not(None),
+            )
+        ),
+    ]
+    # Decided facts take precedence, followed by the oldest pending review.
+    known: dict[tuple[str, ...], int] = {}
+    for notice in sorted(
+        history,
+        key=lambda n: (
+            n.review_batch_id in pending_ids,
+            n.review_batch_id or 0,
+        ),
+    ):
+        batch_id = notice.review_batch_id
+        if batch_id is None:
+            continue
+        snapshot = snapshots.get((batch_id, notice.event_id))
+        if snapshot is not None:
+            known.setdefault(_notice_key(notice, snapshot), batch_id)
+    affected: set[int] = set()
+    now = datetime.now(UTC)
+    for notice in candidates:
+        event = events.get(notice.event_id)
+        if event is None:
+            continue
+        snapshot = (
+            snapshots.get((notice.review_batch_id, notice.event_id), event_fingerprint(event))
+            if notice.review_batch_id is not None
+            else event_fingerprint(event)
+        )
+        prior = known.get(_notice_key(notice, snapshot))
+        if prior is None or prior == notice.review_batch_id:
+            continue
+        if notice.review_batch_id is not None:
+            affected.add(notice.review_batch_id)
+        if prior in pending_ids:
+            notice.review_batch_id = prior
+        elif isinstance(notice, CatalogNotice):
+            notice.sent_at = now  # Consumed without a new broadcast.
+        else:
+            notice.status = "skipped"
+    await session.flush()
+    for batch in pending:
+        if batch.id not in affected:
+            continue
+        remaining: list[Notice] = [
+            *await session.scalars(
+                select(CatalogNotice).where(
+                    CatalogNotice.review_batch_id == batch.id,
+                    CatalogNotice.sent_at.is_(None),
+                )
+            ),
+            *await session.scalars(
+                select(OpenEventNotice).where(
+                    OpenEventNotice.review_batch_id == batch.id,
+                    OpenEventNotice.status == "pending",
+                )
+            ),
+        ]
+        for selection in selections:
+            if selection.review_batch_id != batch.id:
+                continue
+            event_notices = [n for n in remaining if n.event_id == selection.event_id]
+            if not event_notices:
+                await session.delete(selection)
+            else:
+                selection.summary = "\n".join(
+                    dict.fromkeys(human_summary(n, events[n.event_id], now) for n in event_notices)
+                )
+        if not remaining:
+            batch.status = "dismissed"
+            batch.decided_at = now
+    await session.flush()
 
 
 async def decide_review(
