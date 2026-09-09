@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -22,6 +23,8 @@ from olymping.models import (
     StageOutcome,
     StageProgress,
 )
+from olymping.services.delivery import DeliveryDeferred
+from olymping.services.importer import import_data_directory
 from olymping.services.reminders import (
     REMINDER_CUSTOM,
     REMINDER_MUTED,
@@ -32,7 +35,110 @@ from olymping.services.reminders import (
     schedule_rule,
     set_event_reminders_muted,
 )
+from olymping.services.user_state import toggle_event_interest
 from olymping.services.users import ensure_user_profile
+
+
+@pytest.mark.asyncio
+async def test_real_dano_calendar_default_registration_reminders(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    messages: list[str] = []
+
+    async def send(_user: int, text: str) -> None:
+        messages.append(text)
+
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        profile.tag_filters = ["dano"]
+        await import_data_directory(session, Path("data/calendar"))
+        await session.commit()
+        pref = await session.get(EventPreference, (99, "other:dano-2026"))
+        assert pref is not None and pref.interest == "watching"
+    # Standard rules are three reminders, not just the newly clarified previous-day one.
+    for due in [
+        datetime(2026, 10, 2, 17, tzinfo=UTC),
+        datetime(2026, 10, 4, 17, tzinfo=UTC),
+        datetime(2026, 10, 5, 5, tzinfo=UTC),
+    ]:
+        async with factory() as session:
+            assert (
+                await dispatch_due_reminders(
+                    session,
+                    owner_id=99,
+                    send=send,
+                    now=due,
+                    grace_hours=1,
+                )
+                == 1
+            )
+        async with factory() as session:
+            assert (
+                await dispatch_due_reminders(
+                    session,
+                    owner_id=99,
+                    send=send,
+                    now=due,
+                    grace_hours=1,
+                )
+                == 0
+            )
+    assert len(messages) == 3
+    assert "Завтра заканчивается регистрация" in messages[1]
+    assert all("05.10.2026 включительно" in message for message in messages)
+
+
+@pytest.mark.asyncio
+async def test_registration_mark_cancels_deferred_deadline_reminder(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    due = datetime(2026, 10, 4, 17, tzinfo=UTC)
+    sent: list[str] = []
+
+    async def limited(_user: int, _text: str) -> None:
+        raise DeliveryDeferred(120)
+
+    async def send(_user: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        profile.tag_filters = ["dano"]
+        await import_data_directory(session, Path("data/calendar"))
+        await session.commit()
+        with pytest.raises(DeliveryDeferred):
+            await dispatch_due_reminders(session, owner_id=99, send=limited, now=due)
+    async with factory() as session:
+        # Use the same persisted action as the Telegram “registered” button.
+        await toggle_event_interest(
+            session,
+            actor_id=99,
+            event_id="other:dano-2026",
+            interest=EventInterest.REGISTERED,
+        )
+        await session.commit()
+    async with factory() as session:
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=send,
+                now=due + timedelta(minutes=3),
+            )
+            == 0
+        )
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=send,
+                now=datetime(2026, 10, 5, 5, tzinfo=UTC),
+            )
+            == 0
+        )
+    assert not sent
 
 
 @pytest.mark.asyncio
