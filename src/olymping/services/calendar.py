@@ -35,7 +35,7 @@ async def upcoming_events(
     end_utc = aware_utc(ends_at).astimezone(UTC)
     result = await session.execute(
         select(Milestone)
-        .options(selectinload(Milestone.event))
+        .options(selectinload(Milestone.event).selectinload(Event.milestones))
         .where(
             Milestone.status == RecordStatus.CONFIRMED.value,
             Milestone.starts_at >= start_utc,

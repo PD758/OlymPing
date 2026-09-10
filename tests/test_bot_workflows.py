@@ -1,14 +1,22 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from aiogram import Bot, Dispatcher
+from aiogram.methods import AnswerCallbackQuery, EditMessageText
 from aiogram.types import CallbackQuery, Chat, Message, Update, User
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from olymping.bot import create_router
 from olymping.config import Settings
-from olymping.models import CatalogNotice, Event, EventPreference, NotificationReview, UserProfile
+from olymping.models import (
+    CatalogNotice,
+    Event,
+    EventPreference,
+    Milestone,
+    NotificationReview,
+    UserProfile,
+)
 from olymping.services.reviews import collect_review_batch
 from olymping.services.users import ensure_admin_profile, ensure_user_profile
 
@@ -29,6 +37,53 @@ def callback_update(user_id: int, data: str, update_id: int) -> Update:
             ),
         ),
     )
+
+
+@pytest.mark.parametrize("period", ["today", "week", "month"])
+@pytest.mark.asyncio
+async def test_period_callbacks_load_stage_graph_in_fresh_session(
+    period: str,
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        session.add(
+            Event(
+                id="test:upcoming",
+                title="Upcoming contest",
+                source_kind="OTHER",
+                source_url="https://example.org/",
+                milestones=[
+                    Milestone(
+                        id="test:upcoming:final",
+                        kind="final",
+                        title="Final",
+                        starts_at=datetime.now(UTC) + timedelta(minutes=1),
+                        status="confirmed",
+                        advancement_paths=[],
+                        terminal=True,
+                    )
+                ],
+            )
+        )
+        await session.commit()
+    bot = Bot(token="123456:test-token")
+    dispatcher = Dispatcher()
+    dispatcher.include_router(create_router(factory, Settings(owner_telegram_id=1)))
+    response = Message(message_id=77, date=datetime.now(UTC), chat=Chat(id=2, type="private"))
+    transport = AsyncMock(return_value=response)
+    try:
+        with patch.object(Bot, "__call__", new=transport):
+            await dispatcher.feed_update(bot, callback_update(2, f"list:{period}", 1))
+        methods = [call.args[0] for call in transport.await_args_list]
+        assert any(isinstance(method, AnswerCallbackQuery) for method in methods)
+        assert any(
+            isinstance(method, EditMessageText) and "Upcoming contest" in (method.text or "")
+            for method in methods
+        )
+    finally:
+        await bot.session.close()
 
 
 @pytest.mark.parametrize(

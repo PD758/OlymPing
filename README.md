@@ -272,7 +272,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.3.0 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.3.1 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.
