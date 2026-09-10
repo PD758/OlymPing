@@ -1,5 +1,33 @@
 # Проверка календарей ВсОШ и МОШ
 
+## Допроверка 10 сентября 2026
+
+- Проверены [лента новостей ВсОШ](https://vos.olimpiada.ru/news/count/20/page/188),
+  [новость по культуре дома, дизайну и технологии](https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-kulture-doma--dizaynu-i-tekhnologii-2026-09-08),
+  [по технике, технологии и техническому творчеству](https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-tekhnike-tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-08)
+  и [по английскому языку](https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-angliyskomu-yazyku-2026-09-09).
+  В `01_vosh_2026.yaml` три события (`technology-home`,
+  `technology-technical`, `english`) и опубликованные школьные сроки переведены
+  из `tentative` в `confirmed`. Для двух профилей труда подтверждены также
+  практические туры 15–21 сентября; дальнейшие этапы сохранены `tbd`.
+- В практических турах ВсОШ сохранено официально указанное время: с 09:00
+  первого дня до 21:00 последнего. Для истории искусств МОШ источник называет
+  только даты 14–22 ноября, поэтому окончание её окна установлено на 23 ноября
+  00:00.
+- [Годовое расписание МОШ](https://mos.olimpiada.ru/schedule?period=year)
+  по-прежнему содержит единственную датированную запись — историю искусств.
+  [Новость организатора](https://mos.olimpiada.ru/news/4596) уточняет формат
+  (дистанционный) и классы (9–11): эти сведения добавлены в
+  `05_mosh_2026.yaml`. Новых дат по остальным профилям не опубликовано.
+- Официальные страницы [«Науки для жизни»](https://conf.profil.mos.ru/academ/index),
+  [«Инженеров будущего»](https://conf.profil.mos.ru/inj/),
+  [«Интеллектуального мегаполиса. Потенциала»](https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/)
+  и [«Технокубка»](https://techno-cup.ru/) проверены. Расписания НПК цикла
+  2026/27 не опубликованы; на странице «Технокубка» есть регистрация на 2026/27,
+  но приведённый график помечен 25/26. Поэтому даты в
+  `06_moscow_special_and_technocup.yaml` не добавлялись: неизвестные этапы
+  сохранены `tbd`.
+
 ## Допроверка 8 сентября 2026
 
 - Повторно прочитан динамический график [школьного этапа ВсОШ](https://vos.olimpiada.ru/2026/school)

@@ -130,3 +130,14 @@ not accept a separate `checked_at` field.
 - Unverified for the tracked future cycle: registration deadline, qualifiers, and
   final dates. The event remains confirmed as open for registration, while all
   undated milestones remain `tbd`. No calendar fields changed.
+
+## Recheck — 10 September 2026 (Europe/Moscow)
+
+- The official [NTO schedule](https://ntcontest.ru/participants/schedule/)
+  still confirms the entries in `02_nto.yaml` and `10_nto_profiles.yaml`:
+  senior-track registration is 26 August–22 October, stage I is 17 September–23
+  October, and stage II is 5 November–7 December for manual checking or 11
+  December for automatic checking. The schedule gives the final only as
+  February–April 2027; the profile pages remain the source for the more precise
+  stored final windows. No NTO date or progression field changed in this
+  recheck.

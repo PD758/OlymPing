@@ -1,0 +1,149 @@
+calendar_version: 1
+events:
+  - id: other:yandex-cup-analytics-2026
+    source_kind: OTHER
+    title: "Yandex Cup — Аналитика"
+    description: "Международный чемпионат Яндекса по аналитике и Data Science. У школьников от 14 лет есть отдельный юниорский поток."
+    category: data-analysis
+    tags: [programming, informatics, data-analysis, yandex-cup]
+    url: https://yandex.ru/cup/analytics
+    source_url: https://yandex.ru/cup/analytics
+    status: confirmed
+    format: "пробный и квалификационный туры онлайн; финал очно"
+    location: "Москва (финал)"
+    restrictions: "Юниорский поток: с 14 лет, с письменным согласием и под наблюдением законного представителя"
+    milestones:
+      - id: other:yandex-cup-analytics-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-11-01T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://yandex.ru/cup/analytics
+      - id: other:yandex-cup-analytics-2026:practice
+        kind: other
+        title: "Пробный тур"
+        starts_at: "2026-10-12T00:00:00+03:00"
+        ends_at: "2026-10-19T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://yandex.ru/cup/analytics
+      - id: other:yandex-cup-analytics-2026:qualifier
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Квалификация"
+        starts_at: "2026-11-01T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://yandex.ru/cup/analytics
+      - id: other:yandex-cup-analytics-2026:final
+        advancement_paths: [["other:yandex-cup-analytics-2026:qualifier"]]
+        terminal: true
+        kind: final
+        title: "Очный финал"
+        starts_at: "2026-11-27T00:00:00+03:00"
+        ends_at: "2026-11-30T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        location: "Москва"
+        source_url: https://yandex.ru/cup/analytics
+
+  - id: other:yandex-cup-algorithm-2026
+    source_kind: OTHER
+    title: "Yandex Cup — Алгоритм"
+    description: "Международный чемпионат Яндекса по спортивному программированию. У школьников от 14 лет есть отдельный юниорский поток."
+    category: informatics
+    tags: [programming, algorithms, informatics, yandex-cup]
+    url: https://yandex.ru/cup/algorithm
+    source_url: https://yandex.ru/cup/algorithm
+    status: confirmed
+    format: "пробный и квалификационный туры онлайн; финал очно"
+    location: "Москва (финал)"
+    restrictions: "Юниорский поток: с 14 лет, с письменным согласием и под наблюдением законного представителя"
+    milestones:
+      - id: other:yandex-cup-algorithm-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-11-01T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://yandex.ru/cup/algorithm
+      - id: other:yandex-cup-algorithm-2026:practice
+        kind: other
+        title: "Пробный тур"
+        starts_at: "2026-10-12T00:00:00+03:00"
+        ends_at: "2026-10-19T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://yandex.ru/cup/algorithm
+      - id: other:yandex-cup-algorithm-2026:qualifier
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Квалификация"
+        starts_at: "2026-11-01T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://yandex.ru/cup/algorithm
+      - id: other:yandex-cup-algorithm-2026:final
+        advancement_paths: [["other:yandex-cup-algorithm-2026:qualifier"]]
+        terminal: true
+        kind: final
+        title: "Очный финал"
+        starts_at: "2026-11-27T00:00:00+03:00"
+        ends_at: "2026-11-30T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        location: "Москва"
+        source_url: https://yandex.ru/cup/algorithm
+
+  - id: other:yandex-cup-machine-learning-2026
+    source_kind: OTHER
+    title: "Yandex Cup — Машинное обучение"
+    description: "Международный чемпионат Яндекса по машинному обучению. У школьников от 14 лет есть отдельный юниорский поток."
+    category: artificial-intelligence
+    tags: [ai, programming, informatics, machine-learning, yandex-cup]
+    url: https://yandex.ru/cup/ml
+    source_url: https://yandex.ru/cup/ml
+    status: confirmed
+    format: "квалификация онлайн; финал очно"
+    location: "Москва (финал)"
+    restrictions: "Юниорский поток: с 14 лет, с письменным согласием и под наблюдением законного представителя"
+    milestones:
+      - id: other:yandex-cup-machine-learning-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-11-01T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://yandex.ru/cup/ml
+      - id: other:yandex-cup-machine-learning-2026:qualifier
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Квалификация"
+        starts_at: "2026-10-23T00:00:00+03:00"
+        ends_at: "2026-11-02T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://yandex.ru/cup/ml
+      - id: other:yandex-cup-machine-learning-2026:final
+        advancement_paths: [["other:yandex-cup-machine-learning-2026:qualifier"]]
+        terminal: true
+        kind: final
+        title: "Очный финал"
+        starts_at: "2026-11-27T00:00:00+03:00"
+        ends_at: "2026-11-30T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        location: "Москва"
+        source_url: https://yandex.ru/cup/ml

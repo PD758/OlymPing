@@ -235,22 +235,26 @@ events:
   - id: mosh:art-history-2026
     source_kind: MOSH
     title: "МОШ — история искусств"
-    description: "Направление Московской олимпиады школьников 2026/27; опубликованы даты отборочного этапа."
+    description: "Направление Московской олимпиады школьников 2026/27; опубликованы даты дистанционного отборочного этапа."
     category: arts
     tags: ["mosh", "art-history", "art"]
     url: https://mos.olimpiada.ru/olymp/amxk
     source_url: https://mos.olimpiada.ru/news/4596
     status: confirmed
     location: "Москва"
-    restrictions: "Классы 2026/27 уточняются."
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
     milestones:
       - id: mosh:art-history-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
         starts_at: "2026-11-14T00:00:00+03:00"
-        ends_at: "2026-11-22T23:59:59+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
         precision: window
         status: confirmed
+        format: "дистанционно"
+        is_online: true
         source_url: https://mos.olimpiada.ru/news/4596
 
   - id: mosh:complex-security-2026
