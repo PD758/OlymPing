@@ -59,7 +59,7 @@ uv run pyright
 
 ## Telegram commands
 
-At 09:00 Moscow time the bot prepares a daily registration digest for administrator review. It includes
+At 09:00 Moscow time the bot automatically sends registration openings to each active user. It includes
 confirmed registration openings in the preceding 24-hour window that match their filters,
 excluding ignored, registered, cancelled, or already closed events. Empty digests are silent;
 delivered events are recorded in SQLite to avoid repeats after a restart. Events without
@@ -81,14 +81,15 @@ Administrator-only commands:
 - `/invite` — create a one-time invitation link valid for seven days;
 - `/users` — show users and block or unblock their access;
 - `/revoke TELEGRAM_ID` — block a user while preserving their data;
-- `/sync` — reload YAML, synchronize CTFtime, and prepare a review of changes and currently
-  open registration or participation windows;
+- `/sync` — reload YAML, synchronize CTFtime, and prepare a review of changes, including currently
+  open registration or participation windows of changed events;
 - `/reviews` — review pending broadcasts, select olympiads, approve delivery or save silently.
 - `/gaps` — administrator list of completed stages with missing continuation dates or links.
 
-`Открытая регистрация и участие` in settings controls these notices and the administrator's
-daily registration digest. Calendar data changes immediately, but every catalog, availability,
-and digest broadcast requires administrator approval. The administrator receives one grouped
+`Открытая регистрация и участие` in settings controls these notices and the user's
+daily registration digest. Calendar data changes immediately. Broadcasts about imported changes
+and open windows discovered in changed events require administrator approval; reaching an
+already known registration date does not. The administrator receives one grouped
 review (paginated for large updates), can exclude individual olympiads, then approve the rest
 or save everything without a broadcast. Each recipient receives a personalized combined
 message, split only when required by Telegram limits. Ordinary scheduled reminders continue
@@ -98,7 +99,8 @@ the review first; stale approved items are suppressed. Repeated `/sync` does not
 each participation stage and distinct registration opening is tracked separately. Ignored
 events are excluded, and users already registered do not receive registration notices.
 Only confirmed windows are announced. A participation stage needs a known end date;
-unconfirmed dates are never inferred. The same check runs after startup and automatic sync.
+unconfirmed dates are never inferred. Startup and automatic sync review only changed events;
+an unchanged import does not create an availability review as calendar dates pass.
 If CTFtime is unavailable, the reviewed YAML calendar still updates.
 
 A friend opens the invitation link and chooses their school grade and subjects, or explicitly
@@ -272,15 +274,15 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.3.1 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.3.2 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.
 
 Telegram sends and SQLite commits cannot form one transaction. An abrupt crash immediately
 after a send can repeat that message; normal retries and restarts use persisted delivery
-records. Registration digests cover the prior 24-hour window; `/sync` also discovers older
-registrations that are still open, but does not announce already closed windows.
+records. Automatic registration digests cover the prior 24-hour window; `/sync` also discovers
+older open registrations in changed events and submits them for review.
 
 A restart or code deployment never approves pending broadcasts. Previously approved,
 unfinished deliveries resume; already recorded deliveries do not repeat. Scheduled reminders
@@ -290,8 +292,9 @@ The administrator may receive a previously unannounced pending-review preview af
 Review deduplication compares facts across recipients and persists across restarts. Late
 copies join the original pending review; facts already approved or dismissed are consumed
 without a new review or retroactive broadcast to new recipients. Duplicate pending batches
-are reconciled automatically on the next notification cycle. Different changes and new
-participation phases still require review. Keep the persistent SQLite volume on deployment;
+are reconciled automatically on the next notification cycle. Imported changes still require
+review; scheduled stage reminders and daily registration openings are automatic. Legacy pending
+reviews retain their manual decision, including old registration digests. Keep the persistent SQLite volume on deployment;
 the review and delivery history lives there.
 
 For subscribed olympiads, default reminders include 20:00 on the day before registration

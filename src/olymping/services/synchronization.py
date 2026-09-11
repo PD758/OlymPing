@@ -31,6 +31,7 @@ async def synchronize_calendar(
     # A remote outage must not roll back the reviewed local calendar.
     async with factory() as session:
         imported = await import_data_directory(session, settings.data_dir)
+        open_notices = await queue_open_event_notices(session, event_ids=imported.changed_event_ids)
         await session.commit()
     started = datetime.now(UTC)
     ctftime: ImportSummary | None = None
@@ -40,6 +41,9 @@ async def synchronize_calendar(
                 session,
                 base_url=settings.ctftime_base_url,
                 lookahead_days=settings.ctftime_lookahead_days,
+            )
+            open_notices += await queue_open_event_notices(
+                session, event_ids=ctftime.changed_event_ids
             )
             await session.commit()
     except Exception as exc:
@@ -56,7 +60,6 @@ async def synchronize_calendar(
             )
             await session.commit()
     async with factory() as session:
-        open_notices = await queue_open_event_notices(session)
         review_batch_id = await collect_review_batch(session)
         await session.commit()
     return SynchronizationResult(imported, ctftime, open_notices, review_batch_id)

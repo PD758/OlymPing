@@ -114,7 +114,14 @@ def _allowed(
     )
 
 
-async def queue_open_event_notices(session: AsyncSession, *, now: datetime | None = None) -> int:
+async def queue_open_event_notices(
+    session: AsyncSession,
+    *,
+    now: datetime | None = None,
+    event_ids: set[str] | None = None,
+) -> int:
+    if event_ids == set():
+        return 0
     now = _utc(now or datetime.now(UTC))
     profiles = list(
         await session.scalars(
@@ -125,7 +132,14 @@ async def queue_open_event_notices(session: AsyncSession, *, now: datetime | Non
             )
         )
     )
-    events = list(await session.scalars(select(Event).options(selectinload(Event.milestones))))
+    query = (
+        select(Event)
+        .options(selectinload(Event.milestones))
+        .execution_options(populate_existing=True)
+    )
+    if event_ids is not None:
+        query = query.where(Event.id.in_(event_ids))
+    events = list(await session.scalars(query))
     preferences = {
         (p.telegram_user_id, p.event_id): p for p in await session.scalars(select(EventPreference))
     }
@@ -173,8 +187,10 @@ async def queue_open_event_notices(session: AsyncSession, *, now: datetime | Non
                         created_at=now,
                         updated_at=now,
                     )
-                    .on_conflict_do_nothing(
+                    .on_conflict_do_update(
                         index_elements=["telegram_user_id", "event_id", "phase"],
+                        set_={"status": "pending", "next_attempt_at": None, "attempts": 0},
+                        where=OpenEventNotice.status == "automatic",
                     )
                     .returning(OpenEventNotice.id)
                 )

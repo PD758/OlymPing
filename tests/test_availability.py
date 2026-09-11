@@ -22,10 +22,71 @@ from olymping.services.availability import (
     queue_open_event_notices,
 )
 from olymping.services.calendar import registration_closes_at
+from olymping.services.importer import ImportSummary
+from olymping.services.reminders import dispatch_registration_digest
 from olymping.services.synchronization import synchronize_calendar
 from olymping.services.users import ensure_user_profile
 
 NOW = datetime(2026, 9, 6, 12, tzinfo=UTC)
+
+
+@pytest.mark.asyncio
+async def test_unchanged_sync_does_not_review_clock_opening(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]], tmp_path: Path
+) -> None:
+    _, factory = database
+    due = datetime(2026, 9, 11, 6, tzinfo=UTC)
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 42, "Europe/Moscow", onboarding_completed=True)
+        profile.notify_new_events = False
+        profile.auto_subscribe_new_events = False
+        await session.commit()
+    calendar = tmp_path / "calendar.yaml"
+    calendar.write_text("""calendar_version: 1
+events:
+  - id: test:clock
+    source_kind: NTO
+    title: Clock opening
+    source_url: https://example.org/
+    status: confirmed
+    milestones:
+      - id: test:clock:open
+        kind: registration_open
+        title: Open
+        starts_at: '2026-09-11T00:00:00+03:00'
+        status: confirmed
+      - id: test:clock:deadline
+        kind: registration_deadline
+        title: Deadline
+        starts_at: '2026-09-20T00:00:00+03:00'
+        status: confirmed
+""")
+    settings = Settings(data_dir=tmp_path)
+    with (
+        patch(
+            "olymping.services.synchronization.sync_ctftime",
+            new=AsyncMock(return_value=ImportSummary()),
+        ),
+        patch("olymping.services.availability.datetime", wraps=datetime) as clock,
+    ):
+        clock.now.return_value = due - timedelta(days=1)
+        first = await synchronize_calendar(factory, settings)
+        assert first.imported.changed_event_ids == {"test:clock"}
+        assert first.open_notices == 0 and first.review_batch_id is None
+        clock.now.return_value = due
+        second = await synchronize_calendar(factory, settings)
+        assert second.imported.changed_event_ids == set()
+        assert second.open_notices == 0 and second.review_batch_id is None
+        send = AsyncMock()
+        async with factory() as session:
+            assert await dispatch_registration_digest(session, owner_id=42, send=send, now=due) == 1
+        send.assert_awaited_once()
+        calendar.write_text(calendar.read_text().replace("2026-09-20", "2026-09-21"))
+        changed = await synchronize_calendar(factory, settings)
+        assert changed.imported.changed_event_ids == {"test:clock"}
+        assert changed.review_batch_id is not None
+        again = await synchronize_calendar(factory, settings)
+        assert again.open_notices == 0 and again.review_batch_id is None
 
 
 async def seed(session: AsyncSession) -> Event:

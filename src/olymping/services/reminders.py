@@ -8,6 +8,7 @@ from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
+from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm import selectinload
 
@@ -28,7 +29,7 @@ from olymping.models import (
     UserProfile,
 )
 from olymping.presentation import telegram_time
-from olymping.services.availability import registration_deadline
+from olymping.services.availability import open_phases, registration_deadline
 from olymping.services.delivery import DeliveryDeferred
 from olymping.services.filters import event_is_enabled
 from olymping.services.progression import completed_for_user, stage_access, user_outcomes
@@ -335,15 +336,7 @@ async def dispatch_registration_digest(
             )
         )
     )
-    notified.update(
-        await session.scalars(
-            select(OpenEventNotice.event_id).where(
-                OpenEventNotice.telegram_user_id == owner_id,
-                OpenEventNotice.phase.like("registration:%"),
-            )
-        )
-    )
-    events: list[Event] = []
+    outcomes = await user_outcomes(session, owner_id)
     for opening in openings:
         assert opening.starts_at is not None
         event = opening.event
@@ -357,6 +350,8 @@ async def dispatch_registration_digest(
             EventInterest.REGISTERED.value,
         }:
             continue
+        if stage_access(opening, {s.id: s for s in event.milestones}, outcomes) == "blocked":
+            continue
         deadlines = [
             registration_deadline(stage)
             for stage in event.milestones
@@ -367,19 +362,93 @@ async def dispatch_registration_digest(
         ]
         if deadlines and min(deadlines) <= now:
             continue
-        events.append(event)
-        notified.add(event.id)
-    for event in events:
-        session.add(
-            CatalogNotice(
+        phase = f"registration:{opening.id}"
+        if phase not in {p.phase for p in open_phases(event, now)}:
+            continue
+        # The same durable key is used by sync review and timed delivery. An
+        # existing pending/decided review must never be silently auto-approved.
+        await session.execute(
+            insert(OpenEventNotice)
+            .values(
                 telegram_user_id=owner_id,
                 event_id=event.id,
-                kind=REGISTRATION_DIGEST,
-                summary="Открылась регистрация за последние сутки.",
+                milestone_id=opening.id,
+                phase=phase,
+                status="automatic",
+                attempts=0,
+                created_at=now,
+                updated_at=now,
             )
+            .on_conflict_do_nothing(index_elements=["telegram_user_id", "event_id", "phase"])
         )
     await session.commit()
-    return len(events)
+    return await _dispatch_automatic_openings(session, owner_id=owner_id, send=send, now=now)
+
+
+async def _dispatch_automatic_openings(
+    session: AsyncSession, *, owner_id: int, send: SendMessage, now: datetime
+) -> int:
+    profile = await session.get(UserProfile, owner_id)
+    assert profile is not None
+    notices = list(
+        await session.scalars(
+            select(OpenEventNotice)
+            .where(
+                OpenEventNotice.telegram_user_id == owner_id,
+                OpenEventNotice.status == "automatic",
+                OpenEventNotice.review_batch_id.is_(None),
+            )
+            .order_by(OpenEventNotice.id)
+        )
+    )
+    outcomes = await user_outcomes(session, owner_id)
+    sent = 0
+    for notice in notices:
+        if notice.next_attempt_at is not None and aware_utc(notice.next_attempt_at) > now:
+            continue
+        event = await session.scalar(
+            select(Event).options(selectinload(Event.milestones)).where(Event.id == notice.event_id)
+        )
+        preference = await session.get(EventPreference, (owner_id, notice.event_id))
+        stage = (
+            next((s for s in event.milestones if s.id == notice.milestone_id), None)
+            if event
+            else None
+        )
+        if (
+            event is None
+            or stage is None
+            or not event_is_enabled(profile, event, preference=preference)
+            or (preference is not None and preference.interest in {"ignored", "registered"})
+            or notice.phase not in {p.phase for p in open_phases(event, now)}
+            or stage_access(stage, {s.id: s for s in event.milestones}, outcomes) == "blocked"
+        ):
+            notice.status = "skipped"
+            await session.commit()
+            continue
+        notice.attempts += 1
+        try:
+            from olymping.services.reviews import safe_event_block
+
+            await send(owner_id, "📝 " + safe_event_block(event, ["Открылась регистрация."]))
+        except DeliveryDeferred as exc:
+            notice.attempts -= 1
+            notice.next_attempt_at = now + timedelta(seconds=exc.retry_after)
+            await session.commit()
+            raise
+        except Exception as exc:
+            logger.warning("Opening notice %s failed (%s)", notice.id, type(exc).__name__)
+            notice.next_attempt_at = now + timedelta(minutes=min(60, 2**notice.attempts))
+            if notice.attempts >= 5:
+                notice.status = "failed"
+            await session.commit()
+            return sent
+        notice.status = "sent"
+        notice.sent_at = now
+        notice.next_attempt_at = None
+        await session.commit()
+        sent += 1
+    return sent
 
 
 async def run_notification_cycle(
@@ -388,7 +457,7 @@ async def run_notification_cycle(
     owner_id: int,
     send: SendMessage,
     grace_hours: int,
-    registration_digest: bool = False,
+    registration_digest: bool = True,
     send_with_actions: Callable[[int, str, list[str]], Awaitable[None]] | None = None,
 ) -> tuple[int, int]:
     async with factory() as session:
@@ -396,8 +465,9 @@ async def run_notification_cycle(
             session, owner_id=owner_id, send=send, grace_hours=grace_hours
         )
         await session.commit()
+        openings = 0
         if registration_digest:
-            await dispatch_registration_digest(session, owner_id=owner_id, send=send)
+            openings = await dispatch_registration_digest(session, owner_id=owner_id, send=send)
         from olymping.services.reviews import collect_review_batch, dispatch_reviewed_notices
 
         await collect_review_batch(session)
@@ -405,4 +475,4 @@ async def run_notification_cycle(
         changes = await dispatch_reviewed_notices(
             session, owner_id=owner_id, send=send, send_with_actions=send_with_actions
         )
-        return reminders, changes
+        return reminders, changes + openings

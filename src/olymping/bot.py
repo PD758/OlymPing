@@ -1831,7 +1831,7 @@ async def _notification_loop(
                     owner_id=user_id,
                     send=send,
                     grace_hours=settings.reminder_grace_hours,
-                    registration_digest=user_id == settings.owner_telegram_id,
+                    registration_digest=True,
                     send_with_actions=send_actions,
                 )
                 async with factory() as session:
@@ -1878,7 +1878,7 @@ async def _ctftime_loop(
                     base_url=settings.ctftime_base_url,
                     lookahead_days=settings.ctftime_lookahead_days,
                 )
-                await queue_open_event_notices(session)
+                await queue_open_event_notices(session, event_ids=summary.changed_event_ids)
                 await session.commit()
             logger.info("Scheduled CTFtime sync completed: %s", summary)
         except Exception:
@@ -1905,7 +1905,7 @@ async def prepare_database(
                 create_new_event_notices=catalog_exists,
             )
             logger.info("Calendar import completed: %s", summary)
-            await queue_open_event_notices(session)
+            await queue_open_event_notices(session, event_ids=summary.changed_event_ids)
         except CalendarImportError:
             logger.exception("Calendar import failed")
             raise

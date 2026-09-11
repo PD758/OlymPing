@@ -58,6 +58,9 @@ async def _with_database(settings: Settings, command: str, path: Path | None = N
                 print("Database is at the latest revision")
             elif command == "import-data":
                 summary = await import_data_directory(session, path or settings.data_dir)
+                from olymping.services.availability import queue_open_event_notices
+
+                await queue_open_event_notices(session, event_ids=summary.changed_event_ids)
                 print(summary)
             elif command == "sync-ctftime":
                 summary = await sync_ctftime(

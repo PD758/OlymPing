@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -36,6 +37,7 @@ class ImportSummary:
     created_milestones: int = 0
     updated_milestones: int = 0
     notices: int = 0
+    changed_event_ids: set[str] = dataclass_field(default_factory=set[str])
 
     def merge(self, other: ImportSummary) -> None:
         self.files += other.files
@@ -44,6 +46,7 @@ class ImportSummary:
         self.created_milestones += other.created_milestones
         self.updated_milestones += other.updated_milestones
         self.notices += other.notices
+        self.changed_event_ids.update(other.changed_event_ids)
 
     def __str__(self) -> str:
         return (
@@ -331,6 +334,15 @@ async def upsert_event(
             )
     if event_existed:
         summary.notices += await reapply_event(session, event, old_tags=old_tags)
+    if any(
+        (
+            summary.created_events,
+            summary.updated_events,
+            summary.created_milestones,
+            summary.updated_milestones,
+        )
+    ):
+        summary.changed_event_ids.add(seed.id)
     return summary
 
 
