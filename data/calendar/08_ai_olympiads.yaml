@@ -69,21 +69,51 @@ events:
   - id: other:rudn-data-analysis-machine-learning-2026
     source_kind: OTHER
     title: "Олимпиада РУДН — анализ данных и машинное обучение"
-    description: "Профиль олимпиады РУДН для школьников по анализу данных и машинному обучению. На официальной странице пока опубликован завершённый цикл 2025/26, без дат следующего сезона."
+    description: "Профиль олимпиады РУДН для школьников по анализу данных и машинному обучению. Официальная страница публикует расписание сезона 2026/27."
     category: artificial-intelligence
     tags: [ai, artificial-intelligence, machine-learning, data-analysis, programming, informatics, rudn]
     url: https://olympiada.rudn.ru/subject/analiz-dannyx-i-masinnoe-obucenie
     source_url: https://olympiada.rudn.ru/subject/analiz-dannyx-i-masinnoe-obucenie
-    status: tbd
-    format: "отбор и заключительный этап дистанционно"
+    status: confirmed
+    format: "отборочный и заключительный этапы дистанционно"
     is_online: true
     restrictions: "9–11 классы"
     min_grade: 9
     max_grade: 11
     milestones:
+      - id: other:rudn-data-analysis-machine-learning-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-09-15T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://olympiada.rudn.ru/subject/analiz-dannyx-i-masinnoe-obucenie
+      - id: other:rudn-data-analysis-machine-learning-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2027-01-25T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://olympiada.rudn.ru/subject/analiz-dannyx-i-masinnoe-obucenie
       - id: other:rudn-data-analysis-machine-learning-2026:schedule
+        advancement_paths: []
+        terminal: false
         kind: qualifier
-        title: "Расписание следующего сезона — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап онлайн"
+        starts_at: "2026-10-01T00:00:00+03:00"
+        ends_at: "2027-01-26T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://olympiada.rudn.ru/subject/analiz-dannyx-i-masinnoe-obucenie
+      - id: other:rudn-data-analysis-machine-learning-2026:final
+        advancement_paths: [["other:rudn-data-analysis-machine-learning-2026:schedule"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-02-13T00:00:00+03:00"
+        ends_at: "2027-02-19T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
         source_url: https://olympiada.rudn.ru/subject/analiz-dannyx-i-masinnoe-obucenie

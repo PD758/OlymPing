@@ -22,21 +22,27 @@ events:
   - id: mosh:astronomy-2026
     source_kind: MOSH
     title: "МОШ — астрономия"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская астрономическая олимпиада 2026/27; опубликованы даты дистанционного отборочного этапа."
     category: natural-science
     tags: [mosh, astronomy]
-    url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    url: https://mos.olimpiada.ru/olymp/astr
+    source_url: https://mos.olimpiada.ru/news/4597
+    status: confirmed
     location: "Москва"
-    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    restrictions: "5–11 классы"
+    min_grade: 5
+    max_grade: 11
     milestones:
       - id: mosh:astronomy-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Дистанционный отборочный этап"
+        starts_at: "2026-12-04T00:00:00+03:00"
+        ends_at: "2026-12-18T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://mos.olimpiada.ru/news/4597
 
   - id: mosh:biology-2026
     source_kind: MOSH
