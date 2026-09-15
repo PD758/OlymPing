@@ -9,13 +9,30 @@ events:
     url: https://ctfcup.ru/
     source_url: https://ctfcup.ru/
     status: confirmed
-    format: "Attack-Defense"
+    format: "отбор Jeopardy; финальные туры Attack-Defense"
     milestones:
+      - id: other:ctf-cup-russia-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-10-25T12:00:00+03:00"
+        precision: exact
+        status: confirmed
+        source_url: https://ctfcup.ru/doc/polozhenie-x-kubok-ctf-2026.pdf
       - id: other:ctf-cup-russia-2026:qualifier
         kind: qualifier
         title: "Отборочный тур"
-        starts_at: "2026-10-31T00:00:00+03:00"
-        ends_at: "2026-11-02T00:00:00+03:00"
-        precision: window
+        starts_at: "2026-10-31T12:00:00+03:00"
+        ends_at: "2026-11-01T12:00:00+03:00"
+        precision: exact
         status: confirmed
-        source_url: https://ctfcup.ru/
+        source_url: https://ctfcup.ru/doc/polozhenie-x-kubok-ctf-2026.pdf
+      - id: other:ctf-cup-russia-2026:school-final
+        advancement_paths: [[other:ctf-cup-russia-2026:qualifier]]
+        terminal: true
+        kind: final
+        title: "Финальный тур — школьный зачёт"
+        starts_at: "2026-12-04T10:00:00+03:00"
+        ends_at: "2026-12-04T19:00:00+03:00"
+        precision: exact
+        status: confirmed
+        source_url: https://ctfcup.ru/doc/polozhenie-x-kubok-ctf-2026.pdf

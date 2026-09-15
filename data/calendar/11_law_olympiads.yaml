@@ -102,7 +102,7 @@ events:
   - id: other:femida-law-2026
     source_kind: OTHER
     title: "Межрегиональная олимпиада по праву «Фемида»"
-    description: "Олимпиада РГУП имени В. М. Лебедева по праву. На проверенной официальной странице подтверждено только открытие регистрации; остальные даты 2026/27 не опубликованы."
+    description: "Олимпиада РГУП имени В. М. Лебедева по праву. Отборочный этап проходит онлайн отдельно для 9, 10 и 11 классов; заключительный этап проводится очно."
     category: law
     tags: [law, femida, rsuj]
     url: https://olymp.rgup.ru/
@@ -115,13 +115,51 @@ events:
       - id: other:femida-law-2026:registration-open
         kind: registration_open
         title: "Открытие регистрации"
-        starts_at: "2026-10-01T00:00:00+03:00"
-        precision: date
+        starts_at: "2026-10-01T07:00:00+03:00"
+        precision: exact
+        status: confirmed
+        source_url: https://olymp.rgup.ru/
+      - id: other:femida-law-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2026-11-10T22:00:00+03:00"
+        precision: exact
         status: confirmed
         source_url: https://olymp.rgup.ru/
       - id: other:femida-law-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27 — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап — 9 класс"
+        starts_at: "2026-11-29T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.rgup.ru/
+      - id: other:femida-law-2026:qualifier-10
+        kind: qualifier
+        title: "Отборочный этап — 10 класс"
+        starts_at: "2026-12-06T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.rgup.ru/
+      - id: other:femida-law-2026:qualifier-11
+        kind: qualifier
+        title: "Отборочный этап — 11 класс"
+        starts_at: "2026-12-13T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://olymp.rgup.ru/
+      - id: other:femida-law-2026:final
+        advancement_paths:
+          - [other:femida-law-2026:schedule]
+          - [other:femida-law-2026:qualifier-10]
+          - [other:femida-law-2026:qualifier-11]
+        terminal: true
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-01-31T09:00:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: false
         source_url: https://olymp.rgup.ru/

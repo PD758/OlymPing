@@ -156,17 +156,53 @@ events:
   - id: other:mkoshp-2026
     source_kind: OTHER
     title: "Московская командная олимпиада по программированию среди школьников"
-    description: "Командная олимпиада по программированию с квалификационным и финальным турами; победители приглашаются на ВКОШП. Расписание сезона 2026/27 на официальном сайте не опубликовано."
+    description: "Командная олимпиада по программированию с любительской и профессиональной лигами; каждая включает отборочный и финальный тур. Лучшие команды профессиональной лиги получают право представлять Москву на ВКОШП."
     category: informatics
     tags: [informatics, programming, algorithms, team, mkoshp, moscow]
     url: https://mkoshp.ru/
     source_url: https://mkoshp.ru/
-    status: tbd
-    format: "командная; квалификационный и финальный туры"
+    status: confirmed
+    format: "командная; две последовательно проводимые лиги, в каждой — отборочный и финальный туры"
     milestones:
       - id: other:mkoshp-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап любительской лиги"
+        starts_at: "2026-09-26T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: false
+        location: "Площадки Москвы"
+        source_url: https://mkoshp.ru/
+      - id: other:mkoshp-2026:amateur-final
+        advancement_paths: [["other:mkoshp-2026:schedule"]]
+        terminal: false
+        kind: final
+        title: "Финал любительской лиги"
+        starts_at: "2026-10-04T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: false
+        location: "Офис Т-Банка, Москва"
+        source_url: https://mkoshp.ru/
+      - id: other:mkoshp-2026:professional-qualifier
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Отборочный этап профессиональной лиги"
+        starts_at: "2026-10-11T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: false
+        location: "Площадки Москвы"
+        source_url: https://mkoshp.ru/
+      - id: other:mkoshp-2026:professional-final
+        advancement_paths: [["other:mkoshp-2026:professional-qualifier"], ["other:mkoshp-2026:amateur-final"]]
+        terminal: true
+        kind: final
+        title: "Финал профессиональной лиги"
+        starts_at: "2026-11-15T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: false
+        location: "Офис Т-Банка, Москва"
         source_url: https://mkoshp.ru/

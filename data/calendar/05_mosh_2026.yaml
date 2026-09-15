@@ -85,20 +85,24 @@ events:
   - id: mosh:probability-statistics-2026
     source_kind: MOSH
     title: "МОШ — вероятность и статистика"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27; опубликованы даты дистанционного этапа."
     category: mathematics
     tags: ["mosh", "probability", "statistics", "mathematics"]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: confirmed
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
     milestones:
       - id: mosh:probability-statistics-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Дистанционный этап"
+        starts_at: "2026-11-18T00:00:00+03:00"
+        ends_at: "2026-11-25T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
         source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:genetics-2026
@@ -266,20 +270,22 @@ events:
   - id: mosh:complex-security-2026
     source_kind: MOSH
     title: "МОШ — комплексная безопасность"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27; опубликована дата отборочного этапа."
     category: safety
     tags: [mosh, complex-security, obzh, obzr]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: confirmed
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–8 классы"
     milestones:
       - id: mosh:complex-security-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап"
+        starts_at: "2026-12-12T00:00:00+03:00"
+        ends_at: "2026-12-13T00:00:00+03:00"
+        precision: date
+        status: confirmed
         source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:linguistics-2026

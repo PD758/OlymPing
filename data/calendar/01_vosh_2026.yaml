@@ -225,7 +225,7 @@ events:
     category: technology
     tags: [vosh, technology, engineering]
     url: https://vos.olimpiada.ru/subject/ttitt
-    source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-tekhnike-tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-08
+    source_url: https://vos.olimpiada.ru/news/startoval-shkolnyy-etap-po-tekhnike--tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-15
     status: confirmed
     location: "Москва"
     restrictions: "Школьный: 5–11; муниципальный: 7–11; региональный/финал: 9–11. Можно выбрать старший класс."
@@ -240,7 +240,7 @@ events:
         status: confirmed
         format: "электронная регистрация"
         is_online: true
-        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-tekhnike-tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-08
+        source_url: https://vos.olimpiada.ru/news/startoval-shkolnyy-etap-po-tekhnike--tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-15
       - id: vosh:technology-technical-2026:school-stage
         advancement_paths: []
         terminal: false
@@ -253,7 +253,7 @@ events:
         format: "электронная тестирующая система"
         location: "по месту обучения"
         is_online: true
-        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-tekhnike-tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-08
+        source_url: https://vos.olimpiada.ru/news/startoval-shkolnyy-etap-po-tekhnike--tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-15
       - id: vosh:technology-technical-2026:school-practical
         kind: qualifier
         title: "Школьный этап — практический тур"
@@ -264,7 +264,7 @@ events:
         format: "школьный практический тур"
         location: "по месту обучения"
         is_online: true
-        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-tekhnike-tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-08
+        source_url: https://vos.olimpiada.ru/news/startoval-shkolnyy-etap-po-tekhnike--tekhnologii-i-tekhnicheskomu-tvorchestvu-2026-09-15
       - id: vosh:technology-technical-2026:municipal-stage
         advancement_paths: [["vosh:technology-technical-2026:school-stage"]]
         terminal: false
