@@ -40,6 +40,85 @@ from olymping.services.users import ensure_user_profile
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("custom", [False, True])
+async def test_no_advance_registration_opening_even_for_saved_retry(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]], custom: bool
+) -> None:
+    _, factory = database
+    starts = datetime(2026, 9, 21, tzinfo=UTC)
+    due = starts - timedelta(hours=7)  # Previous day, 20:00 Moscow.
+    async with factory() as session:
+        await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:advance",
+            title="Advance",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id=f"test:advance:{kind}",
+                    kind=kind,
+                    title=kind,
+                    starts_at=starts,
+                    status="confirmed",
+                    precision="exact",
+                )
+                for kind in ("registration_open", "registration_deadline", "qualifier")
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add(EventPreference(telegram_user_id=99, event_id=event.id, interest="watching"))
+        if custom:
+            rule = ReminderRule(
+                id="test:advance:custom",
+                telegram_user_id=99,
+                event_id=event.id,
+                mode="offset",
+                offset_minutes=420,
+            )
+            session.add(rule)
+        else:
+            rule = await session.scalar(
+                select(ReminderRule).where(
+                    ReminderRule.telegram_user_id == 99,
+                    ReminderRule.source_kind == "NTO",
+                    ReminderRule.days_before == 1,
+                )
+            )
+            assert rule is not None
+        await session.flush()
+        session.add(
+            NotificationDelivery(
+                telegram_user_id=99,
+                milestone_id="test:advance:registration_open",
+                reminder_rule_id=rule.id,
+                scheduled_for=due,
+                status="pending",
+            )
+        )
+        await session.commit()
+    sent: list[str] = []
+
+    async def send(_user: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        assert await dispatch_due_reminders(session, owner_id=99, send=send, now=due) == 2
+        assert all("registration_open" not in text for text in sent)
+        assert any("qualifier" in text for text in sent)
+        assert any("Завтра заканчивается регистрация" in text for text in sent)
+    async with factory() as session:
+        # Catch-up after opening must not revive the old advance reminder.
+        assert (
+            await dispatch_due_reminders(
+                session, owner_id=99, send=send, now=starts + timedelta(hours=1)
+            )
+            == 0
+        )
+
+
+@pytest.mark.asyncio
 async def test_real_dano_calendar_default_registration_reminders(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:

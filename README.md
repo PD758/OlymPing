@@ -64,6 +64,9 @@ confirmed registration openings in the preceding 24-hour window that match their
 excluding ignored, registered, cancelled, or already closed events. Empty digests are silent;
 delivered events are recorded in SQLite to avoid repeats after a restart. Events without
 a confirmed opening date are not included. This digest is independent of new-event notices.
+Registration-opening reminders are never sent ahead of the opening date/time, including
+saved custom rules and pending retries. Advance reminders for participation stages and
+registration deadlines remain enabled.
 
 - `/start` — onboarding for new users, otherwise the main menu;
 - `/onboarding` — choose class and subjects again and select matching calendar events;
@@ -274,7 +277,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.3.2 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.3.3 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.

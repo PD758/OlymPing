@@ -236,6 +236,15 @@ async def dispatch_due_reminders(
         rules = await _rules_for_event(session, owner_id, event, milestone)
         for rule in rules:
             scheduled = schedule_rule(rule, milestone, profile.timezone)
+            # Opening announcements belong on/after the opening itself, even
+            # for saved custom rules or retries caught up after a restart.
+            if (
+                scheduled is not None
+                and milestone.kind == MilestoneKind.REGISTRATION_OPEN.value
+                and milestone.starts_at is not None
+                and scheduled < aware_utc(milestone.starts_at)
+            ):
+                continue
             if scheduled is None or not (now - timedelta(hours=grace_hours) <= scheduled <= now):
                 continue
             existing_result = await session.execute(
