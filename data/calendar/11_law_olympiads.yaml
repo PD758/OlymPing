@@ -32,7 +32,7 @@ events:
         title: "Первый тур отбора — первый вариант даты"
         starts_at: "2026-09-25T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable
       - id: other:hse-highest-test-law-2026:qualifier-1b
@@ -40,7 +40,7 @@ events:
         title: "Первый тур отбора — второй вариант даты"
         starts_at: "2026-10-04T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable
       - id: other:hse-highest-test-law-2026:qualifier-2

@@ -46,7 +46,7 @@ events:
         format: "очно"
         location: "Москва"
         is_online: false
-        source_url: https://vos.olimpiada.ru/
+        source_url: https://vos.olimpiada.ru/2026/okrug
       - id: vosh:german-2026:regional-stage
         advancement_paths: [["vosh:german-2026:municipal-stage"]]
         terminal: false
@@ -115,7 +115,7 @@ events:
         format: "очно"
         location: "Москва"
         is_online: false
-        source_url: https://vos.olimpiada.ru/
+        source_url: https://vos.olimpiada.ru/2026/okrug
       - id: vosh:literature-2026:regional-stage
         advancement_paths: [["vosh:literature-2026:municipal-stage"]]
         terminal: false
@@ -195,7 +195,7 @@ events:
         format: "очно"
         location: "Москва"
         is_online: false
-        source_url: https://vos.olimpiada.ru/
+        source_url: https://vos.olimpiada.ru/2026/okrug
       - id: vosh:technology-home-2026:regional-stage
         advancement_paths: [["vosh:technology-home-2026:municipal-stage"]]
         terminal: false
@@ -275,7 +275,7 @@ events:
         format: "очно"
         location: "Москва"
         is_online: false
-        source_url: https://vos.olimpiada.ru/
+        source_url: https://vos.olimpiada.ru/2026/okrug
       - id: vosh:technology-technical-2026:regional-stage
         advancement_paths: [["vosh:technology-technical-2026:municipal-stage"]]
         terminal: false
@@ -344,7 +344,7 @@ events:
         format: "очно"
         location: "Москва"
         is_online: false
-        source_url: https://vos.olimpiada.ru/
+        source_url: https://vos.olimpiada.ru/2026/okrug
       - id: vosh:english-2026:regional-stage
         advancement_paths: [["vosh:english-2026:municipal-stage"]]
         terminal: false

@@ -29,6 +29,59 @@ NOW = datetime(2026, 10, 7, 17, tzinfo=UTC)
 
 
 @pytest.mark.asyncio
+async def test_ai_challenge_import_resolves_gaps_and_shares_final_admission(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    seed = next(
+        event
+        for event in load_calendar_document(Path("data/calendar/08_ai_olympiads.yaml")).events
+        if event.id == "other:ai-challenge-2026"
+    )
+    old = seed.model_copy(
+        update={
+            "milestones": [
+                stage.model_copy(update={"advancement_paths": None}) for stage in seed.milestones
+            ]
+        }
+    )
+    now = datetime(2026, 9, 18, 12, tzinfo=UTC)
+    sent: list[str] = []
+
+    async def send(_user: int, _text: str, stage: str, kind: str) -> None:
+        assert kind == "gap"
+        sent.append(stage)
+
+    async with factory() as session:
+        admin = await ensure_admin_profile(session, 1, "Europe/Moscow")
+        admin.onboarding_completed = True
+        admin.auto_subscribe_new_events = False
+        await import_document(session, CalendarDocument(calendar_version=1, events=[old]))
+        await session.commit()
+        assert (
+            await dispatch_workflow_notices(session, user_id=1, admin_id=1, send=send, now=now) == 2
+        )
+    async with factory() as session:
+        current = CalendarDocument(calendar_version=1, events=[seed])
+        await import_document(session, current)
+        await session.commit()
+        assert (
+            await dispatch_workflow_notices(session, user_id=1, admin_id=1, send=send, now=now) == 0
+        )
+        rows = list(await session.scalars(select(WorkflowNotice)))
+        assert len(rows) == 2 and all(row.status == "resolved" for row in rows)
+        event = await session.get(Event, seed.id)
+        assert event is not None
+        stages = {stage.id: stage for stage in event.milestones}
+        for suffix in ("final", "defense"):
+            stage = stages[f"{seed.id}:{suffix}"]
+            assert stage_access(stage, stages, {f"{seed.id}:qualifier": "not_passed"}) == "blocked"
+            assert stage_access(stage, stages, {f"{seed.id}:team-stage": "passed"}) == "eligible"
+        assert (await import_document(session, current)).updated_milestones == 0
+    assert len(sent) == 2
+
+
+@pytest.mark.asyncio
 async def test_rosfin_import_resolves_reported_gaps_without_repeating_alerts(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:

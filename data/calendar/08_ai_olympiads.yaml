@@ -19,7 +19,7 @@ events:
         starts_at: "2026-05-25T00:00:00+03:00"
         precision: date
         status: confirmed
-        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_53ao4Cd.pdf
+        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_4LKUUtO.pdf
       - id: other:ai-challenge-2026:registration-deadline
         kind: registration_deadline
         title: "Окончание регистрации"
@@ -27,8 +27,10 @@ events:
         precision: date
         status: confirmed
         is_online: true
-        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_53ao4Cd.pdf
+        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_4LKUUtO.pdf
       - id: other:ai-challenge-2026:qualifier
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Отборочный этап"
         starts_at: "2026-06-01T00:00:00+03:00"
@@ -36,8 +38,10 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://aiijc.com/
+        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_4LKUUtO.pdf
       - id: other:ai-challenge-2026:team-stage
+        advancement_paths: [["other:ai-challenge-2026:qualifier"]]
+        terminal: false
         kind: competition
         title: "Основной этап — индивидуально или в команде"
         starts_at: "2026-07-01T00:00:00+03:00"
@@ -45,8 +49,9 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://aiijc.com/ru/faq/main_stage
+        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_4LKUUtO.pdf
       - id: other:ai-challenge-2026:final
+        advancement_paths: [["other:ai-challenge-2026:team-stage"]]
         terminal: true
         kind: final
         title: "Финальный этап"
@@ -55,8 +60,9 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://aiijc.com/
+        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_4LKUUtO.pdf
       - id: other:ai-challenge-2026:defense
+        advancement_paths: [["other:ai-challenge-2026:team-stage"]]
         terminal: true
         kind: final
         title: "Защита решений финального этапа"
@@ -64,7 +70,7 @@ events:
         ends_at: "2026-11-14T00:00:00+03:00"
         precision: window
         status: confirmed
-        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_53ao4Cd.pdf
+        source_url: https://davmedia.cups.online/project_links/52/id_4__7bfd094e1bf00410c4998edb8d49da6e_4LKUUtO.pdf
 
   - id: other:rudn-data-analysis-machine-learning-2026
     source_kind: OTHER

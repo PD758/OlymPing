@@ -31,18 +31,18 @@ events:
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-economics-2026:qualifier-1
         kind: qualifier
-        title: "Первый тур — первый вариант даты (проект)"
+        title: "Первый тур — первый вариант даты"
         starts_at: "2026-09-26T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-economics-2026:qualifier-1b
         kind: qualifier
-        title: "Первый тур — второй вариант даты (проект)"
+        title: "Первый тур — второй вариант даты"
         starts_at: "2026-09-30T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-economics-2026:qualifier-2
@@ -95,10 +95,10 @@ events:
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-financial-literacy-2026:qualifier-1
         kind: qualifier
-        title: "Первый тур отборочного этапа (проект)"
+        title: "Первый тур отборочного этапа"
         starts_at: "2026-10-04T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-financial-literacy-2026:qualifier-2
@@ -151,10 +151,10 @@ events:
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-business-basics-2026:qualifier-1
         kind: qualifier
-        title: "Первый тур отборочного этапа (проект)"
+        title: "Первый тур отборочного этапа"
         starts_at: "2026-10-03T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-business-basics-2026:qualifier-2

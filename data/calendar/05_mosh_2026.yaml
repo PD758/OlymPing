@@ -523,20 +523,24 @@ events:
   - id: mosh:physics-2026
     source_kind: MOSH
     title: "МОШ — физика"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27; опубликованы даты отборочного этапа."
     category: natural-science
     tags: [mosh, physics]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: confirmed
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
     milestones:
       - id: mosh:physics-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап"
+        starts_at: "2026-10-15T00:00:00+03:00"
+        ends_at: "2026-10-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
         source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:philology-2026
