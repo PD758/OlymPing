@@ -287,6 +287,24 @@ events:
         precision: date
         status: confirmed
         source_url: https://mos.olimpiada.ru/schedule
+      - id: mosh:complex-security-2026:final-theory
+        advancement_paths: [["mosh:complex-security-2026:schedule"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап — теоретический тур"
+        starts_at: "2027-03-19T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://mos.olimpiada.ru/schedule
+      - id: mosh:complex-security-2026:final-practical
+        advancement_paths: [["mosh:complex-security-2026:schedule"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап — практический тур"
+        starts_at: "2027-03-20T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:linguistics-2026
     source_kind: MOSH
