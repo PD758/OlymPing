@@ -67,16 +67,29 @@ events:
     tags: [rsosh, cybersecurity, informatics]
     url: https://ikb.mtuci.ru/
     source_url: https://ikb.mtuci.ru/
-    status: tbd
+    status: confirmed
     restrictions: "8–11 классы"
     min_grade: 8
     max_grade: 11
     milestones:
       - id: rsosh:verchenko-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Дистанционный отборочный этап"
+        starts_at: "2026-11-09T00:00:00+03:00"
+        ends_at: "2027-02-09T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://ikb.mtuci.ru/
+      - id: rsosh:verchenko-2026:final
+        advancement_paths: [["rsosh:verchenko-2026:schedule"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-02-28T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: false
         source_url: https://ikb.mtuci.ru/
 
   - id: rsosh:hse-informatics-2026
