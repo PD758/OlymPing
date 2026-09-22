@@ -519,12 +519,12 @@ events:
   - id: vosh:russian-2026
     source_kind: VOSH
     title: "ВсОШ — русский язык"
-    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; даты взяты из проекта официального графика."
+    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; регистрация открыта, сроки школьного этапа подтверждены организатором."
     category: humanities
     tags: [vosh, russian]
     url: https://vos.olimpiada.ru/subject/russ
-    source_url: https://vos.olimpiada.ru/2026/school#schedule
-    status: tentative
+    source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-russkomu-yazyku-2026-09-15
+    status: confirmed
     location: "Москва"
     restrictions: "Школьный: 4–11; муниципальный: 7–11; региональный/финал: 9–11. Можно выбрать старший класс."
     min_grade: 4
@@ -535,10 +535,10 @@ events:
         title: "Открытие регистрации на школьный этап"
         starts_at: "2026-09-15T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         format: "электронная регистрация"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-russkomu-yazyku-2026-09-15
       - id: vosh:russian-2026:school-stage
         advancement_paths: []
         terminal: false
@@ -547,11 +547,11 @@ events:
         starts_at: "2026-09-22T09:00:00+03:00"
         ends_at: "2026-09-22T21:00:00+03:00"
         precision: exact
-        status: tentative
+        status: confirmed
         format: "электронная тестирующая система"
         location: "по месту обучения"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-russkomu-yazyku-2026-09-15
       - id: vosh:russian-2026:municipal-stage
         advancement_paths: [["vosh:russian-2026:school-stage"]]
         terminal: false
@@ -806,12 +806,12 @@ events:
   - id: vosh:italian-2026
     source_kind: VOSH
     title: "ВсОШ — итальянский язык"
-    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; даты взяты из проекта официального графика."
+    description: "Школьный этап ВсОШ в Москве в 2026/27 учебном году; регистрация открыта, сроки школьного этапа подтверждены организатором."
     category: languages
     tags: [vosh, italian]
     url: https://vos.olimpiada.ru/subject/ital
-    source_url: https://vos.olimpiada.ru/2026/school#schedule
-    status: tentative
+    source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-italyanskomu-yazyku-2026-09-21
+    status: confirmed
     location: "Москва"
     restrictions: "Школьный: 5–11; муниципальный: 7–11; региональный/финал: 9–11. Можно выбрать старший класс."
     min_grade: 5
@@ -822,10 +822,10 @@ events:
         title: "Открытие регистрации на школьный этап"
         starts_at: "2026-09-21T00:00:00+03:00"
         precision: date
-        status: tentative
+        status: confirmed
         format: "электронная регистрация"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-italyanskomu-yazyku-2026-09-21
       - id: vosh:italian-2026:school-stage
         advancement_paths: []
         terminal: false
@@ -834,11 +834,11 @@ events:
         starts_at: "2026-09-28T09:00:00+03:00"
         ends_at: "2026-09-28T21:00:00+03:00"
         precision: exact
-        status: tentative
+        status: confirmed
         format: "электронная тестирующая система"
         location: "по месту обучения"
         is_online: true
-        source_url: https://vos.olimpiada.ru/2026/school#schedule
+        source_url: https://vos.olimpiada.ru/news/otkryta-registratsiya-na-shkolnyy-etap-po-italyanskomu-yazyku-2026-09-21
       - id: vosh:italian-2026:municipal-stage
         advancement_paths: [["vosh:italian-2026:school-stage"]]
         terminal: false

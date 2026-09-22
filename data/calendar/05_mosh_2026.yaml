@@ -404,58 +404,64 @@ events:
   - id: mosh:preprofessional-engineering-2026
     source_kind: MOSH
     title: "Московская предпрофессиональная олимпиада — инженерия"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская предпрофессиональная олимпиада 2026/27; опубликованы даты теоретического тура отборочного этапа."
     category: engineering
     tags: [mosh, preprofessional, engineering]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: confirmed
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
     milestones:
       - id: mosh:preprofessional-engineering-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Теоретический тур отборочного этапа"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
         source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:preprofessional-it-2026
     source_kind: MOSH
     title: "Московская предпрофессиональная олимпиада — информационные технологии"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская предпрофессиональная олимпиада 2026/27; опубликованы даты теоретического тура отборочного этапа."
     category: informatics
     tags: ["mosh", "preprofessional", "it", "informatics"]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: confirmed
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
     milestones:
       - id: mosh:preprofessional-it-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Теоретический тур отборочного этапа"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
         source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:preprofessional-research-2026
     source_kind: MOSH
     title: "Московская предпрофессиональная олимпиада — исследования"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская предпрофессиональная олимпиада 2026/27; опубликованы даты теоретического тура отборочного этапа."
     category: research
     tags: [mosh, preprofessional, research]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: confirmed
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
     milestones:
       - id: mosh:preprofessional-research-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Теоретический тур отборочного этапа"
+        starts_at: "2026-11-05T00:00:00+03:00"
+        ends_at: "2026-11-23T00:00:00+03:00"
+        precision: window
+        status: confirmed
         source_url: https://mos.olimpiada.ru/schedule
 
   - id: mosh:robotics-5-8-2026

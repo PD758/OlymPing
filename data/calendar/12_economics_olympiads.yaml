@@ -24,7 +24,7 @@ events:
       - id: other:hse-economics-2026:registration-deadline
         kind: registration_deadline
         title: "Окончание регистрации"
-        starts_at: "2026-09-21T14:00:00+03:00"
+        starts_at: "2026-09-22T14:00:00+03:00"
         precision: exact
         status: confirmed
         is_online: true
@@ -88,7 +88,7 @@ events:
       - id: other:hse-financial-literacy-2026:registration-deadline
         kind: registration_deadline
         title: "Окончание регистрации"
-        starts_at: "2026-09-21T14:00:00+03:00"
+        starts_at: "2026-09-22T14:00:00+03:00"
         precision: exact
         status: confirmed
         is_online: true
@@ -144,7 +144,7 @@ events:
       - id: other:hse-business-basics-2026:registration-deadline
         kind: registration_deadline
         title: "Окончание регистрации"
-        starts_at: "2026-09-21T14:00:00+03:00"
+        starts_at: "2026-09-22T14:00:00+03:00"
         precision: exact
         status: confirmed
         is_online: true
