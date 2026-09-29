@@ -65,19 +65,21 @@ events:
   - id: other:lomonosov-law-2026
     source_kind: OTHER
     title: "Олимпиада школьников «Ломоносов» — право"
-    description: "Профиль «Право» олимпиады школьников «Ломоносов». Официальное расписание 2026/27 на проверенной странице не опубликовано."
+    description: "Олимпиада «Ломоносов» 2026/27: регистрация откроется во второй половине октября, отбор запланирован на октябрь–декабрь. Точные даты по профилю пока не опубликованы."
     category: law
     tags: [law, lomonosov, msu]
     url: https://olymp.msu.ru/rus/event/10021/
     source_url: https://olymp.msu.ru/
-    status: tbd
+    status: "tentative"
     milestones:
       - id: other:lomonosov-law-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27 — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап (общий период; точные даты уточняются)"
+        precision: "window"
+        status: "tentative"
         source_url: https://olymp.msu.ru/
+        starts_at: "2026-10-01T00:00:00+03:00"
+        ends_at: "2027-01-01T00:00:00+03:00"
 
   - id: other:kutafin-law-2026
     source_kind: OTHER
@@ -162,8 +164,8 @@ events:
       - id: other:femida-law-2026:registration-open
         kind: registration_open
         title: "Открытие регистрации"
-        starts_at: "2026-10-01T07:00:00+03:00"
-        precision: exact
+        starts_at: "2026-10-09T10:00:00+03:00"
+        precision: "exact"
         status: confirmed
         source_url: https://olymp.rgup.ru/
       - id: other:femida-law-2026:registration-deadline

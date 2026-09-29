@@ -165,44 +165,96 @@ events:
   - id: mosh:informatics-10-11-2026
     source_kind: MOSH
     title: "МОШ — информатика (10–11 классы)"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27; два очных отборочных тура. Для допуска в финал достаточно проходного результата хотя бы одного тура."
     category: informatics
     tags: [mosh, informatics, programming]
-    url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    url: "https://mos-inf.olimpiada.ru/"
+    source_url: "https://mos-inf.olimpiada.ru/"
+    status: "confirmed"
     location: "Москва"
-    restrictions: "10–11 классы"
+    restrictions: "10–11 классы; можно участвовать за старший класс"
     min_grade: 10
     max_grade: 11
     milestones:
       - id: mosh:informatics-10-11-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Первый отборочный тур (очно)"
+        precision: "date"
+        status: "confirmed"
+        source_url: "https://mos-inf.olimpiada.ru/"
+        starts_at: "2027-02-14T00:00:00+03:00"
+        is_online: false
+        advancement_paths: []
+        terminal: false
+      - id: mosh:informatics-10-11-2026:qualifier-2
+        kind: qualifier
+        title: Второй отборочный тур (очно)
+        starts_at: '2027-02-28T00:00:00+03:00'
+        precision: date
+        status: confirmed
+        is_online: false
+        advancement_paths: []
+        terminal: false
+        source_url: https://mos-inf.olimpiada.ru/
+      - id: mosh:informatics-10-11-2026:final
+        kind: final
+        title: Заключительный этап
+        starts_at: '2027-03-28T00:00:00+03:00'
+        precision: date
+        status: confirmed
+        is_online: false
+        advancement_paths:
+        - - mosh:informatics-10-11-2026:schedule
+        - - mosh:informatics-10-11-2026:qualifier-2
+        terminal: true
+        source_url: https://mos-inf.olimpiada.ru/
 
   - id: mosh:informatics-6-9-2026
     source_kind: MOSH
     title: "МОШ — информатика (6–9 классы)"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27; два очных отборочных тура. Для допуска в финал достаточно проходного результата хотя бы одного тура."
     category: informatics
     tags: [mosh, informatics, programming]
-    url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    url: "https://mos-inf.olimpiada.ru/"
+    source_url: "https://mos-inf.olimpiada.ru/"
+    status: "confirmed"
     location: "Москва"
-    restrictions: "6–9 классы"
+    restrictions: "6–9 классы; можно участвовать за старший класс"
     min_grade: 6
     max_grade: 9
     milestones:
       - id: mosh:informatics-6-9-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Первый отборочный тур (очно)"
+        precision: "date"
+        status: "confirmed"
+        source_url: "https://mos-inf.olimpiada.ru/"
+        starts_at: "2026-12-19T00:00:00+03:00"
+        is_online: false
+        advancement_paths: []
+        terminal: false
+      - id: mosh:informatics-6-9-2026:qualifier-2
+        kind: qualifier
+        title: Второй отборочный тур (очно)
+        starts_at: '2027-01-06T00:00:00+03:00'
+        precision: date
+        status: confirmed
+        is_online: false
+        advancement_paths: []
+        terminal: false
+        source_url: https://mos-inf.olimpiada.ru/
+      - id: mosh:informatics-6-9-2026:final
+        kind: final
+        title: Заключительный этап
+        starts_at: '2027-02-14T00:00:00+03:00'
+        precision: date
+        status: confirmed
+        is_online: false
+        advancement_paths:
+        - - mosh:informatics-6-9-2026:schedule
+        - - mosh:informatics-6-9-2026:qualifier-2
+        terminal: true
+        source_url: https://mos-inf.olimpiada.ru/
 
   - id: mosh:information-security-2026
     source_kind: MOSH
@@ -608,21 +660,23 @@ events:
   - id: mosh:chemistry-2026
     source_kind: MOSH
     title: "МОШ — химия"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27; отборочный этап по химии — 26 ноября–16 декабря."
     category: natural-science
     tags: [mosh, chemistry]
     url: https://mos.olimpiada.ru/olimpiads
     source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    status: "confirmed"
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 8–11 классы"
     milestones:
       - id: mosh:chemistry-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап"
+        precision: "window"
+        status: "confirmed"
         source_url: https://mos.olimpiada.ru/schedule
+        starts_at: "2026-11-26T00:00:00+03:00"
+        ends_at: "2026-12-17T00:00:00+03:00"
 
   - id: mosh:ecology-2026
     source_kind: MOSH

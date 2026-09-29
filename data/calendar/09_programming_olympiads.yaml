@@ -116,21 +116,35 @@ events:
   - id: other:vkoshp-2026
     source_kind: OTHER
     title: "Всероссийская командная олимпиада школьников по программированию"
-    description: "Открытая командная олимпиада по программированию; команда состоит из трёх школьников. Отбор проходит через региональные соревнования или централизованный интернет-тур. Расписание 2026/27 не опубликовано."
+    description: "Командная олимпиада по программированию: отбор через региональные соревнования или интернет-тур 15 ноября; финал 11–12 декабря 2026 года."
     category: informatics
     tags: [informatics, programming, algorithms, team, vkoshp, itmo]
     url: https://nerc.itmo.ru/school/russia-team/
-    source_url: https://nerc.itmo.ru/school/information/about.html
-    status: tbd
+    source_url: "https://nerc.itmo.ru/school/russia-team/"
+    status: "confirmed"
     format: "командная; региональный или интернет-отбор"
     restrictions: "Команда из 3 школьников; возрастные границы 2026/27 не опубликованы"
     milestones:
       - id: other:vkoshp-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
+        title: "Отборочный интернет-тур"
+        precision: "date"
+        status: "confirmed"
         source_url: https://nerc.itmo.ru/school/russia-team/
+        starts_at: "2026-11-15T00:00:00+03:00"
+        is_online: true
+        advancement_paths: []
+        terminal: false
+      - id: other:vkoshp-2026:final
+        kind: final
+        title: Финал (допуск через региональный или интернет-отбор)
+        starts_at: '2026-12-11T00:00:00+03:00'
+        precision: window
+        status: confirmed
+        is_online: false
+        terminal: true
+        source_url: https://nerc.itmo.ru/school/russia-team/
+        ends_at: '2026-12-13T00:00:00+03:00'
 
   - id: other:vkoshp-junior-2026
     source_kind: OTHER

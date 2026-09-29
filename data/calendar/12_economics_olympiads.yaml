@@ -211,33 +211,66 @@ events:
   - id: other:lomonosov-economics-2026
     source_kind: OTHER
     title: "Ломоносов — экономика"
-    description: "Профиль по экономике олимпиады школьников «Ломоносов». Расписание сезона 2026/27 на дату проверки не опубликовано."
+    description: "Олимпиада «Ломоносов» 2026/27: регистрация откроется во второй половине октября, отбор запланирован на октябрь–декабрь. Точные даты по профилю пока не опубликованы."
     category: economics
     tags: [economics, lomonosov, msu]
     url: https://olymp.msu.ru/
     source_url: https://olymp.msu.ru/
-    status: tbd
+    status: "tentative"
     milestones:
       - id: other:lomonosov-economics-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27 — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап (общий период; точные даты уточняются)"
+        precision: "window"
+        status: "tentative"
         source_url: https://olymp.msu.ru/
+        starts_at: "2026-10-01T00:00:00+03:00"
+        ends_at: "2027-01-01T00:00:00+03:00"
 
   - id: other:spbu-economics-2026
     source_kind: OTHER
     title: "Олимпиада СПбГУ — экономика"
-    description: "Профиль по экономике олимпиады школьников Санкт-Петербургского государственного университета. Расписание сезона 2026/27 на дату проверки не опубликовано."
+    description: "Олимпиада школьников СПбГУ 2026/27; опубликован общий график регистрации и онлайн-отбора. Точная дата заключительного этапа по предмету уточняется."
     category: economics
     tags: [economics, spbu]
     url: https://olympiada.spbu.ru/
     source_url: https://olympiada.spbu.ru/
-    status: tbd
+    status: "confirmed"
     milestones:
       - id: other:spbu-economics-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27 — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Отборочный этап (общий период)"
+        precision: "window"
+        status: "confirmed"
         source_url: https://olympiada.spbu.ru/
+        starts_at: "2026-10-20T00:00:00+03:00"
+        ends_at: "2026-12-02T00:00:00+03:00"
+        is_online: true
+        advancement_paths: []
+        terminal: false
+        results_at: "2026-12-25T00:00:00+03:00"
+      - id: other:spbu-economics-2026:registration-open
+        kind: registration_open
+        title: Открытие регистрации на олимпиаду
+        starts_at: '2026-10-01T00:00:00+03:00'
+        precision: date
+        status: confirmed
+        source_url: https://olympiada.spbu.ru/
+      - id: other:spbu-economics-2026:registration-deadline
+        kind: registration_deadline
+        title: Окончание регистрации
+        starts_at: '2026-12-01T16:00:00+03:00'
+        precision: exact
+        status: confirmed
+        source_url: https://olympiada.spbu.ru/
+      - id: other:spbu-economics-2026:final
+        kind: final
+        title: Заключительный этап (общий период; дата предмета уточняется)
+        starts_at: '2027-01-01T00:00:00+03:00'
+        precision: window
+        status: tentative
+        source_url: https://olympiada.spbu.ru/
+        terminal: true
+        advancement_paths:
+        - - other:spbu-economics-2026:schedule
+        ends_at: '2027-03-10T00:00:00+03:00'
