@@ -608,6 +608,13 @@ events:
     location: "Москва"
     restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
     milestones:
+      - id: mosh:physics-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-10-05T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://mosphys.olimpiada.ru/
       - id: mosh:physics-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
@@ -618,6 +625,15 @@ events:
         format: "дистанционно"
         is_online: true
         source_url: https://mos.olimpiada.ru/schedule
+
+      - id: mosh:physics-2026:final
+        kind: final
+        title: "Заключительный этап (предварительная дата)"
+        starts_at: "2027-02-28T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: false
+        source_url: https://mosphys.olimpiada.ru/
 
   - id: mosh:philology-2026
     source_kind: MOSH

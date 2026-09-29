@@ -116,6 +116,13 @@ events:
     min_grade: 8
     max_grade: 11
     milestones:
+      - id: rsosh:izumrud-informatics-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-09-01T00:00:00+05:00"
+        precision: date
+        status: confirmed
+        source_url: https://dovuz.urfu.ru/olymps/izumrud
       - id: rsosh:izumrud-informatics-2026:qualifier
         advancement_paths: []
         terminal: false
@@ -194,6 +201,13 @@ events:
     min_grade: 6
     max_grade: 11
     milestones:
+      - id: rsosh:step-future-informatics-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-09-14T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://olymp.bmstu.ru/ru/news/2026/09/14/registraciya-na-olimpiadu-shag-v-buduschee-otkryta
       - id: rsosh:step-future-informatics-2026:schedule
         kind: qualifier
         title: "Отборочный этап — первая волна"
