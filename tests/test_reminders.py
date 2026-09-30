@@ -5,8 +5,10 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import pytest
+from aiogram.exceptions import TelegramForbiddenError
+from aiogram.methods import SendMessage
 from conftest import approve_pending_reviews
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from olymping.models import (
@@ -18,6 +20,7 @@ from olymping.models import (
     Milestone,
     NoticeKind,
     NotificationDelivery,
+    OpenEventNotice,
     ReminderMode,
     ReminderRule,
     StageOutcome,
@@ -31,6 +34,7 @@ from olymping.services.reminders import (
     REMINDER_NORMAL,
     dispatch_catalog_notices,
     dispatch_due_reminders,
+    dispatch_registration_digest,
     event_reminder_state,
     schedule_rule,
     set_event_reminders_muted,
@@ -116,6 +120,312 @@ async def test_no_advance_registration_opening_even_for_saved_retry(
             )
             == 0
         )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("timezone", ["Europe/Moscow", "Asia/Yekaterinburg"])
+async def test_same_day_default_opening_rule_waits_until_exact_opening(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]], timezone: str
+) -> None:
+    _, factory = database
+    tz = ZoneInfo(timezone)
+    opening = datetime(2026, 9, 21, 10, tzinfo=tz).astimezone(UTC)
+    sent: list[str] = []
+
+    async def send(_user_id: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, 99, timezone, onboarding_completed=True)
+        event = Event(
+            id=f"test:opening-at-start:{timezone}",
+            title="Opening at start",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id=f"test:opening-at-start:{timezone}:open",
+                    kind="registration_open",
+                    title="Open",
+                    starts_at=opening,
+                    status="confirmed",
+                )
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add(EventPreference(telegram_user_id=99, event_id=event.id, interest="watching"))
+        await session.commit()
+
+        # The default same-day 08:00 local rule is before this 10:00 opening.
+        # It must not be lost (or sent before registration actually opens).
+        assert await dispatch_due_reminders(session, owner_id=99, send=send, now=opening) == 1
+        delivery = await session.scalar(select(NotificationDelivery))
+        assert delivery is not None
+        assert delivery.scheduled_for.replace(tzinfo=UTC) == opening
+    assert len(sent) == 1 and "Opening at start" in sent[0]
+
+
+@pytest.mark.asyncio
+async def test_registration_opening_reminder_and_digest_share_delivery_history(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    owner_id = 99
+    opening = datetime(2026, 9, 21, 7, tzinfo=UTC)  # 10:00 Moscow.
+    sent: list[str] = []
+
+    async def send(_user_id: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, owner_id, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:opening-dedup",
+            title="Opening dedup",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:opening-dedup:open",
+                    kind="registration_open",
+                    title="Open",
+                    starts_at=opening,
+                    status="confirmed",
+                )
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add(
+            EventPreference(telegram_user_id=owner_id, event_id=event.id, interest="watching")
+        )
+        await session.commit()
+
+        assert await dispatch_due_reminders(session, owner_id=owner_id, send=send, now=opening) == 1
+        # The 09:00 Moscow catch-up on the next day still sees this opening,
+        # but a sent direct opening reminder must suppress its digest duplicate.
+        assert (
+            await dispatch_registration_digest(
+                session, owner_id=owner_id, send=send, now=opening + timedelta(hours=23)
+            )
+            == 0
+        )
+
+        notice = OpenEventNotice(
+            telegram_user_id=owner_id,
+            event_id=event.id,
+            milestone_id="test:opening-dedup:open",
+            phase="registration:test:opening-dedup:open",
+            status="automatic",
+        )
+        session.add(notice)
+        await session.commit()
+        # An older version could leave a failed automatic attempt queued even
+        # though a direct reminder had already succeeded.
+        assert (
+            await dispatch_registration_digest(
+                session, owner_id=owner_id, send=send, now=opening + timedelta(hours=23)
+            )
+            == 0
+        )
+        assert notice.status == "skipped"
+
+        # Model the opposite order independently: only a digest was delivered,
+        # with no direct-reminder delivery record to mask the duplicate.
+        await session.execute(delete(NotificationDelivery))
+        notice.status = "sent"
+        await session.commit()
+        # A digest/review opening sent first also suppresses a later direct
+        # retry after restart; no second NotificationDelivery is created.
+    async with factory() as session:
+        assert await dispatch_due_reminders(session, owner_id=owner_id, send=send, now=opening) == 0
+        assert await session.scalar(select(NotificationDelivery)) is None
+    assert len(sent) == 1
+
+
+@pytest.mark.asyncio
+async def test_failed_reminder_is_not_retried_early_across_sessions_or_after_registration(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    owner_id = 99
+    due = datetime(2026, 9, 20, 8, tzinfo=UTC)
+    calls = 0
+
+    async def fail(_user_id: int, _text: str) -> None:
+        nonlocal calls
+        calls += 1
+        raise RuntimeError("network outage")
+
+    async def unexpected(_user_id: int, _text: str) -> None:
+        pytest.fail("this reminder is no longer eligible")
+
+    async with factory() as session:
+        await ensure_user_profile(session, owner_id, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:retry-eligibility",
+            title="Retry eligibility",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:retry-eligibility:deadline",
+                    kind="registration_deadline",
+                    title="Deadline",
+                    starts_at=due + timedelta(days=2),
+                    status="confirmed",
+                )
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(telegram_user_id=owner_id, event_id=event.id, interest="watching"),
+                ReminderRule(
+                    id="test:retry-eligibility:rule",
+                    telegram_user_id=owner_id,
+                    event_id=event.id,
+                    mode=ReminderMode.OFFSET.value,
+                    offset_minutes=2880,
+                ),
+            ]
+        )
+        await session.commit()
+        assert await dispatch_due_reminders(session, owner_id=owner_id, send=fail, now=due) == 0
+        assert calls == 1
+
+    async with factory() as session:
+        # A fresh session/restart must retain the 2-minute backoff checkpoint.
+        assert (
+            await dispatch_due_reminders(
+                session, owner_id=owner_id, send=unexpected, now=due + timedelta(minutes=1)
+            )
+            == 0
+        )
+        await toggle_event_interest(
+            session,
+            actor_id=owner_id,
+            event_id="test:retry-eligibility",
+            interest=EventInterest.REGISTERED,
+        )
+        await session.commit()
+        assert (
+            await dispatch_due_reminders(
+                session, owner_id=owner_id, send=unexpected, now=due + timedelta(minutes=2)
+            )
+            == 0
+        )
+
+
+@pytest.mark.asyncio
+async def test_expired_reminder_is_never_sent_after_grace_window(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    due = datetime(2026, 9, 20, 8, tzinfo=UTC)
+
+    async def unexpected(_user_id: int, _text: str) -> None:
+        pytest.fail("expired reminders must not be delivered")
+
+    async with factory() as session:
+        await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:expired-reminder",
+            title="Expired",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:expired-reminder:stage",
+                    kind="qualifier",
+                    title="Stage",
+                    starts_at=due,
+                    status="confirmed",
+                )
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(telegram_user_id=99, event_id=event.id, interest="watching"),
+                ReminderRule(
+                    id="test:expired-reminder:rule",
+                    telegram_user_id=99,
+                    event_id=event.id,
+                    mode=ReminderMode.OFFSET.value,
+                    offset_minutes=0,
+                ),
+            ]
+        )
+        await session.commit()
+        assert (
+            await dispatch_due_reminders(
+                session, owner_id=99, send=unexpected, now=due + timedelta(hours=24, seconds=1)
+            )
+            == 0
+        )
+
+
+@pytest.mark.asyncio
+async def test_reminder_skips_its_own_completed_stage_when_another_path_remains_live(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    due = datetime(2026, 9, 20, 8, tzinfo=UTC)
+
+    async def unexpected(_user_id: int, _text: str) -> None:
+        pytest.fail("a completed stage must not be reminded")
+
+    async with factory() as session:
+        await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:completed-stage",
+            title="Completed stage",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:completed-stage:done",
+                    kind="qualifier",
+                    title="Completed",
+                    starts_at=due,
+                    status="confirmed",
+                    advancement_paths=[],
+                ),
+                Milestone(
+                    id="test:completed-stage:other-path",
+                    kind="qualifier",
+                    title="Still available",
+                    starts_at=due + timedelta(days=1),
+                    status="confirmed",
+                    advancement_paths=[],
+                ),
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(telegram_user_id=99, event_id=event.id, interest="watching"),
+                ReminderRule(
+                    id="test:completed-stage:rule",
+                    telegram_user_id=99,
+                    event_id=event.id,
+                    mode=ReminderMode.OFFSET.value,
+                    offset_minutes=0,
+                ),
+                StageProgress(
+                    telegram_user_id=99,
+                    milestone_id="test:completed-stage:done",
+                    outcome=StageOutcome.PASSED.value,
+                ),
+            ]
+        )
+        await session.commit()
+        assert await dispatch_due_reminders(session, owner_id=99, send=unexpected, now=due) == 0
 
 
 @pytest.mark.asyncio
@@ -218,6 +528,157 @@ async def test_registration_mark_cancels_deferred_deadline_reminder(
             == 0
         )
     assert not sent
+
+
+@pytest.mark.asyncio
+async def test_reminder_transient_failures_back_off_and_recover_after_five_attempts(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    owner_id = 99
+    due = datetime(2026, 9, 20, 8, tzinfo=UTC)
+    attempts = 0
+    delivered: list[str] = []
+
+    async def unavailable(_user_id: int, _text: str) -> None:
+        nonlocal attempts
+        attempts += 1
+        raise RuntimeError("temporary network outage")
+
+    async def recovered(_user_id: int, text: str) -> None:
+        delivered.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, owner_id, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:retry-backoff",
+            title="Retry backoff",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:retry-backoff:stage",
+                    kind="qualifier",
+                    title="Stage",
+                    starts_at=due,
+                    status="confirmed",
+                )
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(
+                    telegram_user_id=owner_id,
+                    event_id=event.id,
+                    interest=EventInterest.WATCHING.value,
+                ),
+                ReminderRule(
+                    id="test:retry-backoff:rule",
+                    telegram_user_id=owner_id,
+                    event_id=event.id,
+                    mode=ReminderMode.OFFSET.value,
+                    offset_minutes=0,
+                ),
+            ]
+        )
+        await session.commit()
+
+        # Fail at exponentially spaced checkpoints.  Polls between them must
+        # not consume retries, and five failures must not abandon the reminder.
+        for offset in (0, 2, 6, 14, 30):
+            assert (
+                await dispatch_due_reminders(
+                    session,
+                    owner_id=owner_id,
+                    send=unavailable,
+                    now=due + timedelta(minutes=offset),
+                )
+                == 0
+            )
+            assert attempts == (0, 2, 6, 14, 30).index(offset) + 1
+            assert (
+                await dispatch_due_reminders(
+                    session,
+                    owner_id=owner_id,
+                    send=unavailable,
+                    now=due + timedelta(minutes=offset + 1),
+                )
+                == 0
+            )
+            assert attempts == (0, 2, 6, 14, 30).index(offset) + 1
+
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=owner_id,
+                send=recovered,
+                now=due + timedelta(minutes=62),
+            )
+            == 1
+        )
+        delivery = await session.scalar(select(NotificationDelivery))
+        assert delivery is not None and delivery.status == "sent" and delivery.attempts == 6
+    assert len(delivered) == 1
+
+
+@pytest.mark.asyncio
+async def test_permanent_telegram_failure_is_not_retried_within_grace(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    due = datetime(2026, 9, 20, 8, tzinfo=UTC)
+    calls = 0
+
+    async def forbidden(_user_id: int, _text: str) -> None:
+        nonlocal calls
+        calls += 1
+        raise TelegramForbiddenError(SendMessage(chat_id=99, text="notice"), "bot was blocked")
+
+    async def unexpected(_user_id: int, _text: str) -> None:
+        pytest.fail("a permanent Telegram failure must not be retried")
+
+    async with factory() as session:
+        await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:permanent-failure",
+            title="Permanent failure",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:permanent-failure:stage",
+                    kind="qualifier",
+                    title="Stage",
+                    starts_at=due,
+                    status="confirmed",
+                )
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(telegram_user_id=99, event_id=event.id, interest="watching"),
+                ReminderRule(
+                    id="test:permanent-failure:rule",
+                    telegram_user_id=99,
+                    event_id=event.id,
+                    mode=ReminderMode.OFFSET.value,
+                    offset_minutes=0,
+                ),
+            ]
+        )
+        await session.commit()
+        assert await dispatch_due_reminders(session, owner_id=99, send=forbidden, now=due) == 0
+        assert calls == 1
+        assert (
+            await dispatch_due_reminders(
+                session, owner_id=99, send=unexpected, now=due + timedelta(minutes=2)
+            )
+            == 0
+        )
 
 
 @pytest.mark.asyncio

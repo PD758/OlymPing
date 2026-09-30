@@ -15,7 +15,7 @@ from olymping.models import (
     SourceKind,
     UserProfile,
 )
-from olymping.services.availability import registration_deadline
+from olymping.services.availability import open_phases
 from olymping.services.filters import event_is_enabled
 from olymping.services.progression import completed_for_user, stage_access, user_outcomes
 from olymping.services.reminders import aware_utc
@@ -60,6 +60,8 @@ async def upcoming_events(
     }
     outcomes = await user_outcomes(session, profile.telegram_user_id)
     for milestone in result.scalars():
+        if outcomes.get(milestone.id) in {"passed", "not_passed", "skipped"}:
+            continue
         if (
             stage_access(milestone, {s.id: s for s in milestone.event.milestones}, outcomes)
             == "blocked"
@@ -107,27 +109,25 @@ async def all_olympiads(
 
 
 def registration_closes_at(event: Event, now: datetime) -> datetime | None:
-    """Return the active registration deadline, or None when registration is closed."""
-    now_utc = aware_utc(now)
-    dated_openings = [
-        aware_utc(milestone.starts_at)
-        for milestone in event.milestones
-        if milestone.kind == "registration_open"
-        and milestone.status == RecordStatus.CONFIRMED.value
-        and milestone.starts_at is not None
-    ]
-    if dated_openings and min(dated_openings) > now_utc:
-        return None
-    future_deadlines = [
-        aware_utc(milestone.starts_at)
-        for milestone in event.milestones
-        if milestone.kind == "registration_deadline"
-        and milestone.status == RecordStatus.CONFIRMED.value
-        and milestone.starts_at is not None
-        and registration_deadline(milestone) > now_utc
-    ]
-    if future_deadlines:
-        return min(future_deadlines)
+    """Return a deadline for a registration phase that is open right now.
+
+    A confirmed opening without a published deadline is still open and must
+    appear in ``/register``; callers use ``None`` to omit its deadline label.
+    ``open_phases`` also keeps separate registration waves from being joined
+    across an expired first deadline.
+    """
+    active_ids = {
+        phase.milestone_id
+        for phase in open_phases(event, now)
+        if phase.phase.startswith("registration:")
+    }
+    for milestone in event.milestones:
+        if milestone.id in active_ids and milestone.kind == "registration_deadline":
+            # This value is displayed and sorted in /register.  Preserve the
+            # announced date; registration_deadline() is only for inclusive
+            # availability checks (a date-only deadline stays open all day).
+            assert milestone.starts_at is not None
+            return aware_utc(milestone.starts_at)
     return None
 
 
@@ -168,7 +168,7 @@ async def open_registration_events(
         for event in events
         if event_is_enabled(profile, event, preference=preferences.get(event.id))
         and not completed_for_user(event, outcomes, aware_utc(now))
-        and registration_closes_at(event, now) is not None
+        and any(phase.phase.startswith("registration:") for phase in open_phases(event, now))
     ]
     return sorted(
         active,

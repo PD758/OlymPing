@@ -3,16 +3,21 @@ from pathlib import Path
 
 import pytest
 import yaml
+from aiogram.exceptions import TelegramForbiddenError
+from aiogram.methods import SendMessage
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from olymping.models import (
     CatalogNotice,
     Event,
+    EventPreference,
     Milestone,
     NotificationReview,
     OpenEventNotice,
+    ReviewDelivery,
     ReviewSelection,
+    StageProgress,
     UserProfile,
 )
 from olymping.review_ui import review_page
@@ -224,6 +229,96 @@ async def test_flood_wait_keeps_approved_notices_and_attempt_budget(
 
 
 @pytest.mark.asyncio
+async def test_review_delivery_retries_transient_failures_but_stops_permanent_ones(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    start = datetime.now(UTC)
+
+    async def unavailable(_user_id: int, _text: str) -> None:
+        raise RuntimeError("temporary network outage")
+
+    async with factory() as session:
+        batch_id = await seed_review(session)
+        assert await decide_review(session, batch_id=batch_id, actor_id=1, approve=True)
+        await session.commit()
+
+    for attempt in range(6):
+        async with factory() as session:
+            assert (
+                await dispatch_reviewed_notices(
+                    session,
+                    owner_id=1,
+                    send=unavailable,
+                    now=start + timedelta(hours=2 * attempt),
+                )
+                == 0
+            )
+            delivery = await session.get(ReviewDelivery, (batch_id, 1))
+            assert delivery is not None
+            assert delivery.status == "pending" and delivery.attempts == attempt + 1
+
+    sent: list[str] = []
+
+    async def recovered(_user_id: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        assert (
+            await dispatch_reviewed_notices(
+                session,
+                owner_id=1,
+                send=recovered,
+                now=start + timedelta(hours=13),
+            )
+            == 2
+        )
+        assert sent
+
+        session.add(
+            CatalogNotice(
+                telegram_user_id=1,
+                event_id="test:math",
+                kind="event_updated",
+                summary="Постоянно отклоняемое сообщение.",
+            )
+        )
+        await session.flush()
+        permanent_batch = await collect_review_batch(session)
+        assert permanent_batch is not None
+        assert await decide_review(session, batch_id=permanent_batch, actor_id=1, approve=True)
+        await session.commit()
+
+        async def forbidden(_user_id: int, _text: str) -> None:
+            raise TelegramForbiddenError(SendMessage(chat_id=1, text="review"), "bot was blocked")
+
+        assert (
+            await dispatch_reviewed_notices(
+                session,
+                owner_id=1,
+                send=forbidden,
+                now=start + timedelta(hours=14),
+            )
+            == 0
+        )
+        delivery = await session.get(ReviewDelivery, (permanent_batch, 1))
+        assert delivery is not None and delivery.status == "failed"
+
+        async def must_not_retry(_user_id: int, _text: str) -> None:
+            pytest.fail("permanent review delivery failure must not retry")
+
+        assert (
+            await dispatch_reviewed_notices(
+                session,
+                owner_id=1,
+                send=must_not_retry,
+                now=start + timedelta(days=1),
+            )
+            == 0
+        )
+
+
+@pytest.mark.asyncio
 async def test_no_broadcast_until_approval_then_one_personalized_packet(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
@@ -287,6 +382,47 @@ async def test_deselection_or_dismissal_prevents_broadcast(
 
 
 @pytest.mark.asyncio
+async def test_silent_review_decisions_consume_their_queue_rows(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        batch_id = await seed_review(session)
+        assert await decide_review(session, batch_id=batch_id, actor_id=1, approve=False)
+        await session.commit()
+        dismissed = list(
+            await session.scalars(
+                select(CatalogNotice).where(CatalogNotice.review_batch_id == batch_id)
+            )
+        )
+        assert dismissed and all(notice.sent_at is not None for notice in dismissed)
+
+        session.add(
+            CatalogNotice(
+                telegram_user_id=1,
+                event_id="test:math",
+                kind="event_updated",
+                summary="Уточнено расписание.",
+            )
+        )
+        await session.flush()
+        next_batch = await collect_review_batch(session)
+        assert next_batch is not None
+        assert await toggle_review_event(session, batch_id=next_batch, actor_id=1, index=0)
+        assert await decide_review(session, batch_id=next_batch, actor_id=1, approve=True)
+        await session.commit()
+        excluded = list(
+            await session.scalars(
+                select(CatalogNotice).where(
+                    CatalogNotice.review_batch_id == next_batch,
+                    CatalogNotice.event_id == "test:math",
+                )
+            )
+        )
+        assert excluded and all(notice.sent_at is not None for notice in excluded)
+
+
+@pytest.mark.asyncio
 async def test_only_admin_can_decide_and_stale_review_is_rejected(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
@@ -328,6 +464,147 @@ async def test_current_filters_are_rechecked_after_approval(
         profile.tag_filters = ["biology"]
         await session.commit()
         assert await dispatch_reviewed_notices(session, owner_id=2, send=send) == 0
+
+
+@pytest.mark.asyncio
+async def test_delivery_rechecks_unsubscribe_and_registered_registration_updates(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    sent: list[str] = []
+
+    async def send(_user_id: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        admin = await ensure_admin_profile(session, 1, "Europe/Moscow")
+        admin.onboarding_completed = True
+        event = Event(
+            id="test:delivery-guard",
+            title="Delivery guard",
+            source_kind="NTO",
+            source_url="https://example.org/",
+        )
+        event.milestones = [
+            Milestone(
+                id="test:delivery-guard:open",
+                kind="registration_open",
+                title="Registration",
+            ),
+            Milestone(
+                id="test:delivery-guard:qualifier",
+                kind="qualifier",
+                title="Qualifier",
+            ),
+        ]
+        session.add(event)
+        await session.flush()
+        registration = CatalogNotice(
+            telegram_user_id=1,
+            event_id=event.id,
+            milestone_id="test:delivery-guard:open",
+            kind="event_updated",
+            summary="Изменилась регистрация.",
+        )
+        ordinary = CatalogNotice(
+            telegram_user_id=1,
+            event_id=event.id,
+            milestone_id="test:delivery-guard:qualifier",
+            kind="event_updated",
+            summary="Изменился отборочный этап.",
+        )
+        session.add_all([registration, ordinary])
+        await session.flush()
+        batch_id = await collect_review_batch(session)
+        assert batch_id is not None
+        assert await decide_review(session, batch_id=batch_id, actor_id=1, approve=True)
+        session.add(
+            EventPreference(
+                telegram_user_id=1,
+                event_id=event.id,
+                interest="registered",
+            )
+        )
+        await session.commit()
+
+        assert await dispatch_reviewed_notices(session, owner_id=1, send=send) == 1
+        assert len(sent) == 1 and "отборочный этап" in sent[0]
+        assert registration.sent_at is not None
+        assert ordinary.sent_at is not None
+
+        unsubscribed = CatalogNotice(
+            telegram_user_id=1,
+            event_id=event.id,
+            kind="event_updated",
+            summary="Эта новость не должна прийти.",
+        )
+        session.add(unsubscribed)
+        await session.flush()
+        next_batch = await collect_review_batch(session)
+        assert next_batch is not None
+        assert await decide_review(session, batch_id=next_batch, actor_id=1, approve=True)
+        preference = await session.get(EventPreference, (1, event.id))
+        assert preference is not None
+        preference.interest = "unsubscribed"
+        await session.commit()
+
+        assert await dispatch_reviewed_notices(session, owner_id=1, send=send) == 0
+        assert unsubscribed.sent_at is not None
+
+
+@pytest.mark.asyncio
+async def test_reviewed_stage_opening_is_skipped_after_own_final_outcome(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+
+    async def send(_user_id: int, _text: str) -> None:
+        pytest.fail("finished stage must not be announced")
+
+    now = datetime.now(UTC)
+    async with factory() as session:
+        admin = await ensure_admin_profile(session, 1, "Europe/Moscow")
+        admin.onboarding_completed = True
+        event = Event(
+            id="test:reviewed-outcome",
+            title="Reviewed outcome",
+            source_kind="NTO",
+            source_url="https://example.org/",
+        )
+        event.milestones = [
+            Milestone(
+                id="test:reviewed-outcome:stage",
+                kind="qualifier",
+                title="Qualifier",
+                status="confirmed",
+                starts_at=now - timedelta(hours=1),
+                ends_at=now + timedelta(hours=1),
+            )
+        ]
+        session.add(event)
+        await session.flush()
+        notice = OpenEventNotice(
+            telegram_user_id=1,
+            event_id=event.id,
+            milestone_id="test:reviewed-outcome:stage",
+            phase="stage:test:reviewed-outcome:stage",
+        )
+        session.add(notice)
+        await session.flush()
+        batch_id = await collect_review_batch(session)
+        assert batch_id is not None
+        assert await decide_review(session, batch_id=batch_id, actor_id=1, approve=True)
+        session.add(
+            StageProgress(
+                telegram_user_id=1,
+                milestone_id="test:reviewed-outcome:stage",
+                outcome="passed",
+            )
+        )
+        await session.commit()
+
+        assert await dispatch_reviewed_notices(session, owner_id=1, send=send, now=now) == 0
+        assert notice.status == "skipped"
 
 
 @pytest.mark.asyncio

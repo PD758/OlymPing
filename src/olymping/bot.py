@@ -14,6 +14,7 @@ from aiogram import BaseMiddleware, Bot, Dispatcher, F, Router
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.middlewares.base import BaseRequestMiddleware, NextRequestMiddlewareType
 from aiogram.enums import ParseMode
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, CommandStart
 from aiogram.types import (
     BotCommand,
@@ -78,6 +79,7 @@ from olymping.services.reminders import (
     set_event_reminders_muted,
 )
 from olymping.services.runtime_health import clear_heartbeats, record_heartbeat, supervise_runtime
+from olymping.services.subscriptions import reapply_profile
 from olymping.services.synchronization import synchronize_calendar
 from olymping.services.user_state import (
     StateTargetNotFoundError,
@@ -632,7 +634,13 @@ def _onboarding_tag_keyboard(profile: UserProfile, page: int) -> InlineKeyboardM
 async def _answer_or_edit(event: Message | CallbackQuery, text: str, **kwargs: Any) -> None:
     if isinstance(event, CallbackQuery):
         if isinstance(event.message, Message):
-            await event.message.edit_text(text, **kwargs)
+            try:
+                await event.message.edit_text(text, **kwargs)
+            except TelegramBadRequest as exc:
+                # Repeated clicks can render the exact same page. Telegram
+                # rejects that edit, but the callback still needs an answer.
+                if "message is not modified" not in exc.message.lower():
+                    raise
         await event.answer()
     else:
         await event.answer(text, **kwargs)
@@ -1574,6 +1582,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
         async with factory() as session:
             profile = await ensure_user_profile(session, user_id, settings.timezone)
             profile.school_grade = grade
+            await reapply_profile(session, profile)
             await session.commit()
         await show_settings(callback, "catalog")
 
@@ -1599,6 +1608,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                 else:
                     selected.add(tag)
                 profile.tag_filters = sorted(selected)
+            await reapply_profile(session, profile)
             await session.commit()
         await show_settings(callback, f"tags:{page}")
 
@@ -1615,6 +1625,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
             values = dict(profile.category_settings or {})
             values[kind] = not bool(values.get(kind, True))
             profile.category_settings = values
+            await reapply_profile(session, profile)
             await session.commit()
         await show_settings(callback, "sources")
 
@@ -1638,6 +1649,7 @@ def create_router(factory: async_sessionmaker[AsyncSession], settings: Settings)
                 cycle[(cycle.index(current) + 1) % len(cycle)] if current in cycle else cycle[0]
             )
             profile.ctf_filters = values
+            await reapply_profile(session, profile)
             await session.commit()
         await show_settings(callback, "ctf")
 

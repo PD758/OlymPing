@@ -14,6 +14,7 @@ from olymping.models import (
     EventPreference,
     Milestone,
     OpenEventNotice,
+    StageProgress,
     SyncRun,
 )
 from olymping.services.availability import (
@@ -293,3 +294,33 @@ async def test_registered_user_only_receives_participation(
             )
         )
         assert [notice.phase for notice in notices] == ["stage:nto:test:stage"]
+
+
+@pytest.mark.asyncio
+async def test_finished_stage_and_unsubscribed_user_are_not_queued(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        await seed(session)
+        session.add(
+            StageProgress(
+                telegram_user_id=1,
+                milestone_id="nto:test:stage",
+                outcome="not_passed",
+            )
+        )
+        session.add(
+            EventPreference(
+                telegram_user_id=2,
+                event_id="nto:test",
+                interest="unsubscribed",
+            )
+        )
+        await session.commit()
+
+        assert await queue_open_event_notices(session, now=NOW) == 1
+        notices = list(await session.scalars(select(OpenEventNotice)))
+        assert [(notice.telegram_user_id, notice.phase) for notice in notices] == [
+            (1, "registration:nto:test:open")
+        ]

@@ -30,7 +30,13 @@ from olymping.models import (
 )
 from olymping.presentation import telegram_time
 from olymping.services.availability import open_phases, registration_deadline
-from olymping.services.delivery import DeliveryDeferred
+from olymping.services.delivery import (
+    PERMANENT_ERROR_PREFIX,
+    DeliveryDeferred,
+    delivery_error_detail,
+    is_permanent_delivery_error,
+    retry_delay_minutes,
+)
 from olymping.services.filters import event_is_enabled
 from olymping.services.progression import completed_for_user, stage_access, user_outcomes
 
@@ -212,6 +218,8 @@ async def dispatch_due_reminders(
         interest = preference.interest if preference else None
         if completed_for_user(event, outcomes, now):
             continue
+        if outcomes.get(milestone.id) in {"passed", "not_passed", "skipped"}:
+            continue
         if event.status == RecordStatus.CANCELLED.value or not event_is_enabled(
             profile, event, preference=preference
         ):
@@ -237,16 +245,35 @@ async def dispatch_due_reminders(
         for rule in rules:
             scheduled = schedule_rule(rule, milestone, profile.timezone)
             # Opening announcements belong on/after the opening itself, even
-            # for saved custom rules or retries caught up after a restart.
+            # for saved custom rules or retries caught up after a restart. A
+            # same-day rule earlier than the exact opening is delivered at the
+            # opening; a previous-day rule remains ineligible.
             if (
                 scheduled is not None
                 and milestone.kind == MilestoneKind.REGISTRATION_OPEN.value
                 and milestone.starts_at is not None
                 and scheduled < aware_utc(milestone.starts_at)
             ):
-                continue
+                timezone = ZoneInfo(profile.timezone)
+                if (
+                    scheduled.astimezone(timezone).date()
+                    != aware_utc(milestone.starts_at).astimezone(timezone).date()
+                ):
+                    continue
+                scheduled = aware_utc(milestone.starts_at)
             if scheduled is None or not (now - timedelta(hours=grace_hours) <= scheduled <= now):
                 continue
+            opening_notice: OpenEventNotice | None = None
+            if milestone.kind == MilestoneKind.REGISTRATION_OPEN.value:
+                opening_notice = await session.scalar(
+                    select(OpenEventNotice).where(
+                        OpenEventNotice.telegram_user_id == owner_id,
+                        OpenEventNotice.event_id == event.id,
+                        OpenEventNotice.phase == f"registration:{milestone.id}",
+                    )
+                )
+                if opening_notice is not None and opening_notice.status == "sent":
+                    continue
             existing_result = await session.execute(
                 select(NotificationDelivery).where(
                     NotificationDelivery.telegram_user_id == owner_id,
@@ -270,14 +297,31 @@ async def dispatch_due_reminders(
                 )
                 session.add(delivery)
                 await session.flush()
-            if delivery.attempts >= 5:
-                continue
+            # Generic transport failures can last longer than five polling
+            # cycles.  Keep retrying while the scheduled occurrence remains
+            # inside its grace window, but avoid repeatedly hammering a
+            # failing transport in consecutive cycles.  `updated_at` is a
+            # durable failure checkpoint, so this also holds across restarts.
+            if delivery.attempts:
+                if (
+                    delivery.status == DeliveryStatus.FAILED.value
+                    and delivery.error
+                    and delivery.error.startswith(PERMANENT_ERROR_PREFIX)
+                ):
+                    continue
+                retry_at = aware_utc(delivery.updated_at) + timedelta(
+                    minutes=retry_delay_minutes(delivery.attempts)
+                )
+                if retry_at > now:
+                    continue
             delivery.attempts += 1
             try:
                 await send(owner_id, _reminder_text(event, milestone, profile, now))
                 delivery.status = DeliveryStatus.SENT.value
                 delivery.sent_at = now
                 delivery.error = None
+                if opening_notice is not None and opening_notice.status in {"automatic", "pending"}:
+                    opening_notice.status = "skipped"
                 sent += 1
             except DeliveryDeferred:
                 delivery.attempts -= 1
@@ -287,7 +331,11 @@ async def dispatch_due_reminders(
                 raise
             except Exception as exc:
                 delivery.status = DeliveryStatus.FAILED.value
-                delivery.error = f"{type(exc).__name__}: {exc}"[:2000]
+                # Set this explicitly rather than relying on wall-clock
+                # `onupdate`: callers can supply `now` during recovery and
+                # restart processing.
+                delivery.updated_at = now
+                delivery.error = delivery_error_detail(exc)
                 logger.exception("Failed to send reminder %s", delivery.id)
             # Persist each outcome before pacing or attempting the next message.
             await session.commit()
@@ -345,11 +393,25 @@ async def dispatch_registration_digest(
             )
         )
     )
+    directly_notified = set(
+        await session.scalars(
+            select(NotificationDelivery.milestone_id).where(
+                NotificationDelivery.telegram_user_id == owner_id,
+                NotificationDelivery.status == DeliveryStatus.SENT.value,
+            )
+        )
+    )
     outcomes = await user_outcomes(session, owner_id)
     for opening in openings:
         assert opening.starts_at is not None
         event = opening.event
-        if event.id in notified or event.status == RecordStatus.CANCELLED.value:
+        if (
+            event.id in notified
+            or opening.id in directly_notified
+            or event.status == RecordStatus.CANCELLED.value
+        ):
+            continue
+        if outcomes.get(opening.id) in {"passed", "not_passed", "skipped"}:
             continue
         preference = await session.get(EventPreference, (owner_id, event.id))
         if not event_is_enabled(profile, event, preference=preference):
@@ -357,6 +419,7 @@ async def dispatch_registration_digest(
         if preference is not None and preference.interest in {
             EventInterest.IGNORED.value,
             EventInterest.REGISTERED.value,
+            "unsubscribed",
         }:
             continue
         if stage_access(opening, {s.id: s for s in event.milestones}, outcomes) == "blocked":
@@ -411,6 +474,14 @@ async def _dispatch_automatic_openings(
         )
     )
     outcomes = await user_outcomes(session, owner_id)
+    directly_notified = set(
+        await session.scalars(
+            select(NotificationDelivery.milestone_id).where(
+                NotificationDelivery.telegram_user_id == owner_id,
+                NotificationDelivery.status == DeliveryStatus.SENT.value,
+            )
+        )
+    )
     sent = 0
     for notice in notices:
         if notice.next_attempt_at is not None and aware_utc(notice.next_attempt_at) > now:
@@ -427,8 +498,16 @@ async def _dispatch_automatic_openings(
         if (
             event is None
             or stage is None
+            or (
+                notice.phase.startswith("registration:")
+                and notice.phase.removeprefix("registration:") in directly_notified
+            )
+            or outcomes.get(stage.id) in {"passed", "not_passed", "skipped"}
             or not event_is_enabled(profile, event, preference=preference)
-            or (preference is not None and preference.interest in {"ignored", "registered"})
+            or (
+                preference is not None
+                and preference.interest in {"ignored", "registered", "unsubscribed"}
+            )
             or notice.phase not in {p.phase for p in open_phases(event, now)}
             or stage_access(stage, {s.id: s for s in event.milestones}, outcomes) == "blocked"
         ):
@@ -447,11 +526,17 @@ async def _dispatch_automatic_openings(
             raise
         except Exception as exc:
             logger.warning("Opening notice %s failed (%s)", notice.id, type(exc).__name__)
-            notice.next_attempt_at = now + timedelta(minutes=min(60, 2**notice.attempts))
-            if notice.attempts >= 5:
+            if is_permanent_delivery_error(exc):
                 notice.status = "failed"
+            else:
+                notice.next_attempt_at = now + timedelta(
+                    minutes=retry_delay_minutes(notice.attempts)
+                )
             await session.commit()
-            return sent
+            # A broken recipient/event must not prevent later durable notices
+            # from being attempted in this cycle.  DeliveryDeferred is handled
+            # separately above because Telegram's flood wait is global.
+            continue
         notice.status = "sent"
         notice.sent_at = now
         notice.next_attempt_at = None

@@ -19,7 +19,11 @@ from olymping.models import (
     UserProfile,
     WorkflowNotice,
 )
-from olymping.services.delivery import DeliveryDeferred
+from olymping.services.delivery import (
+    DeliveryDeferred,
+    is_permanent_delivery_error,
+    retry_delay_minutes,
+)
 from olymping.services.filters import event_is_enabled
 
 TRACKABLE = {"qualifier", "team_stage", "final", "competition"}
@@ -257,9 +261,7 @@ async def dispatch_workflow_notices(
                     notice.attempts = 0
                 if notice.status != "pending" or utc(notice.scheduled_for) > now:
                     continue
-                if notice.attempts >= 5 or (
-                    notice.next_attempt_at and utc(notice.next_attempt_at) > now
-                ):
+                if notice.next_attempt_at and utc(notice.next_attempt_at) > now:
                     continue
                 text = f"📋 <b>{html.escape(event.title)}</b>\n{html.escape(stage.title)}\n" + (
                     "Нужно уточнить продолжение: не внесены связи этапов "
@@ -277,8 +279,21 @@ async def dispatch_workflow_notices(
                     await session.commit()
                     raise
                 except Exception as exc:
-                    logger.warning("Workflow delivery failed (%s)", type(exc).__name__)
-                    notice.next_attempt_at = now + timedelta(minutes=min(60, 2**notice.attempts))
+                    if is_permanent_delivery_error(exc):
+                        logger.warning(
+                            "Workflow delivery permanently rejected (%s)", type(exc).__name__
+                        )
+                        # ``resolved`` is deliberately reopened when a stage
+                        # becomes eligible again. A permanent Telegram
+                        # refusal must instead wait for an explicit state
+                        # change from the user.
+                        notice.status = "failed"
+                        notice.next_attempt_at = None
+                    else:
+                        logger.warning("Workflow delivery failed (%s)", type(exc).__name__)
+                        notice.next_attempt_at = now + timedelta(
+                            minutes=retry_delay_minutes(notice.attempts)
+                        )
                 else:
                     notice.status = "sent"
                     notice.sent_at = now

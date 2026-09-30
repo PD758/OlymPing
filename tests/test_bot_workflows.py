@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from aiogram import Bot, Dispatcher
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.methods import AnswerCallbackQuery, EditMessageText
 from aiogram.types import CallbackQuery, Chat, Message, Update, User
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
@@ -17,6 +18,7 @@ from olymping.models import (
     NotificationReview,
     UserProfile,
 )
+from olymping.services.reminders import dispatch_due_reminders
 from olymping.services.reviews import collect_review_batch
 from olymping.services.users import ensure_admin_profile, ensure_user_profile
 
@@ -37,6 +39,40 @@ def callback_update(user_id: int, data: str, update_id: int) -> Update:
             ),
         ),
     )
+
+
+@pytest.mark.parametrize("unchanged", [True, False])
+@pytest.mark.asyncio
+async def test_repeated_page_callback_is_answered_without_hiding_other_errors(
+    unchanged: bool,
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        await session.commit()
+    bot = Bot(token="123456:test-token")
+    dispatcher = Dispatcher()
+    dispatcher.include_router(create_router(factory, Settings(owner_telegram_id=1)))
+    message = "Bad Request: message is not modified" if unchanged else "Bad Request: invalid markup"
+    answered: list[AnswerCallbackQuery] = []
+
+    async def transport(method: EditMessageText | AnswerCallbackQuery) -> bool:
+        if isinstance(method, EditMessageText):
+            raise TelegramBadRequest(method=method, message=message)
+        answered.append(method)
+        return True
+
+    try:
+        with patch.object(Bot, "__call__", new=AsyncMock(side_effect=transport)):
+            if unchanged:
+                await dispatcher.feed_update(bot, callback_update(2, "settings", 1))
+                assert len(answered) == 1
+            else:
+                with pytest.raises(TelegramBadRequest, match="invalid markup"):
+                    await dispatcher.feed_update(bot, callback_update(2, "settings", 1))
+    finally:
+        await bot.session.close()
 
 
 @pytest.mark.parametrize("period", ["today", "week", "month"])
@@ -133,6 +169,126 @@ async def test_real_onboarding_callbacks_populate_existing_subscriptions(
             assert profile.school_grade == 9 and profile.tag_filters == [selection]
             assert preference is not None and preference.interest == "watching"
         assert transport.await_count >= 3
+    finally:
+        await bot.session.close()
+
+
+@pytest.mark.parametrize("setting", ["grade", "tag", "source", "ctf"])
+@pytest.mark.asyncio
+async def test_settings_callbacks_enable_existing_event_reminders(
+    setting: str,
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    callbacks = {
+        "grade": "grade:8",
+        "tag": "tag:0:biology",
+        "source": "source:CTF",
+        "ctf": "ctf:online",
+    }
+    due = datetime(2026, 10, 4, 17, tzinfo=UTC)  # Day before, 20:00 Moscow.
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        profile.school_grade = 9
+        profile.tag_filters = ["mathematics"]
+        if setting == "ctf":
+            profile.category_settings = {"CTF": True}
+            profile.ctf_filters = {"online": "onsite"}
+        session.add(
+            Event(
+                id="test:settings",
+                title="Newly matching contest",
+                source_kind="CTF" if setting in {"source", "ctf"} else "NTO",
+                source_url="https://example.org/",
+                tags=["biology" if setting == "tag" else "mathematics"],
+                max_grade=8 if setting == "grade" else 11,
+                is_online=True,
+                milestones=[
+                    Milestone(
+                        id="test:settings:qualifier",
+                        title="Qualifier",
+                        kind="qualifier",
+                        starts_at=datetime(2026, 10, 5, 12, tzinfo=UTC),
+                        status="confirmed",
+                        advancement_paths=[],
+                        terminal=True,
+                    )
+                ],
+            )
+        )
+        await session.commit()
+        assert (
+            await dispatch_due_reminders(
+                session, owner_id=2, send=AsyncMock(), now=due, grace_hours=1
+            )
+            == 0
+        )
+    bot = Bot(token="123456:test-token")
+    dispatcher = Dispatcher()
+    dispatcher.include_router(create_router(factory, Settings(owner_telegram_id=1)))
+    response = Message(message_id=77, date=datetime.now(UTC), chat=Chat(id=2, type="private"))
+    transport = AsyncMock(return_value=response)
+    send = AsyncMock()
+    try:
+        with patch.object(Bot, "__call__", new=transport):
+            await dispatcher.feed_update(bot, callback_update(2, callbacks[setting], 1))
+        assert any(
+            isinstance(call.args[0], AnswerCallbackQuery) for call in transport.await_args_list
+        )
+        async with factory() as session:
+            pref = await session.get(EventPreference, (2, "test:settings"))
+            assert pref is not None and (pref.interest, pref.origin) == ("watching", "automatic")
+            assert (
+                await dispatch_due_reminders(session, owner_id=2, send=send, now=due, grace_hours=1)
+                == 1
+            )
+        send.assert_awaited_once()
+    finally:
+        await bot.session.close()
+
+
+@pytest.mark.asyncio
+async def test_auto_subscription_toggle_does_not_rewrite_current_choices(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        profile.auto_subscribe_new_events = False
+        for suffix in ("available", "subscribed"):
+            session.add(
+                Event(
+                    id=f"test:{suffix}",
+                    title=suffix,
+                    source_kind="NTO",
+                    source_url="https://example.org/",
+                )
+            )
+        await session.flush()
+        session.add(
+            EventPreference(
+                telegram_user_id=2,
+                event_id="test:subscribed",
+                interest="watching",
+                origin="automatic",
+            )
+        )
+        await session.commit()
+    bot = Bot(token="123456:test-token")
+    dispatcher = Dispatcher()
+    dispatcher.include_router(create_router(factory, Settings(owner_telegram_id=1)))
+    response = Message(message_id=77, date=datetime.now(UTC), chat=Chat(id=2, type="private"))
+    try:
+        with patch.object(Bot, "__call__", new=AsyncMock(return_value=response)):
+            for index in (1, 2):
+                await dispatcher.feed_update(
+                    bot, callback_update(2, "setting:auto_subscribe_new_events", index)
+                )
+                async with factory() as session:
+                    profile = await session.get(UserProfile, 2)
+                    assert profile is not None and profile.auto_subscribe_new_events == (index == 1)
+                    assert await session.get(EventPreference, (2, "test:available")) is None
+                    assert await session.get(EventPreference, (2, "test:subscribed")) is not None
     finally:
         await bot.session.close()
 

@@ -13,10 +13,12 @@ from sqlalchemy.orm import selectinload
 from olymping.models import (
     AccessStatus,
     CatalogNotice,
+    DeliveryStatus,
     Event,
     EventInterest,
     EventPreference,
     Milestone,
+    NotificationDelivery,
     OpenEventNotice,
     RecordStatus,
     UserProfile,
@@ -109,7 +111,7 @@ def _allowed(
         and profile.onboarding_completed
         and profile.notify_open_events
         and event_is_enabled(profile, event, preference=preference)
-        and interest != EventInterest.IGNORED.value
+        and interest not in {EventInterest.IGNORED.value, "unsubscribed"}
         and not (phase.startswith("registration:") and interest == EventInterest.REGISTERED.value)
     )
 
@@ -155,6 +157,16 @@ async def queue_open_event_notices(
             )
         ).all()
     )
+    sent_registration_openings = set(
+        (
+            await session.execute(
+                select(
+                    NotificationDelivery.telegram_user_id,
+                    NotificationDelivery.milestone_id,
+                ).where(NotificationDelivery.status == DeliveryStatus.SENT.value)
+            )
+        ).all()
+    )
     queued = 0
     from olymping.services.progression import stage_access, user_outcomes
 
@@ -166,6 +178,12 @@ async def queue_open_event_notices(
             for profile in profiles:
                 user_id = profile.telegram_user_id
                 stage = next(s for s in event.milestones if s.id == phase.milestone_id)
+                if phase.phase.startswith("stage:") and outcomes[user_id].get(stage.id) in {
+                    "passed",
+                    "not_passed",
+                    "skipped",
+                }:
+                    continue
                 if (
                     stage_access(stage, {s.id: s for s in event.milestones}, outcomes[user_id])
                     == "blocked"
@@ -174,6 +192,12 @@ async def queue_open_event_notices(
                 if not _allowed(profile, event, preferences.get((user_id, event.id)), phase.phase):
                     continue
                 if phase.phase.startswith("registration:") and (user_id, event.id) in digested:
+                    continue
+                if (
+                    phase.phase.startswith("registration:")
+                    and (user_id, phase.phase.removeprefix("registration:"))
+                    in sent_registration_openings
+                ):
                     continue
                 statement = (
                     insert(OpenEventNotice)

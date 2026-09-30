@@ -14,8 +14,10 @@ from sqlalchemy.orm import selectinload
 
 from olymping.models import (
     CatalogNotice,
+    DeliveryStatus,
     Event,
     EventPreference,
+    NotificationDelivery,
     NotificationReview,
     OpenEventNotice,
     ReviewDelivery,
@@ -23,7 +25,11 @@ from olymping.models import (
     UserProfile,
 )
 from olymping.services.availability import open_phases
-from olymping.services.delivery import DeliveryDeferred
+from olymping.services.delivery import (
+    DeliveryDeferred,
+    is_permanent_delivery_error,
+    retry_delay_minutes,
+)
 from olymping.services.filters import event_is_enabled
 from olymping.services.importer import format_calendar_value
 from olymping.services.progression import stage_access, user_outcomes
@@ -398,7 +404,55 @@ async def decide_review(
         )
         .returning(NotificationReview.id)
     )
-    return result.scalar_one_or_none() is not None
+    if result.scalar_one_or_none() is None:
+        return False
+
+    # A dismissed package and deselected events are an explicit decision not to
+    # broadcast.  Consume their durable queue rows as well: otherwise they
+    # remain unsent/pending forever and make retries or later audits look as if
+    # there is still work to deliver.
+    now = datetime.now(UTC)
+    if approve:
+        excluded_events = select(ReviewSelection.event_id).where(
+            ReviewSelection.review_batch_id == batch_id,
+            ReviewSelection.selected.is_(False),
+        )
+        await session.execute(
+            update(CatalogNotice)
+            .where(
+                CatalogNotice.review_batch_id == batch_id,
+                CatalogNotice.sent_at.is_(None),
+                CatalogNotice.event_id.in_(excluded_events),
+            )
+            .values(sent_at=now)
+        )
+        await session.execute(
+            update(OpenEventNotice)
+            .where(
+                OpenEventNotice.review_batch_id == batch_id,
+                OpenEventNotice.status == "pending",
+                OpenEventNotice.event_id.in_(excluded_events),
+            )
+            .values(status="skipped")
+        )
+    else:
+        await session.execute(
+            update(CatalogNotice)
+            .where(
+                CatalogNotice.review_batch_id == batch_id,
+                CatalogNotice.sent_at.is_(None),
+            )
+            .values(sent_at=now)
+        )
+        await session.execute(
+            update(OpenEventNotice)
+            .where(
+                OpenEventNotice.review_batch_id == batch_id,
+                OpenEventNotice.status == "pending",
+            )
+            .values(status="skipped")
+        )
+    return True
 
 
 async def toggle_review_event(
@@ -480,6 +534,14 @@ async def dispatch_reviewed_notices(
     )
     sent = 0
     outcomes = await user_outcomes(session, owner_id)
+    sent_registration_openings = set(
+        await session.scalars(
+            select(NotificationDelivery.milestone_id).where(
+                NotificationDelivery.telegram_user_id == owner_id,
+                NotificationDelivery.status == DeliveryStatus.SENT.value,
+            )
+        )
+    )
     for batch in batches:
         delivery = await session.get(ReviewDelivery, (batch.id, owner_id))
         if delivery is not None:
@@ -527,7 +589,7 @@ async def dispatch_reviewed_notices(
                 and selection.selected
                 and event is not None
                 and event_fingerprint(event) == selection.snapshot_hash
-                and (pref is None or pref.interest != "ignored")
+                and (pref is None or pref.interest not in {"ignored", "unsubscribed"})
             )
             chosen: list[Notice] = []
             for notice in candidates:
@@ -562,6 +624,19 @@ async def dispatch_reviewed_notices(
                             )
                             and (pref is None or pref.interest != "registered")
                         )
+                    if (
+                        allowed
+                        and pref is not None
+                        and pref.interest == "registered"
+                        and notice.milestone_id is not None
+                        and event is not None
+                        and any(
+                            stage.id == notice.milestone_id
+                            and stage.kind in {"registration_open", "registration_deadline"}
+                            for stage in event.milestones
+                        )
+                    ):
+                        allowed = False
                 else:
                     phases: set[str] = (
                         {p.phase for p in open_phases(event, now)} if event else set()
@@ -575,14 +650,22 @@ async def dispatch_reviewed_notices(
                             and pref is not None
                             and pref.interest == "registered"
                         )
+                        and not (
+                            notice.phase.startswith("registration:")
+                            and notice.phase.removeprefix("registration:")
+                            in sent_registration_openings
+                        )
                     )
                     if event is not None:
                         stage = next(
                             (s for s in event.milestones if s.id == notice.milestone_id), None
                         )
-                        if (
-                            stage is not None
-                            and stage_access(stage, {s.id: s for s in event.milestones}, outcomes)
+                        if stage is not None and (
+                            (
+                                notice.phase.startswith("stage:")
+                                and outcomes.get(stage.id) in {"passed", "not_passed", "skipped"}
+                            )
+                            or stage_access(stage, {s.id: s for s in event.milestones}, outcomes)
                             == "blocked"
                         ):
                             allowed = False
@@ -642,11 +725,16 @@ async def dispatch_reviewed_notices(
                 raise
             except Exception as exc:
                 logger.warning("Review batch %s delivery failed (%s)", batch.id, type(exc).__name__)
-                delivery.next_attempt_at = now + timedelta(minutes=min(60, 2**delivery.attempts))
-                if delivery.attempts >= 5:
+                if is_permanent_delivery_error(exc):
                     delivery.status = "failed"
+                else:
+                    delivery.next_attempt_at = now + timedelta(
+                        minutes=retry_delay_minutes(delivery.attempts)
+                    )
                 await session.commit()
-                return sent
+                # Retry the remaining packets for this batch together later,
+                # but do not let one recipient/batch starve later batches.
+                break
             for notice in delivered:
                 notice.sent_at = now
                 if isinstance(notice, OpenEventNotice):

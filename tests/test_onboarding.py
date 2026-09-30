@@ -76,3 +76,81 @@ async def test_onboarding_requires_grade_and_active_access(
         result = await complete_onboarding(session, 1)
         assert result.matched == result.subscribed == 0
         assert profile.onboarding_completed
+
+
+@pytest.mark.asyncio
+async def test_onboarding_reapplies_questionnaire_and_preserves_explicit_choices(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 1, "Europe/Moscow", school_grade=9)
+        profile.tag_filters = ["biology"]
+        profile.auto_subscribe_new_events = False
+        session.add_all(
+            [
+                Event(
+                    id="test:old-auto",
+                    title="Old auto",
+                    source_kind="RSOSH",
+                    tags=["mathematics"],
+                    min_grade=5,
+                    max_grade=11,
+                    status="confirmed",
+                    source_url="https://example.org/old-auto",
+                ),
+                Event(
+                    id="test:new-match",
+                    title="New match",
+                    source_kind="RSOSH",
+                    tags=["biology"],
+                    min_grade=5,
+                    max_grade=11,
+                    status="confirmed",
+                    source_url="https://example.org/new-match",
+                ),
+                Event(
+                    id="test:manual",
+                    title="Manual",
+                    source_kind="RSOSH",
+                    tags=["mathematics"],
+                    min_grade=5,
+                    max_grade=11,
+                    status="confirmed",
+                    source_url="https://example.org/manual",
+                ),
+            ]
+        )
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(
+                    telegram_user_id=1,
+                    event_id="test:old-auto",
+                    interest="watching",
+                    origin="automatic",
+                ),
+                EventPreference(
+                    telegram_user_id=1,
+                    event_id="test:manual",
+                    interest="registered",
+                    origin="manual",
+                ),
+            ]
+        )
+        await session.commit()
+
+        result = await complete_onboarding(session, 1)
+        await session.commit()
+
+        assert (result.matched, result.subscribed) == (1, 1)
+        preferences = {
+            preference.event_id: (preference.interest, preference.origin)
+            for preference in await session.scalars(
+                select(EventPreference).where(EventPreference.telegram_user_id == 1)
+            )
+        }
+        assert preferences == {
+            "test:new-match": ("watching", "automatic"),
+            "test:manual": ("registered", "manual"),
+        }

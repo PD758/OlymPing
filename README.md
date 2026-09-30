@@ -61,8 +61,8 @@ uv run pyright
 
 At 09:00 Moscow time the bot automatically sends registration openings to each active user. It includes
 confirmed registration openings in the preceding 24-hour window that match their filters,
-excluding ignored, registered, cancelled, or already closed events. Empty digests are silent;
-delivered events are recorded in SQLite to avoid repeats after a restart. Events without
+excluding ignored, unsubscribed, registered, cancelled, or already closed events. Empty digests
+are silent; delivered events are recorded in SQLite to avoid repeats after a restart. Events without
 a confirmed opening date are not included. This digest is independent of new-event notices.
 Registration-opening reminders are never sent ahead of the opening date/time, including
 saved custom rules and pending retries. Advance reminders for participation stages and
@@ -73,7 +73,7 @@ registration deadlines remain enabled.
 - `/today`, `/week` — calendar views;
 - `/all` — all tracked olympiads, including schedules marked `tbd`;
 - `/mine` — only subscribed or registered olympiads;
-- `/register` — olympiads whose confirmed registration deadline has not passed;
+- `/register` — olympiads with open registration, including those without a published deadline;
 - `/settings` — class, topic, source, and CTF filters;
 - `/remind EVENT_ID DAYS HH:MM [KIND]` — add a per-event rule;
 - `/remind EVENT_ID off` — mute an event;
@@ -277,7 +277,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.3.3 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.3.4 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.
@@ -306,6 +306,18 @@ The “registered” mark suppresses registration reminders; ignored events, dis
 and muted event reminders are also respected. Custom event rules override the defaults.
 Date-only deadlines are displayed as inclusive dates, and expired registration reminders
 are not sent during catch-up after downtime.
+
+Changing grade, topics, sources or CTF filters immediately reapplies automatic subscriptions
+to the existing catalog. Explicit subscriptions, registrations, ignored/unsubscribed choices
+and event reminder mutes are preserved. The automatic-subscription switch alone leaves
+current subscriptions unchanged; completing the questionnaire explicitly applies its selection.
+Confirmed open registrations appear in `/register` even if no deadline has been published.
+
+Temporary delivery failures retry with persisted exponential delays, capped at one hour.
+Each retry rechecks current eligibility; reminders stop when their grace window expires.
+Permanent Telegram rejections stop that delivery. A delivered registration opening is shared
+between personal reminders, the daily digest and reviewed notices to prevent duplicate sends.
+Stages marked passed, not passed or skipped are excluded from upcoming items and stage reminders.
 
 All `sendMessage` calls share pacing: 10 messages/second by default, at least 1.1 seconds
 between messages in a private chat and 3.1 seconds in a group. Configure

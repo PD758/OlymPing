@@ -1,6 +1,7 @@
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from olymping.models import AccessStatus, Event, Milestone, OpenEventNotice
@@ -218,3 +219,108 @@ async def test_digest_window_filters_retry_and_restart(
             )
             == 0
         )
+
+
+@pytest.mark.asyncio
+async def test_automatic_opening_failure_does_not_starve_later_openings(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    now = datetime(2026, 9, 10, 6, tzinfo=UTC)  # 09:00 Moscow digest.
+    sent: list[str] = []
+
+    async def send(_user_id: int, text: str) -> None:
+        if "Broken" in text:
+            raise RuntimeError("recipient temporarily unavailable")
+        sent.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, 42, "Europe/Moscow", onboarding_completed=True)
+        for event_id, title in (("test:broken", "Broken"), ("test:healthy", "Healthy")):
+            session.add(
+                Event(
+                    id=event_id,
+                    title=title,
+                    source_kind="NTO",
+                    source_url="https://example.org/",
+                    milestones=[
+                        Milestone(
+                            id=f"{event_id}:open",
+                            kind="registration_open",
+                            title="Open",
+                            starts_at=now - timedelta(hours=1),
+                            status="confirmed",
+                        )
+                    ],
+                )
+            )
+        await session.commit()
+
+        assert await dispatch_registration_digest(session, owner_id=42, send=send, now=now) == 1
+        assert len(sent) == 1 and "Healthy" in sent[0]
+        broken = await session.scalar(
+            select(OpenEventNotice).where(OpenEventNotice.event_id == "test:broken")
+        )
+        healthy = await session.scalar(
+            select(OpenEventNotice).where(OpenEventNotice.event_id == "test:healthy")
+        )
+        assert broken is not None and broken.status == "automatic" and broken.attempts == 1
+        assert broken.next_attempt_at is not None
+        assert broken.next_attempt_at.replace(tzinfo=UTC) == now + timedelta(minutes=2)
+        assert healthy is not None and healthy.status == "sent"
+
+
+@pytest.mark.asyncio
+async def test_automatic_opening_recovers_after_more_than_five_transient_failures(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    now = datetime(2026, 9, 10, 6, tzinfo=UTC)
+    failures = 0
+    sent: list[str] = []
+
+    async def unavailable(_user_id: int, _text: str) -> None:
+        nonlocal failures
+        failures += 1
+        raise RuntimeError("network outage")
+
+    async def recovered(_user_id: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, 42, "Europe/Moscow", onboarding_completed=True)
+        session.add(
+            Event(
+                id="test:automatic-retry",
+                title="Automatic retry",
+                source_kind="NTO",
+                source_url="https://example.org/",
+                milestones=[
+                    Milestone(
+                        id="test:automatic-retry:open",
+                        kind="registration_open",
+                        title="Open",
+                        starts_at=now - timedelta(hours=1),
+                        status="confirmed",
+                    )
+                ],
+            )
+        )
+        await session.commit()
+        for offset in (0, 2, 6, 14, 30):
+            assert (
+                await dispatch_registration_digest(
+                    session, owner_id=42, send=unavailable, now=now + timedelta(minutes=offset)
+                )
+                == 0
+            )
+        assert failures == 5
+        assert (
+            await dispatch_registration_digest(
+                session, owner_id=42, send=recovered, now=now + timedelta(minutes=62)
+            )
+            == 1
+        )
+        notice = await session.scalar(select(OpenEventNotice))
+        assert notice is not None and notice.status == "sent" and notice.attempts == 6
+    assert len(sent) == 1

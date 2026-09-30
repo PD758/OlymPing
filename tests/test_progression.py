@@ -2,6 +2,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from aiogram.exceptions import TelegramForbiddenError
+from aiogram.methods import SendMessage
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
@@ -493,6 +495,57 @@ async def test_failed_paths_hide_calendar_and_stop_reminders_but_restore(
 
 
 @pytest.mark.asyncio
+async def test_own_terminal_outcome_hides_it_but_awaiting_result_keeps_it_visible(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        event = event_with_paths()
+        session.add(event)
+        await session.flush()
+        await set_stage_outcome(
+            session, actor_id=2, milestone_id="test:a", outcome=StageOutcome.PASSED
+        )
+        await set_stage_outcome(
+            session, actor_id=2, milestone_id="test:final", outcome=StageOutcome.SKIPPED
+        )
+        await session.commit()
+
+        outcomes = {"test:a": "passed", "test:final": "skipped"}
+        assert not await upcoming_events(
+            session, profile, starts_at=NOW, ends_at=NOW + timedelta(days=5)
+        )
+        assert completed_for_user(event, outcomes, NOW)
+
+        await set_stage_outcome(
+            session,
+            actor_id=2,
+            milestone_id="test:final",
+            outcome=StageOutcome.AWAITING_RESULTS,
+        )
+        await session.commit()
+        assert [
+            milestone.id
+            for _, milestone in await upcoming_events(
+                session, profile, starts_at=NOW, ends_at=NOW + timedelta(days=5)
+            )
+        ] == ["test:final"]
+        assert not completed_for_user(
+            event, {"test:a": "passed", "test:final": "awaiting_results"}, NOW
+        )
+
+        await set_stage_outcome(
+            session, actor_id=2, milestone_id="test:final", outcome=StageOutcome.PASSED
+        )
+        await session.commit()
+        assert not await upcoming_events(
+            session, profile, starts_at=NOW, ends_at=NOW + timedelta(days=5)
+        )
+        assert completed_for_user(event, {"test:a": "passed", "test:final": "passed"}, NOW)
+
+
+@pytest.mark.asyncio
 async def test_workflow_flood_wait_survives_restart(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
@@ -514,3 +567,103 @@ async def test_workflow_flood_wait_survives_restart(
         row = await session.get(WorkflowNotice, "result:2:test:a")
         assert row is not None and row.attempts == 0 and row.status == "pending"
         assert row.next_attempt_at is not None
+
+
+@pytest.mark.asyncio
+async def test_workflow_retries_transient_failures_past_five_attempts(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    attempts = 0
+    sent: list[str] = []
+
+    async def unavailable(_user: int, _text: str, stage: str, _kind: str) -> None:
+        nonlocal attempts
+        if stage == "test:a":
+            attempts += 1
+            raise RuntimeError("network outage")
+        sent.append(stage)
+
+    async def recovered(_user: int, _text: str, stage: str, _kind: str) -> None:
+        sent.append(stage)
+
+    async with factory() as session:
+        await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        event = event_with_paths()
+        session.add(event)
+        await session.flush()
+        session.add(EventPreference(telegram_user_id=2, event_id=event.id, interest="watching"))
+        await session.commit()
+        for offset in (0, 2, 6, 14, 30):
+            assert await dispatch_workflow_notices(
+                session,
+                user_id=2,
+                admin_id=1,
+                send=unavailable,
+                now=NOW + timedelta(minutes=offset),
+            ) == (1 if offset == 0 else 0)
+            assert attempts == (0, 2, 6, 14, 30).index(offset) + 1
+            assert (
+                await dispatch_workflow_notices(
+                    session,
+                    user_id=2,
+                    admin_id=1,
+                    send=unavailable,
+                    now=NOW + timedelta(minutes=offset + 1),
+                )
+                == 0
+            )
+            assert attempts == (0, 2, 6, 14, 30).index(offset) + 1
+        row = await session.get(WorkflowNotice, "result:2:test:a")
+        assert row is not None and row.status == "pending" and row.attempts == 5
+        assert row.next_attempt_at is not None
+        assert row.next_attempt_at.replace(tzinfo=UTC) == NOW + timedelta(minutes=62)
+        assert (
+            await dispatch_workflow_notices(
+                session,
+                user_id=2,
+                admin_id=1,
+                send=recovered,
+                now=NOW + timedelta(minutes=62),
+            )
+            == 1
+        )
+        row = await session.get(WorkflowNotice, "result:2:test:a")
+        assert row is not None and row.status == "sent" and row.attempts == 6
+    assert sent == ["test:b", "test:a"]
+
+
+@pytest.mark.asyncio
+async def test_workflow_stops_after_permanent_telegram_error(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    calls = 0
+
+    async def forbidden(_user: int, _text: str, stage: str, _kind: str) -> None:
+        nonlocal calls
+        if stage == "test:a":
+            calls += 1
+            raise TelegramForbiddenError(SendMessage(chat_id=2, text="notice"), "bot blocked")
+
+    async def unexpected(_user: int, _text: str, stage: str, _kind: str) -> None:
+        if stage == "test:a":
+            pytest.fail("permanent workflow failure must not retry")
+
+    async with factory() as session:
+        await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        event = event_with_paths()
+        session.add(event)
+        await session.flush()
+        session.add(EventPreference(telegram_user_id=2, event_id=event.id, interest="watching"))
+        await session.commit()
+        await dispatch_workflow_notices(session, user_id=2, admin_id=1, send=forbidden, now=NOW)
+        row = await session.get(WorkflowNotice, "result:2:test:a")
+        assert row is not None and row.status == "failed" and row.attempts == 1
+        assert row.next_attempt_at is None
+        await session.commit()
+    async with factory() as session:
+        await dispatch_workflow_notices(
+            session, user_id=2, admin_id=1, send=unexpected, now=NOW + timedelta(days=1)
+        )
+    assert calls == 1

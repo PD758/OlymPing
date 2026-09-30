@@ -7,6 +7,7 @@ from olymping.schemas import CalendarDocument
 from olymping.services.filters import event_is_enabled
 from olymping.services.importer import import_document
 from olymping.services.reviews import collect_review_batch, decide_review, dispatch_reviewed_notices
+from olymping.services.subscriptions import reapply_profile
 from olymping.services.user_state import toggle_event_interest
 from olymping.services.users import ensure_admin_profile, ensure_user_profile
 
@@ -159,3 +160,111 @@ def test_registration_overrides_topic_filter_but_auto_subscription_does_not() ->
     assert not event_is_enabled(profile, event, preference=pref)
     pref.interest = "registered"
     assert event_is_enabled(profile, event, preference=pref)
+
+
+@pytest.mark.asyncio
+async def test_reapply_profile_reconciles_only_automatic_watching_preferences(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 2, "Europe/Moscow", onboarding_completed=True)
+        profile.school_grade = 9
+        profile.tag_filters = ["mathematics"]
+        session.add_all(
+            [
+                Event(
+                    id="test:old-auto",
+                    title="Old automatic",
+                    source_kind="NTO",
+                    tags=["mathematics"],
+                    min_grade=5,
+                    max_grade=11,
+                    source_url="https://example.org/old-auto",
+                ),
+                Event(
+                    id="test:new-auto",
+                    title="New automatic",
+                    source_kind="NTO",
+                    tags=["biology"],
+                    min_grade=5,
+                    max_grade=11,
+                    source_url="https://example.org/new-auto",
+                ),
+                Event(
+                    id="test:manual-watch",
+                    title="Manual watch",
+                    source_kind="NTO",
+                    tags=["mathematics"],
+                    min_grade=5,
+                    max_grade=11,
+                    source_url="https://example.org/manual-watch",
+                ),
+                Event(
+                    id="test:manual-ignored",
+                    title="Manual ignored",
+                    source_kind="NTO",
+                    tags=["mathematics"],
+                    min_grade=5,
+                    max_grade=11,
+                    source_url="https://example.org/manual-ignored",
+                ),
+                Event(
+                    id="test:manual-registered",
+                    title="Manual registered",
+                    source_kind="NTO",
+                    tags=["mathematics"],
+                    min_grade=5,
+                    max_grade=11,
+                    source_url="https://example.org/manual-registered",
+                ),
+            ]
+        )
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(
+                    telegram_user_id=2,
+                    event_id="test:old-auto",
+                    interest="watching",
+                    origin="automatic",
+                ),
+                EventPreference(
+                    telegram_user_id=2,
+                    event_id="test:manual-watch",
+                    interest="watching",
+                    origin="manual",
+                ),
+                EventPreference(
+                    telegram_user_id=2,
+                    event_id="test:manual-ignored",
+                    interest="ignored",
+                    origin="manual",
+                ),
+                EventPreference(
+                    telegram_user_id=2,
+                    event_id="test:manual-registered",
+                    interest="registered",
+                    origin="manual",
+                ),
+            ]
+        )
+        await session.commit()
+
+        profile.tag_filters = ["biology"]
+        added, removed = await reapply_profile(session, profile)
+        await session.commit()
+
+        assert (added, removed) == (1, 1)
+        preferences = {
+            preference.event_id: (preference.interest, preference.origin)
+            for preference in await session.scalars(
+                select(EventPreference).where(EventPreference.telegram_user_id == 2)
+            )
+        }
+        assert preferences == {
+            "test:new-auto": ("watching", "automatic"),
+            "test:manual-watch": ("watching", "manual"),
+            "test:manual-ignored": ("ignored", "manual"),
+            "test:manual-registered": ("registered", "manual"),
+        }

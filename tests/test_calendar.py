@@ -146,6 +146,110 @@ def test_registration_window_respects_explicit_opening_and_deadline() -> None:
 
 
 @pytest.mark.asyncio
+async def test_register_uses_current_open_phase_not_only_a_future_deadline(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    from olymping.services.calendar import open_registration_events
+
+    _, factory = database
+    now = datetime(2026, 10, 10, 12, tzinfo=UTC)
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 1, "Europe/Moscow")
+        no_deadline = Event(
+            id="test:open-without-deadline",
+            source_kind="RSOSH",
+            title="Open without deadline",
+            status="confirmed",
+            source_url="https://example.org/open",
+        )
+        no_deadline.milestones = [
+            Milestone(
+                id="test:open-without-deadline:open",
+                kind="registration_open",
+                title="Open",
+                starts_at=now - timedelta(days=1),
+                precision="date",
+                status="confirmed",
+            )
+        ]
+        between_waves = Event(
+            id="test:between-waves",
+            source_kind="RSOSH",
+            title="Between waves",
+            status="confirmed",
+            source_url="https://example.org/waves",
+        )
+        between_waves.milestones = [
+            Milestone(
+                id="test:between-waves:first-open",
+                kind="registration_open",
+                title="First opening",
+                starts_at=now - timedelta(days=10),
+                precision="date",
+                status="confirmed",
+            ),
+            Milestone(
+                id="test:between-waves:first-deadline",
+                kind="registration_deadline",
+                title="First deadline",
+                starts_at=now - timedelta(days=5),
+                precision="date",
+                status="confirmed",
+            ),
+            Milestone(
+                id="test:between-waves:second-open",
+                kind="registration_open",
+                title="Second opening",
+                starts_at=now + timedelta(days=2),
+                precision="date",
+                status="confirmed",
+            ),
+            Milestone(
+                id="test:between-waves:second-deadline",
+                kind="registration_deadline",
+                title="Second deadline",
+                starts_at=now + timedelta(days=5),
+                precision="date",
+                status="confirmed",
+            ),
+        ]
+        expired = Event(
+            id="test:expired",
+            source_kind="RSOSH",
+            title="Expired",
+            status="confirmed",
+            source_url="https://example.org/expired",
+        )
+        expired.milestones = [
+            Milestone(
+                id="test:expired:open",
+                kind="registration_open",
+                title="Open",
+                starts_at=now - timedelta(days=5),
+                precision="date",
+                status="confirmed",
+            ),
+            Milestone(
+                id="test:expired:deadline",
+                kind="registration_deadline",
+                title="Deadline",
+                starts_at=now - timedelta(days=1),
+                precision="date",
+                status="confirmed",
+            ),
+        ]
+        session.add_all([no_deadline, between_waves, expired])
+        await session.commit()
+
+        assert registration_closes_at(no_deadline, now) is None
+        assert registration_closes_at(between_waves, now) is None
+        assert registration_closes_at(expired, now) is None
+        assert [
+            event.id for event in await open_registration_events(session, profile, now=now)
+        ] == ["test:open-without-deadline"]
+
+
+@pytest.mark.asyncio
 async def test_personal_views_hide_ignored_and_nonmatching_events(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
