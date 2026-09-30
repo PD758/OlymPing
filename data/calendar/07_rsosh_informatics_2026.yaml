@@ -32,6 +32,7 @@ events:
         is_online: true
         source_url: https://ai.edu.gov.ru/
       - id: rsosh:all-russian-ai-2026:main
+        advancement_paths: [["rsosh:all-russian-ai-2026:qualifier"]]
         kind: qualifier
         title: "Основной этап"
         starts_at: "2026-10-14T00:00:00+03:00"
@@ -41,6 +42,7 @@ events:
         is_online: null
         source_url: https://ai.edu.gov.ru/
       - id: rsosh:all-russian-ai-2026:final
+        advancement_paths: [["rsosh:all-russian-ai-2026:main"]]
         terminal: true
         kind: final
         title: "Заключительный этап"

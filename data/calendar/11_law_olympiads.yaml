@@ -3,7 +3,7 @@ events:
   - id: other:hse-highest-test-law-2026
     source_kind: OTHER
     title: "Высшая проба — право"
-    description: "Профиль «Право» олимпиады школьников «Высшая проба». В первом туре можно выбрать одну из двух дат; время зависит от класса. Расписание первого тура пока предварительное."
+    description: "Профиль «Право» олимпиады школьников «Высшая проба». Первый тур: 25 сентября — 9–10 классы в 14:00, 11 класс в 15:00; 4 октября — 9–10 классы в 9:20, 11 класс в 9:00 МСК. Выбирается одна дата; длительность 30 минут."
     category: law
     tags: [law, hse, highest-test]
     url: https://olymp.hse.ru/mmo/law
@@ -28,6 +28,8 @@ events:
         status: confirmed
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-highest-test-law-2026:qualifier-1a
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый тур отбора — первый вариант даты"
         starts_at: "2026-09-25T00:00:00+03:00"
@@ -36,6 +38,8 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable
       - id: other:hse-highest-test-law-2026:qualifier-1b
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый тур отбора — второй вариант даты"
         starts_at: "2026-10-04T00:00:00+03:00"
@@ -44,6 +48,12 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable
       - id: other:hse-highest-test-law-2026:qualifier-2
+        # Регламент §2.2.1; две даты первого тура — альтернативы, не два требования.
+        # https://olymp.hse.ru/mirror/pubs/share/1177293678.pdf
+        advancement_paths:
+          - [other:hse-highest-test-law-2026:qualifier-1a]
+          - [other:hse-highest-test-law-2026:qualifier-1b]
+        terminal: false
         kind: qualifier
         title: "Второй тур отбора"
         starts_at: "2026-11-13T00:00:00+03:00"

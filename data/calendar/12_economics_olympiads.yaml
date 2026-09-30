@@ -3,7 +3,7 @@ events:
   - id: other:hse-economics-2026
     source_kind: OTHER
     title: "Высшая проба — экономика"
-    description: "Профиль «Экономика» Всероссийской олимпиады школьников «Высшая проба» в 2026/27 учебном году."
+    description: "Профиль «Экономика» олимпиады «Высшая проба» 2026/27. Первый тур: 26 сентября — 9–10 классы в 9:30, 11 класс в 9:00; 30 сентября — 9–10 классы в 14:00, 11 класс в 15:00 МСК. Выбирается одна дата; длительность 30 минут."
     category: economics
     tags: [economics, hse]
     url: https://olymp.hse.ru/mmo/eco
@@ -30,6 +30,8 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-economics-2026:qualifier-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый тур — первый вариант даты"
         starts_at: "2026-09-26T00:00:00+03:00"
@@ -38,6 +40,8 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-economics-2026:qualifier-1b
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый тур — второй вариант даты"
         starts_at: "2026-09-30T00:00:00+03:00"
@@ -46,6 +50,12 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-economics-2026:qualifier-2
+        # Регламент §2.2.1; достаточно пройти первый тур в одну из двух дат.
+        # https://olymp.hse.ru/mirror/pubs/share/1177293678.pdf
+        advancement_paths:
+          - [other:hse-economics-2026:qualifier-1]
+          - [other:hse-economics-2026:qualifier-1b]
+        terminal: false
         kind: qualifier
         title: "Второй тур отборочного этапа"
         starts_at: "2026-11-13T00:00:00+03:00"
@@ -67,7 +77,7 @@ events:
   - id: other:hse-financial-literacy-2026
     source_kind: OTHER
     title: "Высшая проба — финансовая грамотность"
-    description: "Профиль «Финансовая грамотность» Всероссийской олимпиады школьников «Высшая проба» в 2026/27 учебном году."
+    description: "Профиль «Финансовая грамотность» олимпиады «Высшая проба» 2026/27. Первый тур 4 октября: 7–8 классы в 13:00, 9–10 классы в 13:30, 11 класс в 14:30 МСК. Длительность 40 минут."
     category: economics
     tags: [economics, financial-literacy, hse]
     url: https://olymp.hse.ru/mmo/finance
@@ -94,6 +104,8 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-financial-literacy-2026:qualifier-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый тур отборочного этапа"
         starts_at: "2026-10-04T00:00:00+03:00"
@@ -102,6 +114,9 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-financial-literacy-2026:qualifier-2
+        # https://olymp.hse.ru/mirror/pubs/share/1177293678.pdf, §2.2.1
+        advancement_paths: [[other:hse-financial-literacy-2026:qualifier-1]]
+        terminal: false
         kind: qualifier
         title: "Второй тур отборочного этапа"
         starts_at: "2026-11-13T00:00:00+03:00"
@@ -123,7 +138,7 @@ events:
   - id: other:hse-business-basics-2026
     source_kind: OTHER
     title: "Высшая проба — основы бизнеса"
-    description: "Профиль «Основы бизнеса» Всероссийской олимпиады школьников «Высшая проба» в 2026/27 учебном году."
+    description: "Профиль «Основы бизнеса» олимпиады «Высшая проба» 2026/27. Первый тур 3 октября: 9–10 классы в 12:30, 11 класс в 11:45 МСК. Длительность 30 минут."
     category: economics
     tags: [economics, business, hse]
     url: https://olymp.hse.ru/mmo/business
@@ -150,6 +165,8 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/
       - id: other:hse-business-basics-2026:qualifier-1
+        advancement_paths: []
+        terminal: false
         kind: qualifier
         title: "Первый тур отборочного этапа"
         starts_at: "2026-10-03T00:00:00+03:00"
@@ -158,6 +175,9 @@ events:
         is_online: true
         source_url: https://olymp.hse.ru/mmo/timetable/
       - id: other:hse-business-basics-2026:qualifier-2
+        # https://olymp.hse.ru/mirror/pubs/share/1177293678.pdf, §2.2.1
+        advancement_paths: [[other:hse-business-basics-2026:qualifier-1]]
+        terminal: false
         kind: qualifier
         title: "Второй тур отборочного этапа"
         starts_at: "2026-11-13T00:00:00+03:00"

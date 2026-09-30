@@ -29,6 +29,84 @@ NOW = datetime(2026, 10, 7, 17, tzinfo=UTC)
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("filename", "event_id", "first_rounds"),
+    [
+        (
+            "11_law_olympiads.yaml",
+            "other:hse-highest-test-law-2026",
+            ("qualifier-1a", "qualifier-1b"),
+        ),
+        (
+            "12_economics_olympiads.yaml",
+            "other:hse-economics-2026",
+            ("qualifier-1", "qualifier-1b"),
+        ),
+        ("12_economics_olympiads.yaml", "other:hse-financial-literacy-2026", ("qualifier-1",)),
+        ("12_economics_olympiads.yaml", "other:hse-business-basics-2026", ("qualifier-1",)),
+    ],
+)
+async def test_hse_import_resolves_first_round_gaps_and_accepts_either_date(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    filename: str,
+    event_id: str,
+    first_rounds: tuple[str, ...],
+) -> None:
+    _, factory = database
+    seed = next(
+        event
+        for event in load_calendar_document(Path("data/calendar") / filename).events
+        if event.id == event_id
+    )
+    old = seed.model_copy(
+        update={
+            "milestones": [
+                stage.model_copy(update={"advancement_paths": None}) for stage in seed.milestones
+            ]
+        }
+    )
+    sent: list[str] = []
+
+    async def send(_user: int, _text: str, stage: str, kind: str) -> None:
+        assert kind == "gap"
+        sent.append(stage)
+
+    async with factory() as session:
+        admin = await ensure_admin_profile(session, 1, "Europe/Moscow")
+        admin.onboarding_completed = True
+        admin.auto_subscribe_new_events = False
+        await import_document(session, CalendarDocument(calendar_version=1, events=[old]))
+        await session.commit()
+        assert await dispatch_workflow_notices(
+            session, user_id=1, admin_id=1, send=send, now=NOW
+        ) == len(first_rounds)
+
+    async with factory() as session:
+        current = CalendarDocument(calendar_version=1, events=[seed])
+        await import_document(session, current)
+        await session.commit()
+        assert (
+            await dispatch_workflow_notices(session, user_id=1, admin_id=1, send=send, now=NOW) == 0
+        )
+        notices = list(await session.scalars(select(WorkflowNotice)))
+        assert len(notices) == len(first_rounds)
+        assert all(notice.status == "resolved" for notice in notices)
+        event = await session.get(Event, event_id)
+        assert event is not None
+        stages = {stage.id: stage for stage in event.milestones}
+        second = stages[f"{event_id}:qualifier-2"]
+        assert stage_access(second, stages, {}) == "unknown"
+        for suffix in first_rounds:
+            outcomes = {f"{event_id}:{other}": "skipped" for other in first_rounds}
+            outcomes[f"{event_id}:{suffix}"] = "passed"
+            assert stage_access(second, stages, outcomes) == "eligible"
+        failed = {f"{event_id}:{suffix}": "not_passed" for suffix in first_rounds}
+        assert stage_access(second, stages, failed) == "blocked"
+        assert (await import_document(session, current)).updated_milestones == 0
+    assert len(sent) == len(first_rounds)
+
+
+@pytest.mark.asyncio
 async def test_ai_challenge_import_resolves_gaps_and_shares_final_admission(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:

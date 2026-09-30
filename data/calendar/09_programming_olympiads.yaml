@@ -55,12 +55,12 @@ events:
         terminal: false
         kind: qualifier
         title: "Первый отборочный этап"
-        starts_at: "2026-10-09T00:00:00+03:00"
-        ends_at: "2026-10-13T00:00:00+03:00"
-        precision: window
+        starts_at: "2026-10-09T08:00:00+03:00"
+        ends_at: "2026-10-12T23:59:00+03:00"
+        precision: exact
         status: confirmed
         is_online: true
-        source_url: https://dano.hse.ru/
+        source_url: https://dano.hse.ru/first
       - id: other:dano-2026:stage-2
         advancement_paths: [["other:dano-2026:stage-1"]]
         terminal: false

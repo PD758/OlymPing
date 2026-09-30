@@ -657,21 +657,37 @@ events:
   - id: mosh:financial-literacy-2026
     source_kind: MOSH
     title: "МОШ — финансовая грамотность"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Пригласительный этап МОШ по финансовой грамотности: 26 сентября 9:00 — 3 октября 21:00 МСК. Баллы этого тура не влияют на допуск к последующим этапам олимпиады."
     category: economics
     tags: [mosh, financial-literacy]
     url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    source_url: https://mos.olimpiada.ru/news/4607
+    status: confirmed
     location: "Москва"
-    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–11 классы"
+    restrictions: "5–11 классы; учащиеся московских школ"
+    min_grade: 5
+    max_grade: 11
     milestones:
+      - id: mosh:financial-literacy-2026:registration-open
+        kind: registration_open
+        title: "Регистрация на пригласительный этап"
+        starts_at: "2026-09-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://mos.olimpiada.ru/news/4604
       - id: mosh:financial-literacy-2026:schedule
+        # Результаты пригласительного тура не влияют на допуск к следующим этапам.
+        advancement_paths: []
+        terminal: true
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Пригласительный этап"
+        starts_at: "2026-09-26T09:00:00+03:00"
+        ends_at: "2026-10-03T21:00:00+03:00"
+        precision: exact
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://mos.olimpiada.ru/news/4604
 
   - id: mosh:chemistry-2026
     source_kind: MOSH
