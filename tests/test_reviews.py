@@ -30,6 +30,7 @@ from olymping.services.reviews import (
     decide_review,
     dispatch_reviewed_notices,
     event_fingerprint,
+    legacy_event_fingerprint,
     refresh_review,
     toggle_review_event,
 )
@@ -69,6 +70,10 @@ async def test_reviewed_facts_do_not_return_for_new_recipient_or_old_duplicate_b
             )
         )
         await decide_review(session, batch_id=original, actor_id=1, approve=approve)
+        original_selection = await session.get(ReviewSelection, (original, event.id))
+        assert original_selection is not None
+        # Simulate a package persisted by the release before full stage fields.
+        original_selection.snapshot_hash = legacy_event_fingerprint(event)
         await session.commit()
     async with factory() as session:
         await ensure_user_profile(session, 3, "Europe/Moscow", onboarding_completed=True)
@@ -101,6 +106,52 @@ async def test_reviewed_facts_do_not_return_for_new_recipient_or_old_duplicate_b
         )
         await session.flush()
         assert await collect_review_batch(session) is not None
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("approve", [False, True])
+async def test_legacy_event_update_deduplicates_for_later_recipient(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    approve: bool,
+) -> None:
+    _, factory = database
+    summary = "Уточнено место проведения."
+    async with factory() as session:
+        batch_id = await seed_review(session)
+        event = await session.get(Event, "test:math")
+        selection = await session.get(ReviewSelection, (batch_id, "test:math"))
+        assert event is not None and selection is not None
+        session.add(
+            CatalogNotice(
+                telegram_user_id=1,
+                event_id=event.id,
+                kind="event_updated",
+                summary=summary,
+                review_batch_id=batch_id,
+            )
+        )
+        selection.snapshot_hash = legacy_event_fingerprint(event)
+        if approve:
+            assert await decide_review(session, batch_id=batch_id, actor_id=1, approve=True)
+            # Simulate an approved package persisted before the new hash existed.
+            selection.snapshot_hash = legacy_event_fingerprint(event)
+        await session.commit()
+
+    async with factory() as session:
+        await ensure_user_profile(session, 3, "Europe/Moscow", onboarding_completed=True)
+        late = CatalogNotice(
+            telegram_user_id=3,
+            event_id="test:math",
+            kind="event_updated",
+            summary=summary,
+        )
+        session.add(late)
+        await session.flush()
+        assert await collect_review_batch(session) is None
+        if approve:
+            assert late.sent_at is not None
+        else:
+            assert late.review_batch_id == batch_id
 
 
 @pytest.mark.asyncio
@@ -445,6 +496,99 @@ async def test_only_admin_can_decide_and_stale_review_is_rejected(
         assert await refresh_review(session, batch_id=batch_id, actor_id=1)
         await session.commit()
         assert await decide_review(session, batch_id=batch_id, actor_id=1, approve=True)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("location", "Новая площадка"),
+        ("format", "очный"),
+        ("is_online", True),
+        ("source_url", "https://example.org/new-stage"),
+    ],
+)
+async def test_review_is_stale_when_full_stage_metadata_changes(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    field: str,
+    value: str | bool,
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        batch_id = await seed_review(session)
+        stage = Milestone(
+            id="test:math:round",
+            event_id="test:math",
+            kind="round",
+            title="Отборочный этап",
+            status="confirmed",
+        )
+        session.add(stage)
+        await session.flush()
+        assert await refresh_review(session, batch_id=batch_id, actor_id=1)
+        setattr(stage, field, value)
+        await session.flush()
+
+        with pytest.raises(StaleReviewError):
+            await decide_review(session, batch_id=batch_id, actor_id=1, approve=True)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("stage_changes_after_failure", [False, True])
+async def test_legacy_approved_review_upgrades_before_retry(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    stage_changes_after_failure: bool,
+) -> None:
+    _, factory = database
+    delivered: list[str] = []
+    start = datetime.now(UTC)
+
+    async def unavailable(_user_id: int, _text: str) -> None:
+        raise RuntimeError("temporary network outage")
+
+    async def send(_user_id: int, text: str) -> None:
+        delivered.append(text)
+
+    async with factory() as session:
+        batch_id = await seed_review(session)
+        selection = await session.get(ReviewSelection, (batch_id, "test:math"))
+        event = await session.get(Event, "test:math")
+        batch = await session.get(NotificationReview, batch_id)
+        assert selection is not None and event is not None and batch is not None
+        stage = Milestone(
+            id="test:math:legacy-stage",
+            event_id=event.id,
+            kind="round",
+            title="Отборочный этап",
+            status="confirmed",
+        )
+        session.add(stage)
+        await session.flush()
+        await session.refresh(event, attribute_names=["milestones"])
+        selection.snapshot_hash = legacy_event_fingerprint(event)
+        full_snapshot = event_fingerprint(event)
+        batch.status = "approved"
+        for notice in await session.scalars(
+            select(CatalogNotice).where(
+                CatalogNotice.review_batch_id == batch_id,
+                CatalogNotice.event_id != event.id,
+            )
+        ):
+            notice.sent_at = start
+        await session.commit()
+
+        assert (
+            await dispatch_reviewed_notices(session, owner_id=1, send=unavailable, now=start) == 0
+        )
+        assert selection.snapshot_hash == full_snapshot
+        if stage_changes_after_failure:
+            stage.location = "Новая площадка"
+        await session.commit()
+
+        assert await dispatch_reviewed_notices(
+            session, owner_id=1, send=send, now=start + timedelta(minutes=2)
+        ) == (0 if stage_changes_after_failure else 1)
+        assert bool(delivered) is not stage_changes_after_failure
 
 
 @pytest.mark.asyncio

@@ -250,6 +250,56 @@ async def test_register_uses_current_open_phase_not_only_a_future_deadline(
 
 
 @pytest.mark.asyncio
+async def test_second_registration_wave_without_deadline_opens_after_expired_first_wave(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    """An old deadline must not hide a newer confirmed open-only wave."""
+    from olymping.services.calendar import open_registration_events
+
+    _, factory = database
+    now = datetime(2026, 10, 10, 12, tzinfo=UTC)
+    async with factory() as session:
+        profile = await ensure_user_profile(session, 1, "Europe/Moscow")
+        event = Event(
+            id="test:second-wave-no-deadline",
+            source_kind="RSOSH",
+            title="Second wave",
+            status="confirmed",
+            source_url="https://example.org/waves",
+            milestones=[
+                Milestone(
+                    id="test:second-wave-no-deadline:first-open",
+                    kind="registration_open",
+                    title="First opening",
+                    starts_at=now - timedelta(days=10),
+                    status="confirmed",
+                ),
+                Milestone(
+                    id="test:second-wave-no-deadline:first-deadline",
+                    kind="registration_deadline",
+                    title="First deadline",
+                    starts_at=now - timedelta(days=5),
+                    status="confirmed",
+                ),
+                Milestone(
+                    id="test:second-wave-no-deadline:second-open",
+                    kind="registration_open",
+                    title="Second opening",
+                    starts_at=now - timedelta(hours=1),
+                    status="confirmed",
+                ),
+            ],
+        )
+        session.add(event)
+        await session.commit()
+
+        assert registration_closes_at(event, now) is None
+        assert [item.id for item in await open_registration_events(session, profile, now=now)] == [
+            event.id
+        ]
+
+
+@pytest.mark.asyncio
 async def test_personal_views_hide_ignored_and_nonmatching_events(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:

@@ -162,9 +162,10 @@ Each event card contains one reminder toggle. `🔔 Напоминания: об
 `⚙️ Напоминания: свои` means `/remind` overrides exist, and `🔕 Напоминания: выключены`
 suppresses the event. Muting preserves custom rules so they can be restored with one tap.
 
-The registration section requires a confirmed future `registration_deadline`. When a confirmed
-`registration_open` milestone exists, the event appears only after it. With no separate opening
-date, a future confirmed deadline is treated as an already available registration.
+The registration section follows confirmed, currently open registration phases. A confirmed
+`registration_open` can appear without a published deadline; when a deadline is known, it must
+not have expired. With no separate opening date, a future confirmed deadline is treated as an
+already available registration. Separate registration waves remain separate.
 
 The settings keep two actions independent: `Сообщать о новых` controls catalog notices,
 while `Автоподписка на новые` decides whether future events immediately receive normal

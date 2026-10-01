@@ -219,6 +219,54 @@ async def test_closed_or_unconfirmed_windows_not_announced(
         assert open_phases(event, NOW) == []
 
 
+def test_registration_waves_do_not_join_across_closed_or_future_openings() -> None:
+    now = datetime(2026, 9, 10, 12, tzinfo=UTC)
+    event = Event(id="test:waves", source_kind="NTO", title="Waves", status="confirmed")
+    event.milestones = [
+        Milestone(
+            id="test:waves:first-open",
+            kind="registration_open",
+            title="First open",
+            starts_at=now - timedelta(days=10),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:waves:first-deadline",
+            kind="registration_deadline",
+            title="First deadline",
+            starts_at=now - timedelta(days=5),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:waves:second-open",
+            kind="registration_open",
+            title="Second open",
+            starts_at=now - timedelta(hours=1),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:waves:future-open",
+            kind="registration_open",
+            title="Future open",
+            starts_at=now + timedelta(days=2),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:waves:future-deadline",
+            kind="registration_deadline",
+            title="Future deadline",
+            starts_at=now + timedelta(days=5),
+            status="confirmed",
+        ),
+    ]
+
+    # The second wave is open with no published deadline.  The future opening
+    # owns the future deadline, so it must not close or hide this wave.
+    assert [(phase.phase, phase.milestone_id) for phase in open_phases(event, now)] == [
+        ("registration:test:waves:second-open", "test:waves:second-open")
+    ]
+
+
 @pytest.mark.asyncio
 async def test_sync_keeps_yaml_if_ctftime_fails(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],

@@ -33,3 +33,4 @@ build/
 backups/
 .DS_Store
 Thumbs.db
+HANDOFF.md

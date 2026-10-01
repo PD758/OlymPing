@@ -237,6 +237,14 @@ async def dispatch_due_reminders(
         }:
             continue
         if (
+            milestone.kind == MilestoneKind.REGISTRATION_OPEN.value
+            and f"registration:{milestone.id}"
+            not in {phase.phase for phase in open_phases(event, now)}
+        ):
+            # A reminder that was missed during an outage must not announce a
+            # registration wave after its deadline has already passed.
+            continue
+        if (
             milestone.kind == MilestoneKind.REGISTRATION_DEADLINE.value
             and registration_deadline(milestone) <= now
         ):

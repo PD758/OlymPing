@@ -96,7 +96,7 @@ async def refresh_review(session: AsyncSession, *, batch_id: int, actor_id: int)
     return True
 
 
-def event_fingerprint(event: Event) -> str:
+def _event_fingerprint(event: Event, *, stage_fields: tuple[str, ...]) -> str:
     def value(item: object) -> object:
         if isinstance(item, datetime):
             return (
@@ -118,18 +118,6 @@ def event_fingerprint(event: Event) -> str:
         "location",
         "is_online",
     )
-    stage_fields = (
-        "id",
-        "title",
-        "kind",
-        "status",
-        "starts_at",
-        "ends_at",
-        "precision",
-        "results_at",
-        "advancement_paths",
-        "terminal",
-    )
     payload = {field: value(getattr(event, field)) for field in fields}
     payload["milestones"] = [
         {field: value(getattr(stage, field)) for field in stage_fields}
@@ -138,6 +126,58 @@ def event_fingerprint(event: Event) -> str:
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()
     ).hexdigest()
+
+
+def legacy_event_fingerprint(event: Event) -> str:
+    """Fingerprint format stored by releases before full milestone details."""
+    return _event_fingerprint(
+        event,
+        stage_fields=(
+            "id",
+            "title",
+            "kind",
+            "status",
+            "starts_at",
+            "ends_at",
+            "precision",
+            "results_at",
+            "advancement_paths",
+            "terminal",
+        ),
+    )
+
+
+def event_fingerprint(event: Event) -> str:
+    """Current snapshot used for new and refreshed notification reviews."""
+    return _event_fingerprint(
+        event,
+        stage_fields=(
+            "id",
+            "title",
+            "kind",
+            "status",
+            "starts_at",
+            "ends_at",
+            "precision",
+            "results_at",
+            "advancement_paths",
+            "terminal",
+            "format",
+            "location",
+            "is_online",
+            "source_url",
+        ),
+    )
+
+
+def _snapshot_matches(event: Event, snapshot_hash: str) -> bool:
+    """Accept pre-upgrade stored selections without weakening current checks."""
+    return snapshot_hash in {event_fingerprint(event), legacy_event_fingerprint(event)}
+
+
+def _canonical_snapshot(event: Event, snapshot_hash: str) -> str:
+    """Use today's key for compatible legacy snapshots during deduplication."""
+    return event_fingerprint(event) if _snapshot_matches(event, snapshot_hash) else snapshot_hash
 
 
 def human_summary(notice: Notice, event: Event, now: datetime) -> str:
@@ -294,6 +334,9 @@ async def _reconcile_duplicate_reviews(session: AsyncSession) -> None:
             continue
         snapshot = snapshots.get((batch_id, notice.event_id))
         if snapshot is not None:
+            event = events.get(notice.event_id)
+            if event is not None:
+                snapshot = _canonical_snapshot(event, snapshot)
             known.setdefault(_notice_key(notice, snapshot), batch_id)
     affected: set[int] = set()
     now = datetime.now(UTC)
@@ -306,6 +349,7 @@ async def _reconcile_duplicate_reviews(session: AsyncSession) -> None:
             if notice.review_batch_id is not None
             else event_fingerprint(event)
         )
+        snapshot = _canonical_snapshot(event, snapshot)
         prior = known.get(_notice_key(notice, snapshot))
         if prior is None or prior == notice.review_batch_id:
             continue
@@ -387,10 +431,13 @@ async def decide_review(
                 .execution_options(populate_existing=True)
                 .where(Event.id == item.event_id)
             )
-            if event is None or event_fingerprint(event) != item.snapshot_hash:
+            if event is None or not _snapshot_matches(event, item.snapshot_hash):
                 raise StaleReviewError(
                     "Данные изменились. Нажми «Обновить сведения», затем проверь пакет ещё раз."
                 )
+            # Upgrade a compatible pre-v2 decision at the point it is approved.
+            # The following delivery check will then include full stage details.
+            item.snapshot_hash = event_fingerprint(event)
     result = await session.execute(
         update(NotificationReview)
         .where(
@@ -588,9 +635,14 @@ async def dispatch_reviewed_notices(
                 selection is not None
                 and selection.selected
                 and event is not None
-                and event_fingerprint(event) == selection.snapshot_hash
+                and _snapshot_matches(event, selection.snapshot_hash)
                 and (pref is None or pref.interest not in {"ignored", "unsubscribed"})
             )
+            if valid and selection is not None and event is not None:
+                # A legacy approved batch may still be awaiting its first send.
+                # Persist the full snapshot before calling Telegram so a retry
+                # cannot silently ignore a later stage-detail correction.
+                selection.snapshot_hash = event_fingerprint(event)
             chosen: list[Notice] = []
             for notice in candidates:
                 allowed = (

@@ -59,39 +59,66 @@ def open_phases(event: Event, now: datetime) -> list[OpenPhase]:
         for stage in event.milestones
         if stage.status == RecordStatus.CONFIRMED.value and stage.starts_at is not None
     ]
-    openings = [stage for stage in stages if stage.kind == "registration_open"]
-    deadlines = [stage for stage in stages if stage.kind == "registration_deadline"]
-    future_deadlines = sorted(
-        [
-            stage
-            for stage in deadlines
-            if stage.starts_at is not None and registration_deadline(stage) > now
-        ],
+    openings = sorted(
+        (stage for stage in stages if stage.kind == "registration_open"),
+        key=lambda stage: _utc(stage.starts_at or now),
+    )
+    deadlines = sorted(
+        (stage for stage in stages if stage.kind == "registration_deadline"),
         key=registration_deadline,
     )
     result: list[OpenPhase] = []
-    # A future confirmed deadline without an opening follows /register semantics.
-    if future_deadlines:
-        deadline = future_deadlines[0]
-        matching = [
-            stage
-            for stage in openings
-            if stage.starts_at is not None
-            and _utc(stage.starts_at) < registration_deadline(deadline)
-        ]
-        latest = max(matching, key=lambda stage: _utc(stage.starts_at or now), default=None)
-        if not openings or (latest is not None and _utc(latest.starts_at or now) <= now):
-            key = latest.id if latest else deadline.id
-            result.append(OpenPhase(f"registration:{key}", deadline.id, "Открыта регистрация"))
-    elif openings and not deadlines:
-        latest = max(openings, key=lambda stage: _utc(stage.starts_at or now))
-        final_ends = [
-            stage.ends_at for stage in stages if stage.kind == "final" and stage.ends_at is not None
-        ]
-        if _utc(latest.starts_at or now) <= now and (
-            not final_ends or max(_utc(value) for value in final_ends) > now
-        ):
-            result.append(OpenPhase(f"registration:{latest.id}", latest.id, "Открыта регистрация"))
+    started = [stage for stage in openings if _utc(stage.starts_at or now) <= now]
+    latest = started[-1] if started else None
+    closed_deadlines = [stage for stage in deadlines if registration_deadline(stage) <= now]
+    last_closed = registration_deadline(closed_deadlines[-1]) if closed_deadlines else None
+    if latest is not None and (last_closed is None or _utc(latest.starts_at or now) >= last_closed):
+        # A later opening begins a new wave.  Do not attach the current wave
+        # to a deadline after that later opening: it may have its own deadline
+        # (or deliberately have none).
+        next_opening = next(
+            (
+                stage
+                for stage in openings
+                if _utc(stage.starts_at or now) > _utc(latest.starts_at or now)
+            ),
+            None,
+        )
+        deadline = next(
+            (
+                stage
+                for stage in deadlines
+                if registration_deadline(stage) > now
+                and registration_deadline(stage) > _utc(latest.starts_at or now)
+                and (
+                    next_opening is None
+                    or registration_deadline(stage) <= _utc(next_opening.starts_at or now)
+                )
+            ),
+            None,
+        )
+        if deadline is not None:
+            result.append(
+                OpenPhase(f"registration:{latest.id}", deadline.id, "Открыта регистрация")
+            )
+        else:
+            final_ends = [
+                _utc(stage.ends_at)
+                for stage in stages
+                if stage.kind == "final" and stage.ends_at is not None
+            ]
+            if not final_ends or max(final_ends) > now:
+                result.append(
+                    OpenPhase(f"registration:{latest.id}", latest.id, "Открыта регистрация")
+                )
+    elif not openings:
+        # Historical calendars can publish only a future deadline.  Preserve
+        # that contract, but never infer a new wave from an old, closed one.
+        deadline = next((stage for stage in deadlines if registration_deadline(stage) > now), None)
+        if deadline is not None:
+            result.append(
+                OpenPhase(f"registration:{deadline.id}", deadline.id, "Открыта регистрация")
+            )
     for stage in stages:
         if stage.kind not in {"qualifier", "team_stage", "final", "competition"}:
             continue

@@ -200,3 +200,65 @@ async def test_reminders_checkpoint_each_send_before_interruption(
         assert await dispatch_due_reminders(session, owner_id=1, send=recovered, now=now) == 1
         assert len(messages) == 2 and len(set(messages)) == 2
         assert await dispatch_due_reminders(session, owner_id=1, send=recovered, now=now) == 0
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("failed_first", [False, True])
+async def test_expired_registration_opening_is_not_caught_up_after_restart(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    failed_first: bool,
+) -> None:
+    _, factory = database
+    opening = datetime(2026, 9, 21, 7, tzinfo=UTC)
+    closed = opening + timedelta(minutes=16)
+    sent: list[str] = []
+
+    async def offline(_user_id: int, _text: str) -> None:
+        raise RuntimeError("temporary network outage")
+
+    async def send(_user_id: int, text: str) -> None:
+        sent.append(text)
+
+    async with factory() as session:
+        await ensure_user_profile(session, 1, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:expired-opening",
+            title="Expired opening",
+            source_kind="NTO",
+            source_url="https://example.org/",
+            milestones=[
+                Milestone(
+                    id="test:expired-opening:open",
+                    kind="registration_open",
+                    title="Open",
+                    starts_at=opening,
+                    status="confirmed",
+                ),
+                Milestone(
+                    id="test:expired-opening:deadline",
+                    kind="registration_deadline",
+                    title="Deadline",
+                    starts_at=opening + timedelta(minutes=15),
+                    status="confirmed",
+                ),
+            ],
+        )
+        session.add(event)
+        await session.flush()
+        session.add(EventPreference(telegram_user_id=1, event_id=event.id, interest="watching"))
+        await session.commit()
+        if failed_first:
+            assert (
+                await dispatch_due_reminders(
+                    session, owner_id=1, send=offline, now=opening, grace_hours=24
+                )
+                == 0
+            )
+
+    # A fresh session simulates a restart after a short registration has closed.
+    async with factory() as session:
+        assert (
+            await dispatch_due_reminders(session, owner_id=1, send=send, now=closed, grace_hours=24)
+            == 0
+        )
+    assert not sent
