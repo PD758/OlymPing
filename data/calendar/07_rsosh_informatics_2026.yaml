@@ -3,7 +3,7 @@ events:
   - id: rsosh:all-russian-ai-2026
     source_kind: RSOSH
     title: "Всероссийская олимпиада по искусственному интеллекту"
-    description: "Олимпиада для школьников 8–11 классов по алгоритмам, моделям обработки данных и искусственному интеллекту. Включена в проект перечня РСОШ 2026/27; первые этапы дистанционные, финал очный."
+    description: "Олимпиада для школьников 8–11 классов по алгоритмам, моделям обработки данных и искусственному интеллекту. Включена в проект перечня РСОШ 2026/27; первые этапы дистанционные, финал очный. Результаты отбора объявят 12 октября. Основной этап: тур 1 — 14 октября 10:00–16 октября 23:59; 17 октября итоги, до 25% лучших проходят в тур 2 — 18 октября 10:00–12:00. Время московское."
     category: informatics
     tags: [rsosh, informatics, programming, algorithms, ai]
     url: https://ai.edu.gov.ru/
@@ -35,11 +35,11 @@ events:
         advancement_paths: [["rsosh:all-russian-ai-2026:qualifier"]]
         kind: qualifier
         title: "Основной этап"
-        starts_at: "2026-10-14T00:00:00+03:00"
-        ends_at: "2026-10-19T00:00:00+03:00"
-        precision: window
+        starts_at: "2026-10-14T10:00:00+03:00"
+        ends_at: "2026-10-18T12:00:00+03:00"
+        precision: "exact"
         status: confirmed
-        is_online: null
+        is_online: true
         source_url: https://ai.edu.gov.ru/
       - id: rsosh:all-russian-ai-2026:final
         advancement_paths: [["rsosh:all-russian-ai-2026:main"]]
@@ -111,7 +111,7 @@ events:
     category: informatics
     tags: [rsosh, informatics, programming, urfu]
     url: https://izumrud.urfu.ru/
-    source_url: https://dovuz.urfu.ru/
+    source_url: "https://dovuz.urfu.ru/olymps/izumrud"
     status: confirmed
     format: "отбор онлайн, заключительный этап очно"
     restrictions: "8–11 классы"
@@ -135,7 +135,7 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://dovuz.urfu.ru/
+        source_url: "https://dovuz.urfu.ru/olymps/izumrud"
       - id: rsosh:izumrud-informatics-2026:final
         advancement_paths: [["rsosh:izumrud-informatics-2026:qualifier"]]
         terminal: true
@@ -146,7 +146,15 @@ events:
         precision: window
         status: confirmed
         is_online: false
-        source_url: https://dovuz.urfu.ru/
+        source_url: "https://dovuz.urfu.ru/olymps/izumrud"
+      - id: rsosh:izumrud-informatics-2026:registration-deadline
+        kind: "registration_deadline"
+        title: "Окончание регистрации (19 января включительно)"
+        starts_at: "2027-01-19T00:00:00+05:00"
+        precision: "date"
+        status: "confirmed"
+        is_online: true
+        source_url: "https://dovuz.urfu.ru/olymps/izumrud"
 
   - id: rsosh:lomonosov-informatics-2026
     source_kind: RSOSH
@@ -275,7 +283,7 @@ events:
       - id: rsosh:spbu-informatics-2026:registration-open
         kind: registration_open
         title: Открытие регистрации на олимпиаду
-        starts_at: '2026-10-01T00:00:00+03:00'
+        starts_at: "2026-10-10T00:00:00+03:00"
         precision: date
         status: confirmed
         source_url: https://olympiada.spbu.ru/

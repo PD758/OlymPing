@@ -236,13 +236,13 @@ events:
       - id: mosh:informatics-6-9-2026:qualifier-2
         kind: qualifier
         title: Второй отборочный тур (очно)
-        starts_at: '2027-01-06T00:00:00+03:00'
+        starts_at: "2027-01-16T00:00:00+03:00"
         precision: date
         status: confirmed
         is_online: false
         advancement_paths: []
         terminal: false
-        source_url: https://mos-inf.olimpiada.ru/
+        source_url: "https://mos.olimpiada.ru/news/4608"
       - id: mosh:informatics-6-9-2026:final
         kind: final
         title: Заключительный этап
@@ -519,12 +519,12 @@ events:
   - id: mosh:robotics-5-8-2026
     source_kind: MOSH
     title: "МОШ — робототехника (5–8 классы)"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "МОШ 2026/27: теоретический отбор 4–14 декабря онлайн; учитываются результаты обоих туров отбора. Для 5–8 классов практический отбор — диплом победителя/призёра осеннего РОБОСТЕП, предварительно 16–29 ноября. Финал предварительно: теория 27 февраля, практика 27 марта 2027. Допуск также есть у дипломантов финала прошлого года."
     category: robotics
     tags: [mosh, robotics]
     url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    source_url: "https://mos.olimpiada.ru/news/4610"
+    status: "confirmed"
     location: "Москва"
     restrictions: "5–8 классы"
     min_grade: 5
@@ -532,20 +532,47 @@ events:
     milestones:
       - id: mosh:robotics-5-8-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Теоретический тур отборочного этапа"
+        precision: "window"
+        status: "confirmed"
+        source_url: "https://mos.olimpiada.ru/news/4610"
+        starts_at: "2026-12-04T00:00:00+03:00"
+        ends_at: "2026-12-15T00:00:00+03:00"
+        is_online: true
+      - id: mosh:robotics-5-8-2026:qualifier-practical
+        kind: "qualifier"
+        title: "Практический отбор — РОБОСТЕП (предварительно)"
+        precision: "window"
+        status: "tentative"
+        source_url: "https://mos.olimpiada.ru/news/4610"
+        starts_at: "2026-11-16T00:00:00+03:00"
+        ends_at: "2026-11-30T00:00:00+03:00"
+      - id: mosh:robotics-5-8-2026:final-theory
+        kind: "final"
+        title: "Теоретический тур финала (предварительно)"
+        starts_at: "2027-02-27T00:00:00+03:00"
+        precision: "date"
+        status: "tentative"
+        terminal: true
+        source_url: "https://mos.olimpiada.ru/news/4610"
+      - id: mosh:robotics-5-8-2026:final-practical
+        kind: "final"
+        title: "Практический тур финала (предварительно)"
+        starts_at: "2027-03-27T00:00:00+03:00"
+        precision: "date"
+        status: "tentative"
+        terminal: true
+        source_url: "https://mos.olimpiada.ru/news/4610"
 
   - id: mosh:robotics-9-11-2026
     source_kind: MOSH
     title: "МОШ — робототехника (9–11 классы)"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "МОШ 2026/27: теоретический отбор 4–14 декабря онлайн; учитываются результаты обоих туров отбора. Для 9–11 классов практический отбор в симуляторе в декабре; точные даты ещё не опубликованы. Финал предварительно: теория 27 февраля, практика 27 марта 2027. Допуск также есть у дипломантов финала прошлого года."
     category: robotics
     tags: [mosh, robotics]
     url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    source_url: "https://mos.olimpiada.ru/news/4610"
+    status: "confirmed"
     location: "Москва"
     restrictions: "9–11 классы"
     min_grade: 9
@@ -553,10 +580,36 @@ events:
     milestones:
       - id: mosh:robotics-9-11-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Теоретический тур отборочного этапа"
+        precision: "window"
+        status: "confirmed"
+        source_url: "https://mos.olimpiada.ru/news/4610"
+        starts_at: "2026-12-04T00:00:00+03:00"
+        ends_at: "2026-12-15T00:00:00+03:00"
+        is_online: true
+      - id: mosh:robotics-9-11-2026:qualifier-practical
+        kind: "qualifier"
+        title: "Практический отбор в симуляторе — декабрь, даты уточняются"
+        precision: "unknown"
+        status: "tbd"
+        source_url: "https://mos.olimpiada.ru/news/4610"
+        is_online: true
+      - id: mosh:robotics-9-11-2026:final-theory
+        kind: "final"
+        title: "Теоретический тур финала (предварительно)"
+        starts_at: "2027-02-27T00:00:00+03:00"
+        precision: "date"
+        status: "tentative"
+        terminal: true
+        source_url: "https://mos.olimpiada.ru/news/4610"
+      - id: mosh:robotics-9-11-2026:final-practical
+        kind: "final"
+        title: "Практический тур финала (предварительно)"
+        starts_at: "2027-03-27T00:00:00+03:00"
+        precision: "date"
+        status: "tentative"
+        terminal: true
+        source_url: "https://mos.olimpiada.ru/news/4610"
 
   - id: mosh:technology-home-2026
     source_kind: MOSH
@@ -618,13 +671,13 @@ events:
       - id: mosh:physics-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
-        starts_at: "2026-10-15T00:00:00+03:00"
-        ends_at: "2026-10-23T00:00:00+03:00"
-        precision: window
+        starts_at: "2026-10-15T10:00:00+03:00"
+        ends_at: "2026-10-22T23:59:00+03:00"
+        precision: "exact"
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/schedule
+        source_url: "https://mos.olimpiada.ru/news/4611"
 
       - id: mosh:physics-2026:final
         kind: final
