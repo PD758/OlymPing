@@ -166,6 +166,9 @@ The registration section follows confirmed, currently open registration phases. 
 `registration_open` can appear without a published deadline; when a deadline is known, it must
 not have expired. With no separate opening date, a future confirmed deadline is treated as an
 already available registration. Separate registration waves remain separate.
+Without a published deadline, an entry registration stops appearing once all its known
+independent entry tours have a confirmed end in the past. Later dependent stages do not
+keep that registration open. This availability bound does not invent a deadline label.
 
 The settings keep two actions independent: `Сообщать о новых` controls catalog notices,
 while `Автоподписка на новые` decides whether future events immediately receive normal
@@ -278,7 +281,7 @@ by default).
 Event-level format is only a general description. Actual delivery mode, format, and location
 belong to each milestone because different stages of one olympiad may be online and onsite.
 
-Release 0.3.4 targets one polling instance with SQLite for a small invitation-only group.
+Release 0.3.5 targets one polling instance with SQLite for a small invitation-only group.
 Runtime health checks cover SQLite, successful Telegram polling, notification processing,
 and CTFtime synchronization freshness. A watchdog restarts stalled core workers; a remote
 CTFtime outage marks health degraded without discarding the local calendar.
@@ -291,6 +294,9 @@ older open registrations in changed events and submits them for review.
 A restart or code deployment never approves pending broadcasts. Previously approved,
 unfinished deliveries resume; already recorded deliveries do not repeat. Scheduled reminders
 continue, including unsent occurrences within `REMINDER_GRACE_HOURS` (24 hours by default).
+An occurrence is never caught up after its tour's confirmed end, even with a longer grace
+period. Approved registration notices and automatic retries also recheck availability
+before sending and skip windows whose entry tours have ended.
 The administrator may receive a previously unannounced pending-review preview after restart.
 
 Review deduplication compares facts across recipients and persists across restarts. Late

@@ -49,6 +49,47 @@ class OpenPhase:
     title: str
 
 
+def _entry_window_finished(
+    event: Event, opening: Milestone, next_opening: Milestone | None, now: datetime
+) -> bool:
+    """Stop advertising an undated registration once its entry tours have ended.
+
+    This is an availability bound, not a claimed registration deadline. Explicit
+    deadlines remain authoritative. Dependent later stages cannot keep the
+    original entry registration open; independent rounds/practical tours can.
+    Unknown dates or ends do not establish that all entry opportunities ended.
+    """
+    assert opening.starts_at is not None
+    start = _utc(opening.starts_at)
+    following = _utc(next_opening.starts_at) if next_opening and next_opening.starts_at else None
+    entries = [
+        stage
+        for stage in event.milestones
+        if (
+            stage.kind in {"qualifier", "competition"}
+            or (stage.kind in {"team_stage", "final"} and stage.advancement_paths == [])
+        )
+        and stage.status != RecordStatus.CANCELLED.value
+        and not stage.advancement_paths
+        and (
+            stage.starts_at is None
+            or (
+                (following is None or _utc(stage.starts_at) < following)
+                and (
+                    _utc(stage.starts_at) >= start
+                    or (stage.ends_at is not None and _utc(stage.ends_at) > start)
+                )
+            )
+        )
+    ]
+    return bool(entries) and all(
+        stage.status == RecordStatus.CONFIRMED.value
+        and stage.ends_at is not None
+        and _utc(stage.ends_at) <= now
+        for stage in entries
+    )
+
+
 def open_phases(event: Event, now: datetime) -> list[OpenPhase]:
     """Only confirmed, currently available registration or participation windows."""
     now = _utc(now)
@@ -107,7 +148,9 @@ def open_phases(event: Event, now: datetime) -> list[OpenPhase]:
                 for stage in stages
                 if stage.kind == "final" and stage.ends_at is not None
             ]
-            if not final_ends or max(final_ends) > now:
+            if (not final_ends or max(final_ends) > now) and not _entry_window_finished(
+                event, latest, next_opening, now
+            ):
                 result.append(
                     OpenPhase(f"registration:{latest.id}", latest.id, "Открыта регистрация")
                 )

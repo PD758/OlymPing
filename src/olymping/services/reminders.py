@@ -38,7 +38,7 @@ from olymping.services.delivery import (
     retry_delay_minutes,
 )
 from olymping.services.filters import event_is_enabled
-from olymping.services.progression import completed_for_user, stage_access, user_outcomes
+from olymping.services.progression import TRACKABLE, completed_for_user, stage_access, user_outcomes
 
 logger = logging.getLogger(__name__)
 SendMessage = Callable[[int, str], Awaitable[None]]
@@ -219,6 +219,14 @@ async def dispatch_due_reminders(
         if completed_for_user(event, outcomes, now):
             continue
         if outcomes.get(milestone.id) in {"passed", "not_passed", "skipped"}:
+            continue
+        if (
+            milestone.kind in TRACKABLE
+            and milestone.ends_at is not None
+            and aware_utc(milestone.ends_at) <= now
+        ):
+            # A grace period can catch up an outage, but cannot revive a tour
+            # after its confirmed end, including durable failed deliveries.
             continue
         if event.status == RecordStatus.CANCELLED.value or not event_is_enabled(
             profile, event, preference=preference

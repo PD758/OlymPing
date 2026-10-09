@@ -45,9 +45,9 @@ events:
         source_url: https://dano.hse.ru/
       - id: other:dano-2026:registration-deadline
         kind: registration_deadline
-        title: "Окончание регистрации"
-        starts_at: "2026-10-05T00:00:00+03:00"
-        precision: date
+        title: "Окончание регистрации (продлено до 10:00 МСК)"
+        starts_at: "2026-10-08T10:00:00+03:00"
+        precision: exact
         status: confirmed
         source_url: https://dano.hse.ru/
       - id: other:dano-2026:stage-1

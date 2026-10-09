@@ -23,7 +23,7 @@ from olymping.services.availability import (
     queue_open_event_notices,
 )
 from olymping.services.calendar import registration_closes_at
-from olymping.services.importer import ImportSummary
+from olymping.services.importer import ImportSummary, load_calendar_document
 from olymping.services.reminders import dispatch_registration_digest
 from olymping.services.synchronization import synchronize_calendar
 from olymping.services.users import ensure_user_profile
@@ -265,6 +265,257 @@ def test_registration_waves_do_not_join_across_closed_or_future_openings() -> No
     assert [(phase.phase, phase.milestone_id) for phase in open_phases(event, now)] == [
         ("registration:test:waves:second-open", "test:waves:second-open")
     ]
+
+
+def test_real_vosh_registration_is_not_open_a_week_after_school_tours() -> None:
+    document = load_calendar_document(Path("data/calendar/01_vosh_2026.yaml"))
+    assert len(document.events) == 28
+    for seed in document.events:
+        event = Event(id=seed.id, title=seed.title, status=seed.status.value)
+        event.milestones = [
+            Milestone(
+                id=stage.id,
+                kind=stage.kind.value,
+                title=stage.title,
+                starts_at=stage.starts_at,
+                ends_at=stage.ends_at,
+                status=stage.status.value,
+                advancement_paths=stage.advancement_paths,
+            )
+            for stage in seed.milestones
+        ]
+        school = next(stage for stage in event.milestones if stage.advancement_paths == [])
+        assert school.starts_at is not None
+        entry_ends = [
+            stage.ends_at
+            for stage in event.milestones
+            if stage.kind == "qualifier" and not stage.advancement_paths
+        ]
+        assert entry_ends and all(end is not None for end in entry_ends)
+        last_end = max(end for end in entry_ends if end is not None)
+        assert any(
+            p.phase.startswith("registration:")
+            for p in open_phases(event, school.starts_at - timedelta(days=1))
+        ), seed.id
+        assert not any(
+            p.phase.startswith("registration:")
+            for p in open_phases(event, last_end + timedelta(days=7))
+        ), seed.id
+
+
+@pytest.mark.parametrize("second_status, second_end", [("confirmed", True), ("tbd", False)])
+def test_undated_registration_keeps_remaining_independent_entry_rounds(
+    second_status: str, second_end: bool
+) -> None:
+    event = Event(id="test:rounds", title="Rounds", status="confirmed")
+    event.milestones = [
+        Milestone(
+            id="test:rounds:open",
+            kind="registration_open",
+            title="Open",
+            starts_at=NOW - timedelta(days=10),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:rounds:first",
+            kind="qualifier",
+            title="First",
+            starts_at=NOW - timedelta(days=2),
+            ends_at=NOW - timedelta(days=1),
+            status="confirmed",
+            advancement_paths=[],
+        ),
+        Milestone(
+            id="test:rounds:second",
+            kind="qualifier",
+            title="Second",
+            starts_at=NOW + timedelta(days=1),
+            ends_at=NOW + timedelta(days=2) if second_end else None,
+            status=second_status,
+            advancement_paths=[],
+        ),
+    ]
+    assert any(p.phase.startswith("registration:") for p in open_phases(event, NOW))
+    if second_end:
+        assert not open_phases(event, NOW + timedelta(days=2))
+    else:
+        # Missing dates cannot be promoted to a claimed closed window.
+        assert open_phases(event, NOW + timedelta(days=7))
+
+
+def test_published_registration_deadline_overrides_entry_window_bound() -> None:
+    event = Event(id="test:deadline", title="Deadline", status="confirmed")
+    event.milestones = [
+        Milestone(
+            id="test:deadline:open",
+            kind="registration_open",
+            title="Open",
+            starts_at=NOW - timedelta(days=10),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:deadline:entry",
+            kind="qualifier",
+            title="Entry",
+            starts_at=NOW - timedelta(days=2),
+            ends_at=NOW - timedelta(days=1),
+            status="confirmed",
+            advancement_paths=[],
+        ),
+        Milestone(
+            id="test:deadline:close",
+            kind="registration_deadline",
+            title="Close",
+            starts_at=NOW + timedelta(days=1),
+            status="confirmed",
+        ),
+    ]
+    assert any(p.phase.startswith("registration:") for p in open_phases(event, NOW))
+    assert not open_phases(event, NOW + timedelta(days=2))
+
+
+def test_unknown_final_does_not_extend_initial_registration_after_qualifier() -> None:
+    event = Event(id="test:unknown-final", title="Unknown final", status="confirmed")
+    event.milestones = [
+        Milestone(
+            id="test:unknown-final:open",
+            kind="registration_open",
+            title="Open",
+            starts_at=NOW - timedelta(days=10),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:unknown-final:qualifier",
+            kind="qualifier",
+            title="Qualifier",
+            starts_at=NOW - timedelta(days=2),
+            ends_at=NOW - timedelta(days=1),
+            status="confirmed",
+        ),
+        Milestone(
+            id="test:unknown-final:final",
+            kind="final",
+            title="Final",
+            starts_at=NOW + timedelta(days=30),
+            status="tentative",
+        ),
+    ]
+    assert not open_phases(event, NOW)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("failed_first", [False, True])
+async def test_approved_registration_without_deadline_expires_before_late_send(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]], failed_first: bool
+) -> None:
+    _, factory = database
+    async with factory() as session:
+        await ensure_user_profile(session, 1, "Europe/Moscow", onboarding_completed=True)
+        event = Event(
+            id="test:late-review",
+            title="Late review",
+            source_kind="VOSH",
+            source_url="https://example.org/",
+            status="confirmed",
+            milestones=[
+                Milestone(
+                    id="test:late-review:open",
+                    kind="registration_open",
+                    title="Open",
+                    starts_at=NOW,
+                    status="confirmed",
+                ),
+                Milestone(
+                    id="test:late-review:school",
+                    kind="qualifier",
+                    title="School",
+                    starts_at=NOW + timedelta(days=1),
+                    ends_at=NOW + timedelta(days=2),
+                    status="confirmed",
+                    advancement_paths=[],
+                ),
+                Milestone(
+                    id="test:late-review:regional",
+                    kind="qualifier",
+                    title="Regional",
+                    starts_at=NOW + timedelta(days=30),
+                    ends_at=NOW + timedelta(days=31),
+                    status="confirmed",
+                    advancement_paths=[["test:late-review:school"]],
+                ),
+            ],
+        )
+        session.add(event)
+        await session.commit()
+        assert await queue_open_event_notices(session, now=NOW) == 1
+        await approve_pending_reviews(session)
+        if failed_first:
+            send = AsyncMock(side_effect=RuntimeError("network unavailable"))
+            assert await dispatch_open_event_notices(session, owner_id=1, send=send, now=NOW) == 0
+            send.assert_awaited_once()
+
+    # Approved before the outage: restart/retry must still check availability.
+    async with factory() as session:
+        send = AsyncMock()
+        late = NOW + timedelta(days=9)
+        assert await dispatch_open_event_notices(session, owner_id=1, send=send, now=late) == 0
+        send.assert_not_awaited()
+        notice = await session.scalar(select(OpenEventNotice))
+        assert notice is not None and notice.status == "skipped"
+        assert await queue_open_event_notices(session, now=late) == 0
+        await session.commit()
+
+
+@pytest.mark.asyncio
+async def test_automatic_registration_retry_expires_after_entry_tour(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+) -> None:
+    _, factory = database
+    due = NOW.replace(hour=6)  # 09:00 Moscow: within the opening digest window.
+    async with factory() as session:
+        await ensure_user_profile(session, 1, "Europe/Moscow", onboarding_completed=True)
+        session.add(
+            Event(
+                id="test:late-digest",
+                title="Late digest",
+                source_kind="VOSH",
+                source_url="https://example.org/",
+                status="confirmed",
+                milestones=[
+                    Milestone(
+                        id="test:late-digest:open",
+                        kind="registration_open",
+                        title="Open",
+                        starts_at=due - timedelta(hours=1),
+                        status="confirmed",
+                    ),
+                    Milestone(
+                        id="test:late-digest:entry",
+                        kind="qualifier",
+                        title="Entry",
+                        starts_at=due + timedelta(hours=1),
+                        ends_at=due + timedelta(hours=2),
+                        status="confirmed",
+                        advancement_paths=[],
+                    ),
+                ],
+            )
+        )
+        await session.commit()
+        send = AsyncMock(side_effect=RuntimeError("network unavailable"))
+        assert await dispatch_registration_digest(session, owner_id=1, send=send, now=due) == 0
+        send.assert_awaited_once()
+    async with factory() as session:
+        send = AsyncMock()
+        assert (
+            await dispatch_registration_digest(
+                session, owner_id=1, send=send, now=due + timedelta(days=7)
+            )
+            == 0
+        )
+        send.assert_not_awaited()
+        notice = await session.scalar(select(OpenEventNotice))
+        assert notice is not None and notice.status == "skipped"
 
 
 @pytest.mark.asyncio

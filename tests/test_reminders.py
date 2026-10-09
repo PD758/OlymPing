@@ -27,7 +27,7 @@ from olymping.models import (
     StageProgress,
 )
 from olymping.services.delivery import DeliveryDeferred
-from olymping.services.importer import import_data_directory
+from olymping.services.importer import import_data_directory, load_calendar_document
 from olymping.services.reminders import (
     REMINDER_CUSTOM,
     REMINDER_MUTED,
@@ -320,6 +320,89 @@ async def test_failed_reminder_is_not_retried_early_across_sessions_or_after_reg
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("failed_first", [False, True])
+@pytest.mark.parametrize("lag_hours", [1, 168])
+async def test_finished_stage_is_not_replayed_even_inside_configured_grace(
+    database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
+    failed_first: bool,
+    lag_hours: int,
+) -> None:
+    _, factory = database
+    due = datetime(2026, 9, 20, 8, tzinfo=UTC)
+
+    async def offline(_user_id: int, _text: str) -> None:
+        raise RuntimeError("network unavailable")
+
+    async def unexpected(_user_id: int, _text: str) -> None:
+        pytest.fail("a finished tour must not invite participation during catch-up")
+
+    async with factory() as session:
+        await ensure_user_profile(session, 99, "Europe/Moscow", onboarding_completed=True)
+        session.add(
+            Event(
+                id="test:finished-stage",
+                title="Finished",
+                source_kind="NTO",
+                source_url="https://example.org/",
+                status="confirmed",
+                milestones=[
+                    Milestone(
+                        id="test:finished-stage:entry",
+                        kind="qualifier",
+                        title="Entry",
+                        starts_at=due,
+                        ends_at=due + timedelta(minutes=10),
+                        status="confirmed",
+                        advancement_paths=[],
+                    ),
+                    Milestone(
+                        id="test:finished-stage:next",
+                        kind="final",
+                        title="Next",
+                        starts_at=due + timedelta(days=30),
+                        status="confirmed",
+                        advancement_paths=[["test:finished-stage:entry"]],
+                    ),
+                ],
+            )
+        )
+        await session.flush()
+        session.add_all(
+            [
+                EventPreference(
+                    telegram_user_id=99, event_id="test:finished-stage", interest="watching"
+                ),
+                ReminderRule(
+                    id="test:finished-stage:rule",
+                    telegram_user_id=99,
+                    event_id="test:finished-stage",
+                    mode=ReminderMode.OFFSET.value,
+                    offset_minutes=0,
+                ),
+            ]
+        )
+        await session.commit()
+        if failed_first:
+            assert (
+                await dispatch_due_reminders(
+                    session, owner_id=99, send=offline, now=due, grace_hours=168
+                )
+                == 0
+            )
+    async with factory() as session:
+        assert (
+            await dispatch_due_reminders(
+                session,
+                owner_id=99,
+                send=unexpected,
+                now=due + timedelta(hours=lag_hours),
+                grace_hours=168,
+            )
+            == 0
+        )
+
+
+@pytest.mark.asyncio
 async def test_expired_reminder_is_never_sent_after_grace_window(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
@@ -445,11 +528,12 @@ async def test_real_dano_calendar_default_registration_reminders(
         await session.commit()
         pref = await session.get(EventPreference, (99, "other:dano-2026"))
         assert pref is not None and pref.interest == "watching"
+    deadline = _dano_deadline_moscow()
     # Standard rules are three reminders, not just the newly clarified previous-day one.
     for due in [
-        datetime(2026, 10, 2, 17, tzinfo=UTC),
-        datetime(2026, 10, 4, 17, tzinfo=UTC),
-        datetime(2026, 10, 5, 5, tzinfo=UTC),
+        (deadline - timedelta(days=3)).replace(hour=20, minute=0),
+        (deadline - timedelta(days=1)).replace(hour=20, minute=0),
+        deadline.replace(hour=8, minute=0),
     ]:
         async with factory() as session:
             assert (
@@ -475,7 +559,17 @@ async def test_real_dano_calendar_default_registration_reminders(
             )
     assert len(messages) == 3
     assert "Завтра заканчивается регистрация" in messages[1]
-    assert all("05.10.2026 включительно" in message for message in messages)
+    assert all(deadline.strftime("%d.%m.%Y %H:%M") in message for message in messages)
+
+
+def _dano_deadline_moscow() -> datetime:
+    document = load_calendar_document(Path("data/calendar/09_programming_olympiads.yaml"))
+    event = next(event for event in document.events if event.id == "other:dano-2026")
+    deadline = next(
+        stage for stage in event.milestones if stage.kind.value == "registration_deadline"
+    )
+    assert deadline.starts_at is not None
+    return deadline.starts_at.astimezone(ZoneInfo("Europe/Moscow"))
 
 
 @pytest.mark.asyncio
@@ -483,7 +577,8 @@ async def test_registration_mark_cancels_deferred_deadline_reminder(
     database: tuple[AsyncEngine, async_sessionmaker[AsyncSession]],
 ) -> None:
     _, factory = database
-    due = datetime(2026, 10, 4, 17, tzinfo=UTC)
+    deadline = _dano_deadline_moscow()
+    due = (deadline - timedelta(days=1)).replace(hour=20, minute=0)
     sent: list[str] = []
 
     async def limited(_user: int, _text: str) -> None:
@@ -523,7 +618,7 @@ async def test_registration_mark_cancels_deferred_deadline_reminder(
                 session,
                 owner_id=99,
                 send=send,
-                now=datetime(2026, 10, 5, 5, tzinfo=UTC),
+                now=deadline.replace(hour=8, minute=0),
             )
             == 0
         )

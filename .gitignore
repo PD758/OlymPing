@@ -34,3 +34,6 @@ backups/
 .DS_Store
 Thumbs.db
 HANDOFF.md
+# Production snapshots and private audit reports stay local.
+/private/
+/docs/prod-audit-*.md
