@@ -95,7 +95,7 @@ events:
   - id: rsosh:hse-informatics-2026
     source_kind: RSOSH
     title: "Высшая проба — информатика"
-    description: "Профиль «Информатика» Всероссийской олимпиады школьников «Высшая проба»."
+    description: "Профиль «Информатика» Всероссийской олимпиады школьников «Высшая проба». По проекту расписания второго тура — один из дней на выбор: 14 ноября в 14:00 или 19 ноября в 11:00 МСК, 120 минут."
     category: informatics
     tags: [rsosh, hse, informatics]
     url: https://olymp.hse.ru/mmo/it
