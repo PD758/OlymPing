@@ -28,8 +28,8 @@ events:
   - id: nto:automation-business-processes-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:automation-business-processes-2026:stage-1
@@ -38,7 +38,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/avtomatizatsiya-bisnes-protsessov/
@@ -47,7 +47,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -91,8 +91,8 @@ events:
   - id: nto:intelligent-robotic-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:intelligent-robotic-systems-2026:stage-1
@@ -101,7 +101,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/intellektualnye-robototekhnicheskie-sistemy/
@@ -110,7 +110,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -154,8 +154,8 @@ events:
   - id: nto:digital-sensor-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:digital-sensor-systems-2026:stage-1
@@ -164,7 +164,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/tsifrovye-sensornye-sistemy/
@@ -173,7 +173,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -217,8 +217,8 @@ events:
   - id: nto:water-robotic-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:water-robotic-systems-2026:stage-1
@@ -227,7 +227,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/vodnye-robototekhnicheskie-sistemy/
@@ -236,7 +236,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -279,8 +279,8 @@ events:
   - id: nto:flexible-molecular-electronics-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:flexible-molecular-electronics-2026:stage-1
@@ -289,7 +289,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/flexible-electronics/
@@ -298,7 +298,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -341,8 +341,8 @@ events:
   - id: nto:chemical-industrial-technologies-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:chemical-industrial-technologies-2026:stage-1
@@ -351,7 +351,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/khimicheskie-promtekhnologii/
@@ -360,7 +360,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -403,8 +403,8 @@ events:
   - id: nto:wireless-communications-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:wireless-communications-2026:stage-1
@@ -413,7 +413,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/tekhnologii-besprovodnoy-svyazi/
@@ -422,7 +422,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -465,8 +465,8 @@ events:
   - id: nto:genome-editing-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:genome-editing-2026:stage-1
@@ -475,7 +475,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/genomnoe-redaktirovanie/
@@ -484,7 +484,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -527,8 +527,8 @@ events:
   - id: nto:nanosystems-chemical-engineering-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:nanosystems-chemical-engineering-2026:stage-1
@@ -537,7 +537,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/nanosistemy-i-khimicheskiy-inzhiniring/
@@ -546,7 +546,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -589,8 +589,8 @@ events:
   - id: nto:rehabilitation-engineering-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:rehabilitation-engineering-2026:stage-1
@@ -599,7 +599,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/reabilitatsionnaya-inzheneriya/
@@ -608,7 +608,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -651,8 +651,8 @@ events:
   - id: nto:engineering-biological-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:engineering-biological-systems-2026:stage-1
@@ -661,7 +661,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/inzhenernye-biologicheskie-sistemy-agrobiotekhnologii/
@@ -670,7 +670,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -713,8 +713,8 @@ events:
   - id: nto:urbanistics-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:urbanistics-2026:stage-1
@@ -723,7 +723,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/urbanistika/
@@ -732,7 +732,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -775,8 +775,8 @@ events:
   - id: nto:urban-engineering-networks-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:urban-engineering-networks-2026:stage-1
@@ -785,7 +785,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/ingenet/
@@ -794,7 +794,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -839,8 +839,8 @@ events:
   - id: nto:modeling-biotechnologies-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:modeling-biotechnologies-2026:stage-1
@@ -849,7 +849,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/biotech/
@@ -858,7 +858,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -901,8 +901,8 @@ events:
   - id: nto:agroecological-control-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:agroecological-control-2026:stage-1
@@ -911,7 +911,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/agroekologicheskiy-kontrol/
@@ -920,7 +920,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -965,8 +965,8 @@ events:
   - id: nto:infochemistry-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:infochemistry-2026:stage-1
@@ -975,7 +975,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/infokhimiya/
@@ -984,7 +984,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1028,8 +1028,8 @@ events:
   - id: nto:virtual-reality-technologies-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:virtual-reality-technologies-2026:stage-1
@@ -1038,7 +1038,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/vr/
@@ -1047,7 +1047,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1091,8 +1091,8 @@ events:
   - id: nto:computer-game-development-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:computer-game-development-2026:stage-1
@@ -1101,7 +1101,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/razrabotka-komputernih-igr/
@@ -1110,7 +1110,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1154,8 +1154,8 @@ events:
   - id: nto:mobile-app-development-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:mobile-app-development-2026:stage-1
@@ -1164,7 +1164,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-01T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/mobile-apps-dev/
@@ -1173,7 +1173,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1217,8 +1217,8 @@ events:
   - id: nto:intelligent-energy-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:intelligent-energy-systems-2026:stage-1
@@ -1227,7 +1227,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/intellektualnye-energeticheskie-sistemy/
@@ -1236,7 +1236,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1279,8 +1279,8 @@ events:
   - id: nto:nuclear-technologies-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:nuclear-technologies-2026:stage-1
@@ -1289,7 +1289,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/yadernye-tekhnologii/
@@ -1298,7 +1298,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1341,8 +1341,8 @@ events:
   - id: nto:quantum-engineering-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:quantum-engineering-2026:stage-1
@@ -1351,7 +1351,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/kvant-ingineering/
@@ -1360,7 +1360,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1403,8 +1403,8 @@ events:
   - id: nto:chemical-power-sources-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:chemical-power-sources-2026:stage-1
@@ -1413,7 +1413,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/khimicheskie-istochniki-toka/
@@ -1422,7 +1422,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1469,8 +1469,8 @@ events:
   - id: nto:space-imagery-geodata-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:space-imagery-geodata-2026:stage-1
@@ -1479,7 +1479,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/analiz-kosmicheskikh-snimkov-i-geoprostranstvennykh-dannykh/
@@ -1488,7 +1488,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1533,8 +1533,8 @@ events:
   - id: nto:satellite-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:satellite-systems-2026:stage-1
@@ -1543,7 +1543,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/sputnikovye-sistemy/
@@ -1552,7 +1552,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1597,8 +1597,8 @@ events:
   - id: nto:aerospace-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:aerospace-systems-2026:stage-1
@@ -1607,7 +1607,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/aerokosmicheskie-sistemy/
@@ -1616,7 +1616,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1662,8 +1662,8 @@ events:
   - id: nto:autonomous-transport-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:autonomous-transport-systems-2026:stage-1
@@ -1672,7 +1672,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/avtonomnye-transportnye-sistemy/
@@ -1681,7 +1681,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1725,8 +1725,8 @@ events:
   - id: nto:unmanned-aircraft-systems-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:unmanned-aircraft-systems-2026:stage-1
@@ -1735,7 +1735,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/bespilotnye-aviatsionnye-sistemy/
@@ -1744,7 +1744,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
@@ -1789,8 +1789,8 @@ events:
   - id: nto:flying-robotics-2026:registration-deadline
     kind: registration_deadline
     title: Окончание регистрации старшего трека
-    starts_at: '2026-10-28T00:00:00+03:00'
-    precision: date
+    starts_at: '2026-11-03T12:00:00+03:00'
+    precision: exact
     status: confirmed
     source_url: https://ntcontest.ru/participants/schedule/
   - id: nto:flying-robotics-2026:stage-1
@@ -1799,7 +1799,7 @@ events:
     kind: qualifier
     title: I этап — индивидуальный (общий период; точные профильные даты — в личном кабинете)
     starts_at: '2026-09-17T00:00:00+03:00'
-    ends_at: '2026-10-29T00:00:00+03:00'
+    ends_at: '2026-11-03T12:00:00+03:00'
     precision: window
     status: confirmed
     source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/letayushchaya-robototekhnika/
@@ -1808,7 +1808,7 @@ events:
     terminal: false
     kind: team_stage
     title: II этап — командный (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2026-11-05T00:00:00+03:00'
+    starts_at: '2026-11-10T12:00:00+03:00'
     ends_at: '2026-12-12T00:00:00+03:00'
     precision: window
     status: confirmed
