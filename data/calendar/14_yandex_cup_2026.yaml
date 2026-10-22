@@ -35,6 +35,7 @@ events:
         kind: qualifier
         title: "Квалификация"
         starts_at: "2026-11-01T00:00:00+03:00"
+        results_at: "2026-11-10T20:00:00+03:00"
         precision: date
         status: confirmed
         is_online: true
@@ -87,6 +88,7 @@ events:
         kind: qualifier
         title: "Квалификация"
         starts_at: "2026-11-01T00:00:00+03:00"
+        results_at: "2026-11-10T20:00:00+03:00"
         precision: date
         status: confirmed
         is_online: true
@@ -131,6 +133,7 @@ events:
         title: "Квалификация"
         starts_at: "2026-10-23T00:00:00+03:00"
         ends_at: "2026-11-02T00:00:00+03:00"
+        results_at: "2026-11-10T20:00:00+03:00"
         precision: window
         status: confirmed
         is_online: true

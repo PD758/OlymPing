@@ -46,6 +46,7 @@ events:
         title: "Основной этап — индивидуально или в команде"
         starts_at: "2026-07-01T00:00:00+03:00"
         ends_at: "2026-09-18T00:00:00+03:00"
+        results_at: "2026-10-08T20:00:00+03:00"
         precision: window
         status: confirmed
         is_online: true
@@ -108,6 +109,7 @@ events:
         title: "Отборочный этап онлайн"
         starts_at: "2026-10-01T00:00:00+03:00"
         ends_at: "2027-01-26T00:00:00+03:00"
+        results_at: "2027-01-31T20:00:00+03:00"
         precision: window
         status: confirmed
         is_online: true

@@ -3,7 +3,7 @@ events:
   - id: other:ctf-cup-russia-2026
     source_kind: OTHER
     title: "Кубок CTF России 2026"
-    description: "Всероссийское командное соревнование по информационной безопасности."
+    description: "Всероссийское командное соревнование по информационной безопасности. Регистрация команд — до 29 октября 12:00 МСК по объявлениям официального канала (в Положении указано 25 октября)."
     category: cybersecurity
     tags: [ctf, cybersecurity, russia, team]
     url: https://ctfcup.ru/
@@ -14,10 +14,10 @@ events:
       - id: other:ctf-cup-russia-2026:registration-deadline
         kind: registration_deadline
         title: "Окончание регистрации"
-        starts_at: "2026-10-25T12:00:00+03:00"
+        starts_at: "2026-10-29T12:00:00+03:00"
         precision: exact
         status: confirmed
-        source_url: https://ctfcup.ru/doc/polozhenie-x-kubok-ctf-2026.pdf
+        source_url: https://t.me/ctf_cup/556
       - id: other:ctf-cup-russia-2026:qualifier
         kind: qualifier
         title: "Отборочный тур"

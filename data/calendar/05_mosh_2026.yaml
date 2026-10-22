@@ -127,6 +127,7 @@ events:
         title: "Дистанционный этап"
         starts_at: "2026-11-18T00:00:00+03:00"
         ends_at: "2026-11-25T00:00:00+03:00"
+        results_at: "2026-12-08T20:00:00+03:00"
         precision: window
         status: confirmed
         format: "дистанционно"
@@ -243,6 +244,7 @@ events:
         status: "confirmed"
         source_url: "https://mos-inf.olimpiada.ru/"
         starts_at: "2027-02-14T00:00:00+03:00"
+        results_at: "2027-03-18T20:00:00+03:00"
         is_online: false
         advancement_paths: []
         terminal: false
@@ -250,6 +252,7 @@ events:
         kind: qualifier
         title: Второй отборочный тур (очно)
         starts_at: '2027-02-28T00:00:00+03:00'
+        results_at: '2027-03-18T20:00:00+03:00'
         precision: date
         status: confirmed
         is_online: false
@@ -290,6 +293,7 @@ events:
         status: "confirmed"
         source_url: "https://mos-inf.olimpiada.ru/"
         starts_at: "2026-12-19T00:00:00+03:00"
+        results_at: "2027-02-04T20:00:00+03:00"
         is_online: false
         advancement_paths: []
         terminal: false
@@ -297,6 +301,7 @@ events:
         kind: qualifier
         title: Второй отборочный тур (очно)
         starts_at: "2027-01-16T00:00:00+03:00"
+        results_at: "2027-02-04T20:00:00+03:00"
         precision: date
         status: confirmed
         is_online: false
@@ -386,6 +391,7 @@ events:
         title: "Отборочный этап"
         starts_at: "2026-11-14T00:00:00+03:00"
         ends_at: "2026-11-23T00:00:00+03:00"
+        results_at: "2026-12-23T20:00:00+03:00"
         precision: window
         status: confirmed
         format: "дистанционно"
