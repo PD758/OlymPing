@@ -84,36 +84,68 @@ events:
   - id: rsosh:technocup-2026
     source_kind: RSOSH
     title: "Олимпиада по программированию «Технокубок»"
-    description: "Олимпиада по алгоритмическому программированию для 8–11 классов; организаторы указывают II уровень РСОШ. Регистрация на цикл 2026/27 открыта, подробный график ещё не опубликован."
+    description: "Олимпиада по алгоритмическому программированию для 8–11 классов и студентов СПО; I уровень РСОШ (приказ Минобрнауки № 521 от 31.08.2026). Сезон 2026/27: регистрация и ознакомительный раунд 22 октября — 6 декабря; отборочные раунды 8 ноября (онлайн, 14:05–17:05 МСК), 6 декабря (онлайн, 10:05–13:05 МСК) и 30 января (очно на региональных площадках, о площадках сообщат в январе; на платформе All Cups 10:05–13:05 МСК). Можно участвовать в одном или во всех раундах. Кто допускается к третьему раунду, на сайте сформулировано неоднозначно. Финал 12–14 марта 2027 года на площадках МФТИ (Долгопрудный) и МГТУ им. Н. Э. Баумана."
     category: informatics
-    tags: [rsosh, rsosh-level-2, programming, algorithms, mipt, bmstu, vk]
+    tags: [rsosh, rsosh-level-1, programming, algorithms, mipt, bmstu, vk]
     url: https://techno-cup.ru/
     source_url: https://techno-cup.ru/
     status: confirmed
-    format: "отбор онлайн, заключительный этап очно"
+    format: "отборочные раунды 1–2 онлайн, 3-й раунд и заключительный этап очно"
     restrictions: "8–11 классы"
     min_grade: 8
     max_grade: 11
     milestones:
       - id: rsosh:technocup-2026:registration-deadline
         kind: registration_deadline
-        title: "Окончание регистрации — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Окончание регистрации и ознакомительного раунда"
+        starts_at: "2026-12-06T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
         source_url: https://techno-cup.ru/
       - id: rsosh:technocup-2026:qualifier
         advancement_paths: []
         terminal: false
         kind: qualifier
-        title: "Отборочные этапы — расписание уточняется"
-        precision: unknown
-        status: tbd
+        title: "Первый отборочный раунд (онлайн)"
+        starts_at: "2026-11-08T14:05:00+03:00"
+        ends_at: "2026-11-08T17:05:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: true
+        source_url: https://cups.online/ru/contests/technocup-26/
+      - id: rsosh:technocup-2026:qualifier-2
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Второй отборочный раунд (онлайн)"
+        starts_at: "2026-12-06T10:05:00+03:00"
+        ends_at: "2026-12-06T13:05:00+03:00"
+        precision: exact
+        status: confirmed
+        is_online: true
+        source_url: https://cups.online/ru/contests/technocup-26/
+      - id: rsosh:technocup-2026:qualifier-3
+        terminal: false
+        kind: qualifier
+        title: "Третий отборочный раунд (очно, региональные площадки)"
+        starts_at: "2027-01-30T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: false
         source_url: https://techno-cup.ru/
       - id: rsosh:technocup-2026:final
-        advancement_paths: [["rsosh:technocup-2026:qualifier"]]
+        advancement_paths:
+          - ["rsosh:technocup-2026:qualifier"]
+          - ["rsosh:technocup-2026:qualifier-2"]
+          - ["rsosh:technocup-2026:qualifier-3"]
         terminal: true
         kind: final
-        title: "Заключительный этап — дата уточняется"
-        precision: unknown
-        status: tbd
+        title: "Заключительный этап"
+        starts_at: "2027-03-12T00:00:00+03:00"
+        ends_at: "2027-03-15T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        location: "МФТИ (Долгопрудный) и МГТУ им. Н. Э. Баумана (Москва)"
         source_url: https://techno-cup.ru/

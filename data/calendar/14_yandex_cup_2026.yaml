@@ -19,7 +19,7 @@ events:
         starts_at: "2026-11-01T00:00:00+03:00"
         precision: date
         status: confirmed
-        source_url: https://yandex.ru/cup/analytics
+        source_url: https://t.me/yandex_cup/341
       - id: other:yandex-cup-analytics-2026:practice
         kind: other
         title: "Пробный тур"
@@ -28,7 +28,7 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://yandex.ru/cup/analytics
+        source_url: https://yandex.ru/cup/regulations
       - id: other:yandex-cup-analytics-2026:qualifier
         advancement_paths: []
         terminal: false
@@ -38,7 +38,7 @@ events:
         precision: date
         status: confirmed
         is_online: true
-        source_url: https://yandex.ru/cup/analytics
+        source_url: https://yandex.ru/cup/regulations
       - id: other:yandex-cup-analytics-2026:final
         advancement_paths: [["other:yandex-cup-analytics-2026:qualifier"]]
         terminal: true
@@ -50,7 +50,7 @@ events:
         status: confirmed
         is_online: false
         location: "Москва"
-        source_url: https://yandex.ru/cup/analytics
+        source_url: https://yandex.ru/cup/regulations
 
   - id: other:yandex-cup-algorithm-2026
     source_kind: OTHER
@@ -71,7 +71,7 @@ events:
         starts_at: "2026-11-01T00:00:00+03:00"
         precision: date
         status: confirmed
-        source_url: https://yandex.ru/cup/algorithm
+        source_url: https://t.me/yandex_cup/341
       - id: other:yandex-cup-algorithm-2026:practice
         kind: other
         title: "Пробный тур"
@@ -80,7 +80,7 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://yandex.ru/cup/algorithm
+        source_url: https://yandex.ru/cup/regulations
       - id: other:yandex-cup-algorithm-2026:qualifier
         advancement_paths: []
         terminal: false
@@ -90,7 +90,7 @@ events:
         precision: date
         status: confirmed
         is_online: true
-        source_url: https://yandex.ru/cup/algorithm
+        source_url: https://yandex.ru/cup/regulations
       - id: other:yandex-cup-algorithm-2026:final
         advancement_paths: [["other:yandex-cup-algorithm-2026:qualifier"]]
         terminal: true
@@ -102,7 +102,7 @@ events:
         status: confirmed
         is_online: false
         location: "Москва"
-        source_url: https://yandex.ru/cup/algorithm
+        source_url: https://yandex.ru/cup/regulations
 
   - id: other:yandex-cup-machine-learning-2026
     source_kind: OTHER
@@ -123,7 +123,7 @@ events:
         starts_at: "2026-11-01T00:00:00+03:00"
         precision: date
         status: confirmed
-        source_url: https://yandex.ru/cup/ml
+        source_url: https://t.me/yandex_cup/341
       - id: other:yandex-cup-machine-learning-2026:qualifier
         advancement_paths: []
         terminal: false
@@ -134,7 +134,7 @@ events:
         precision: window
         status: confirmed
         is_online: true
-        source_url: https://yandex.ru/cup/ml
+        source_url: https://yandex.ru/cup/regulations
       - id: other:yandex-cup-machine-learning-2026:final
         advancement_paths: [["other:yandex-cup-machine-learning-2026:qualifier"]]
         terminal: true
@@ -146,4 +146,4 @@ events:
         status: confirmed
         is_online: false
         location: "Москва"
-        source_url: https://yandex.ru/cup/ml
+        source_url: https://yandex.ru/cup/regulations

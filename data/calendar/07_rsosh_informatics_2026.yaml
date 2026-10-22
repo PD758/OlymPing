@@ -196,22 +196,36 @@ events:
   - id: rsosh:phystech-code-future-2026
     source_kind: RSOSH
     title: "Физтех.Код будущего"
-    description: "Профиль олимпиады «Физтех» по информатике и программированию для 7–11 классов, вошедший в проект перечня РСОШ 2026/27."
+    description: "Олимпиада «Физтех» по информатике и программированию (МФТИ, фирма «1С», проект «Код будущего») для 7–11 классов. В 2026/27 уровень повышен с III до II. Первый отборочный этап онлайн 28 сентября — 5 ноября 2026 (уже идёт, регистрация продолжается; статус этапа не повышен, так как он начался до публикации даты в календаре), второй — 20 ноября 2026 — 25 января 2027 онлайн, финал очно в марте 2027 (даты не объявлены)."
     category: informatics
     tags: [rsosh, informatics, programming, algorithms, mipt]
-    url: https://olymp.mipt.ru/
-    source_url: https://olymp.mipt.ru/
-    status: tbd
+    url: https://uc1.1c.ru/olymp-mipt/
+    source_url: https://uc1.1c.ru/lp/olimpiada-nashe-buduschee/uchastnikam/
+    status: confirmed
     restrictions: "7–11 классы"
     min_grade: 7
     max_grade: 11
     milestones:
       - id: rsosh:phystech-code-future-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://olymp.mipt.ru/
+        title: "Первый отборочный этап"
+        starts_at: "2026-09-28T00:00:00+03:00"
+        ends_at: "2026-11-06T00:00:00+03:00"
+        precision: window
+        status: tentative
+        is_online: true
+        source_url: https://uc1.1c.ru/lp/olimpiada-nashe-buduschee/uchastnikam/
+      - id: rsosh:phystech-code-future-2026:qualifier-2
+        advancement_paths: [["rsosh:phystech-code-future-2026:schedule"]]
+        terminal: false
+        kind: qualifier
+        title: "Второй отборочный этап"
+        starts_at: "2026-11-20T00:00:00+03:00"
+        ends_at: "2027-01-26T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: true
+        source_url: https://uc1.1c.ru/lp/olimpiada-nashe-buduschee/uchastnikam/
 
   - id: rsosh:step-future-informatics-2026
     source_kind: RSOSH
@@ -273,7 +287,7 @@ events:
   - id: rsosh:spbu-informatics-2026
     source_kind: RSOSH
     title: "Олимпиада СПбГУ — информатика"
-    description: "Олимпиада школьников СПбГУ 2026/27; опубликован общий график регистрации и онлайн-отбора. Точная дата заключительного этапа по предмету уточняется."
+    description: "Олимпиада школьников СПбГУ 2026/27: регистрация 10 октября — 1 декабря (до 16:00), онлайн-отбор 20 октября — 1 декабря, результаты 25 декабря. Заключительный этап по информатике — 6 февраля 2027 в 11:00 МСК; адреса площадок будут опубликованы позднее."
     category: informatics
     tags: [rsosh, informatics, programming, algorithms, spbu]
     url: https://olympiada.spbu.ru/
@@ -311,15 +325,15 @@ events:
         source_url: https://olympiada.spbu.ru/
       - id: rsosh:spbu-informatics-2026:final
         kind: final
-        title: Заключительный этап (общий период; дата предмета уточняется)
-        starts_at: '2027-01-01T00:00:00+03:00'
-        precision: window
-        status: tentative
-        source_url: https://olympiada.spbu.ru/
+        title: Заключительный этап
+        starts_at: '2027-02-06T11:00:00+03:00'
+        precision: exact
+        status: confirmed
+        is_online: false
+        source_url: https://olympiada.spbu.ru/zaklyuchitelnyj-etap-1.html
         terminal: true
         advancement_paths:
         - - rsosh:spbu-informatics-2026:schedule
-        ends_at: '2027-03-10T00:00:00+03:00'
 
   - id: rsosh:open-programming-2026
     source_kind: RSOSH
