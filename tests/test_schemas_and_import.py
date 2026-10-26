@@ -61,7 +61,7 @@ def test_seed_calendar_is_valid() -> None:
 
     assert len(events) >= 70
     assert sum(event.source_kind is SourceKind.VOSH for event in events) == 28
-    assert sum(event.source_kind is SourceKind.MOSH for event in events) == 32
+    assert sum(event.source_kind is SourceKind.MOSH for event in events) == 33
 
     security = next(event for event in events if event.id == "vosh:informatics-security-2026")
     school_stage = next(stage for stage in security.milestones if stage.id.endswith(":schedule"))

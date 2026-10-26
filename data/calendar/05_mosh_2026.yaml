@@ -59,15 +59,17 @@ events:
 
   - id: mosh:biology-2026
     source_kind: MOSH
-    title: "МОШ — биология"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    title: "МОШ — биология (5–8 классы)"
+    description: "Направление Московской олимпиады школьников 2026/27 для 5–8 классов. Официальное расписание пока не опубликовано. Для 9–11 классов с 2026/27 проводится отдельная олимпиада."
     category: natural-science
     tags: [mosh, biology]
-    url: https://mos.olimpiada.ru/olimpiads
+    url: https://mos.olimpiada.ru/olymp/biol-5-8
     source_url: https://mos.olimpiada.ru/schedule
     status: tbd
     location: "Москва"
-    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 5–8 классы"
+    restrictions: "5–8 классы"
+    min_grade: 5
+    max_grade: 8
     milestones:
       - id: mosh:biology-2026:schedule
         kind: qualifier
@@ -75,6 +77,41 @@ events:
         precision: unknown
         status: tbd
         source_url: https://mos.olimpiada.ru/schedule
+
+  - id: mosh:biology-9-11-2026
+    source_kind: MOSH
+    title: "МОШ — биология (9–11 классы)"
+    description: "Новая олимпиада Московской олимпиады школьников с 2026/27. Отборочный этап дистанционно 27–29 ноября 2026 (150 минут для 9 класса, 180 минут для 10–11 классов). Заключительный этап очно, 235 минут; дата пока не опубликована."
+    category: natural-science
+    tags: [mosh, biology]
+    url: https://mos.olimpiada.ru/olymp/biol-9-11
+    source_url: https://mos.olimpiada.ru/news/4629
+    status: confirmed
+    location: "Москва"
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: mosh:biology-9-11-2026:schedule
+        kind: qualifier
+        title: "Отборочный этап"
+        starts_at: "2026-11-27T00:00:00+03:00"
+        ends_at: "2026-11-30T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://mos.olimpiada.ru/news/4629
+      - id: mosh:biology-9-11-2026:final
+        advancement_paths: [["mosh:biology-9-11-2026:schedule"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап — дата уточняется"
+        precision: unknown
+        status: tbd
+        format: "очно"
+        is_online: false
+        source_url: https://mos.olimpiada.ru/files/m_Regulations/40/reg-mosh-bio9-11_2026-27.pdf
 
   - id: mosh:bioeconomics-2026
     source_kind: MOSH
