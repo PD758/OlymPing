@@ -142,13 +142,14 @@ events:
         advancement_paths: [["other:dano-2026:stage-1"]]
         terminal: false
         kind: qualifier
-        title: "Второй отборочный этап"
-        starts_at: "2026-11-01T00:00:00+03:00"
+        title: "Второй отборочный этап (онлайн с прокторингом, 210 минут)"
+        starts_at: "2026-11-01T10:00:00+03:00"
+        ends_at: "2026-11-01T13:30:00+03:00"
         results_at: "2026-11-16T20:00:00+03:00"
-        precision: date
+        precision: exact
         status: confirmed
         is_online: true
-        source_url: https://dano.hse.ru/
+        source_url: https://t.me/dano_hse/1836
       - id: other:dano-2026:final-task
         advancement_paths: [["other:dano-2026:stage-2"]]
         terminal: true
@@ -194,7 +195,7 @@ events:
   - id: other:vkoshp-2026
     source_kind: OTHER
     title: "Всероссийская командная олимпиада школьников по программированию"
-    description: "Командная олимпиада по программированию: отбор через региональные соревнования или интернет-тур 15 ноября; финал 11–12 декабря 2026 года."
+    description: "Командная олимпиада по программированию: отбор через региональные соревнования или интернет-тур 15 ноября; финал 11–12 декабря 2026 года в Санкт-Петербурге, Новосибирске, Сириусе и Алматы."
     category: informatics
     tags: [informatics, programming, algorithms, team, vkoshp, itmo]
     url: https://nerc.itmo.ru/school/russia-team/

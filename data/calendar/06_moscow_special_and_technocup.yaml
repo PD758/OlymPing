@@ -57,29 +57,41 @@ events:
   - id: other:intellectual-megapolis-potential-2026
     source_kind: OTHER
     title: "Интеллектуальный мегаполис. Потенциал"
-    description: "Московский конкурс межпредметных навыков и знаний для предпрофессиональных классов. Календарь цикла 2026/27 ещё не опубликован."
+    description: "Московский конкурс межпредметных навыков и знаний для 11-х предпрофессиональных классов (оператор — МЦКО, система my.mcko.ru). Цикл 2026/27: регистрация 9 ноября — 7 декабря 2026 (в личном кабинете выбираются направление, дата и время этапов), консультации 8–29 декабря, основной период 18 января — 21 февраля 2027 (теоретический этап дистанционно, практический — на площадках вузов-партнёров), резервный период 22 февраля — 28 марта, подведение итогов 29 марта — 16 апреля 2027."
     category: preprofessional
     tags: [moscow, preprofessional, engineering, it, minpros, gir]
-    url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
-    source_url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
-    status: tbd
+    url: https://im.mcko.ru/potential.php
+    source_url: https://im.mcko.ru/potential.php
+    status: confirmed
     location: "Москва"
     restrictions: "11 класс; учащиеся предпрофессиональных классов"
     min_grade: 11
     max_grade: 11
     milestones:
+      - id: other:intellectual-megapolis-potential-2026:registration-open
+        kind: registration_open
+        title: "Открытие регистрации"
+        starts_at: "2026-11-09T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://im.mcko.ru/potential.php
       - id: other:intellectual-megapolis-potential-2026:registration-deadline
         kind: registration_deadline
-        title: "Окончание регистрации — дата уточняется"
-        precision: unknown
-        status: tbd
-        source_url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
+        title: "Окончание регистрации"
+        starts_at: "2026-12-07T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://im.mcko.ru/potential.php
       - id: other:intellectual-megapolis-potential-2026:competition
         kind: competition
-        title: "Конкурс — дата уточняется"
-        precision: unknown
-        status: tbd
-        source_url: https://misis.ru/applicants/school-leavers/competitions/predprofessional_nyiekzamen/
+        title: "Основной период: теоретический и практический этапы"
+        starts_at: "2027-01-18T00:00:00+03:00"
+        ends_at: "2027-02-22T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        source_url: https://im.mcko.ru/potential.php
 
   - id: rsosh:technocup-2026
     source_kind: RSOSH
@@ -129,11 +141,12 @@ events:
         terminal: false
         kind: qualifier
         title: "Третий отборочный раунд (очно, региональные площадки)"
-        starts_at: "2027-01-30T00:00:00+03:00"
-        precision: date
+        starts_at: "2027-01-30T10:05:00+03:00"
+        ends_at: "2027-01-30T13:05:00+03:00"
+        precision: exact
         status: confirmed
         is_online: false
-        source_url: https://techno-cup.ru/
+        source_url: https://cups.online/ru/contests/technocup-26/
       - id: rsosh:technocup-2026:final
         advancement_paths:
           - ["rsosh:technocup-2026:qualifier"]

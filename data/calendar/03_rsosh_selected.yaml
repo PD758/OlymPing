@@ -3,7 +3,7 @@ events:
   - id: rsosh:innopolis-open-security-2026
     source_kind: RSOSH
     title: "Innopolis Open — информационная безопасность"
-    description: "Международная олимпиада Университета Иннополис для школьников 7–11 классов."
+    description: "Международная олимпиада Университета Иннополис для школьников 7–11 классов. На странице профиля регистрация открыта до 23 ноября 2026, 15:00 МСК, но в постах Довуза Иннополиса от 30 сентября и 5 октября для информационной безопасности указан срок «до 11 ноября» — лучше зарегистрироваться заранее."
     category: cybersecurity
     tags: [rsosh, innopolis, cybersecurity]
     url: https://dovuz.innopolis.university/pre-olympiads/innopolis-open/cyberbez

@@ -3,11 +3,11 @@ events:
   - id: mosh:arabic-2026
     source_kind: MOSH
     title: "МОШ — арабский язык"
-    description: "Московская олимпиада школьников 2026/27; регистрация открыта 15 октября, отборочный этап дистанционно 25 октября — 9 ноября."
+    description: "Московская олимпиада школьников 2026/27; регистрация открыта 15 октября, отборочный этап дистанционно 27 октября (старт в 10:00, перенесён с 25 октября) — 9 ноября, на решение 180 минут."
     category: languages
     tags: [mosh, arabic]
     url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/news/4620
+    source_url: https://mos.olimpiada.ru/news/4630
     status: confirmed
     location: "Москва"
     restrictions: "7–11 классы"
@@ -24,13 +24,13 @@ events:
       - id: mosh:arabic-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
-        starts_at: "2026-10-25T00:00:00+03:00"
+        starts_at: "2026-10-27T10:00:00+03:00"
         ends_at: "2026-11-10T00:00:00+03:00"
         precision: window
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/news/4620
+        source_url: https://mos.olimpiada.ru/news/4630
 
   - id: mosh:astronomy-2026
     source_kind: MOSH
@@ -183,11 +183,11 @@ events:
   - id: mosh:fine-art-2026
     source_kind: MOSH
     title: "МОШ — изобразительное искусство"
-    description: "Московская олимпиада школьников 2026/27; дистанционный этап в два тура: теоретический 3–8 ноября, практический 7 ноября (5–6 классы) и 8 ноября (7–11 классы). Регистрацию планируют открыть после 23 октября, дата не объявлена. Для 5–8 классов этап один (похвальные грамоты), для 9–11 — отборочный; заключительный этап очно."
+    description: "Московская олимпиада школьников 2026/27; дистанционный этап в два тура: теоретический 3–8 ноября, практический 7 ноября (5–6 классы) и 8 ноября (7–11 классы). Регистрация открыта 24 октября (нужна учётная запись «Сириус.Онлайн»). Для 5–8 классов этап один (похвальные грамоты), для 9–11 — отборочный; заключительный этап очно, предварительно 30 января 2027."
     category: arts
     tags: ["mosh", "fine-art", "art"]
     url: https://mos-izo.olimpiada.ru/
-    source_url: https://mos.olimpiada.ru/news/4625
+    source_url: https://mos.olimpiada.ru/news/4631
     status: confirmed
     location: "Москва"
     restrictions: "5–11 классы"
@@ -222,6 +222,14 @@ events:
         format: "дистанционно"
         is_online: true
         source_url: https://mos.olimpiada.ru/news/4625
+      - id: mosh:fine-art-2026:final
+        kind: final
+        title: "Заключительный этап, 9–11 классы (предварительная дата)"
+        starts_at: "2027-01-30T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: false
+        source_url: https://mos.olimpiada.ru/news/4631
 
   - id: mosh:informatics-10-11-2026
     source_kind: MOSH
@@ -368,11 +376,11 @@ events:
   - id: mosh:art-history-2026
     source_kind: MOSH
     title: "МОШ — история искусств"
-    description: "Направление Московской олимпиады школьников 2026/27; регистрация открывается 23 октября, отборочный этап дистанционно 14–22 ноября, один блок заданий на 180–240 минут."
+    description: "Направление Московской олимпиады школьников 2026/27; регистрация открывается 4 ноября (перенесена с 23 октября), отборочный этап дистанционно 14–22 ноября, один блок заданий на 180–240 минут. Проходной балл на заключительный этап — 23 декабря, финал в январе–феврале 2027."
     category: arts
     tags: ["mosh", "art-history", "art"]
     url: https://mos.olimpiada.ru/olymp/amxk
-    source_url: https://mos.olimpiada.ru/news/4596
+    source_url: https://mos.olimpiada.ru/news/4632
     status: confirmed
     location: "Москва"
     restrictions: "9–11 классы"
@@ -382,10 +390,10 @@ events:
       - id: mosh:art-history-2026:registration-open
         kind: registration_open
         title: "Открытие регистрации"
-        starts_at: "2026-10-23T00:00:00+03:00"
+        starts_at: "2026-11-04T00:00:00+03:00"
         precision: date
         status: confirmed
-        source_url: https://mos.olimpiada.ru/news/4623
+        source_url: https://mos.olimpiada.ru/news/4632
       - id: mosh:art-history-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
@@ -397,6 +405,13 @@ events:
         format: "дистанционно"
         is_online: true
         source_url: https://mos.olimpiada.ru/news/4596
+      - id: mosh:art-history-2026:final
+        kind: final
+        title: "Заключительный этап — январь–февраль 2027, даты уточняются"
+        precision: unknown
+        status: tbd
+        is_online: false
+        source_url: https://arthistory.olimpiada.ru/
 
   - id: mosh:complex-security-2026
     source_kind: MOSH
@@ -866,21 +881,42 @@ events:
   - id: mosh:philology-2026
     source_kind: MOSH
     title: "МОШ — филология"
-    description: "Направление Московской олимпиады школьников 2026/27. Официальное расписание пока не опубликовано."
+    description: "Московская олимпиада школьников 2026/27. По предметному сайту: отборочный этап 25 ноября — 9 декабря; заключительный этап предварительно — письменный тур 14 февраля (7–11 классы), устный 13–14 марта (10–11 классы). Год на сайте не указан, в общем графике МОШ дат пока нет."
     category: humanities
     tags: [mosh, philology]
-    url: https://mos.olimpiada.ru/olimpiads
-    source_url: https://mos.olimpiada.ru/schedule
-    status: tbd
+    url: https://mos-phil.olimpiada.ru/
+    source_url: https://mos-phil.olimpiada.ru/
+    status: tentative
     location: "Москва"
-    restrictions: "Классы 2026/27 уточняются; в 2025/26 — 7–11 классы"
+    restrictions: "7–11 классы"
+    min_grade: 7
+    max_grade: 11
     milestones:
       - id: mosh:philology-2026:schedule
         kind: qualifier
-        title: "Расписание 2026/27"
-        precision: unknown
-        status: tbd
-        source_url: https://mos.olimpiada.ru/schedule
+        title: "Отборочный этап"
+        starts_at: "2026-11-25T00:00:00+03:00"
+        ends_at: "2026-12-10T00:00:00+03:00"
+        precision: window
+        status: tentative
+        source_url: https://mos-phil.olimpiada.ru/
+      - id: mosh:philology-2026:final-written
+        kind: final
+        title: "Заключительный этап — письменный тур (предварительная дата)"
+        starts_at: "2027-02-14T00:00:00+03:00"
+        precision: date
+        status: tentative
+        is_online: false
+        source_url: https://mos-phil.olimpiada.ru/
+      - id: mosh:philology-2026:final-oral
+        kind: final
+        title: "Заключительный этап — устный тур, 10–11 классы (предварительно)"
+        starts_at: "2027-03-13T00:00:00+03:00"
+        ends_at: "2027-03-15T00:00:00+03:00"
+        precision: window
+        status: tentative
+        is_online: false
+        source_url: https://mos-phil.olimpiada.ru/
 
   - id: mosh:financial-literacy-2026
     source_kind: MOSH
