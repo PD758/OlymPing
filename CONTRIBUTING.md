@@ -15,6 +15,8 @@ Never commit a bot token, Telegram ID, production database, or copied private da
 ## Calendar changes
 
 - Prefer the organizer's official page over aggregators and social reposts.
+- For ВсОШ in Moscow, `uv run olymping vos-news --since YYYY-MM-DD` lists the organizer's news
+  since the last check (`--full` adds the text, `--grep` filters).
 - Include `source_url` for the event and changed milestone.
 - Use `confirmed` only when the source contains an actual date.
 - Use an explicit UTC offset and preserve the organizer's stated timezone.

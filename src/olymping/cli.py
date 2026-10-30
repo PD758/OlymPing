@@ -5,6 +5,7 @@ import asyncio
 import logging
 import sqlite3
 from contextlib import closing
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from olymping.config import Settings
@@ -23,7 +24,33 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("doctor", help="validate configuration, data and database")
     health = subparsers.add_parser("healthcheck", help="check database and running bot workers")
     health.add_argument("--database-only", action="store_true", help="check an offline database")
+    news = subparsers.add_parser("vos-news", help="list recent news from vos.olimpiada.ru")
+    news.add_argument(
+        "--since",
+        type=date.fromisoformat,
+        help="first publication date, YYYY-MM-DD (default: 7 days ago)",
+    )
+    news.add_argument("--grep", help="keep news whose title or text contains this substring")
+    news.add_argument("--full", action="store_true", help="print the text of each news item")
     return parser
+
+
+async def _print_vos_news(since: date, pattern: str | None, full: bool) -> None:
+    import httpx
+
+    from olymping.services.vos_news import fetch_vos_news
+
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+        items = await fetch_vos_news(client, since=since)
+    if pattern:
+        needle = pattern.casefold()
+        items = [i for i in items if needle in i.title.casefold() or needle in i.text.casefold()]
+    for item in items:
+        print(f"{item.published_at:%Y-%m-%d %H:%M}  {item.title}\n    {item.url}")
+        if full and item.text:
+            print("    " + item.text.replace("\n", "\n    ") + "\n")
+    print(f"{len(items)} news since {since.isoformat()}")
 
 
 async def _with_database(settings: Settings, command: str, path: Path | None = None) -> None:
@@ -95,6 +122,9 @@ def main() -> None:
         from olymping.bot import run_bot
 
         asyncio.run(run_bot(settings))
+    elif command == "vos-news":
+        since = args.since or (datetime.now(settings.tz).date() - timedelta(days=7))
+        asyncio.run(_print_vos_news(since, args.grep, args.full))
     else:
         asyncio.run(_with_database(settings, command, getattr(args, "path", None)))
         if command == "healthcheck" and not args.database_only:

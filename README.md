@@ -51,6 +51,7 @@ uv run olymping sync-ctftime
 uv run olymping db-upgrade
 uv run olymping doctor
 uv run olymping healthcheck
+uv run olymping vos-news --since 2026-10-26 --grep муниципальн --full
 uv run pytest
 uv run ruff check .
 uv run mypy
