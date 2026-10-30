@@ -149,7 +149,7 @@ events:
         precision: exact
         status: confirmed
         is_online: true
-        source_url: https://t.me/dano_hse/1836
+        source_url: https://t.me/dano_hse/1838
       - id: other:dano-2026:final-task
         advancement_paths: [["other:dano-2026:stage-2"]]
         terminal: true
