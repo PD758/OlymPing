@@ -35,11 +35,11 @@ events:
   - id: mosh:astronomy-2026
     source_kind: MOSH
     title: "МОШ — астрономия"
-    description: "Московская астрономическая олимпиада 2026/27; опубликованы даты дистанционного отборочного этапа."
+    description: "Московская астрономическая олимпиада 2026/27; регистрация открыта 7 ноября (нужны учётная запись «Сириус.Онлайн» и заявка), дистанционный этап с 10:00 4 декабря до 23:59 17 декабря МСК. Для 5–6 классов этап один, для 7–11 — отборочный. Заключительный этап очно в два тура, предварительно: теоретический 24 января 2027, практический (8–11 классы, по итогам теоретического) 16 марта 2027."
     category: natural-science
     tags: [mosh, astronomy]
     url: https://mos.olimpiada.ru/olymp/astr
-    source_url: https://mos.olimpiada.ru/news/4597
+    source_url: https://mos.olimpiada.ru/news/4653
     status: confirmed
     location: "Москва"
     restrictions: "5–11 классы"
@@ -49,13 +49,34 @@ events:
       - id: mosh:astronomy-2026:schedule
         kind: qualifier
         title: "Дистанционный отборочный этап"
-        starts_at: "2026-12-04T00:00:00+03:00"
-        ends_at: "2026-12-18T00:00:00+03:00"
-        precision: window
+        starts_at: "2026-12-04T10:00:00+03:00"
+        ends_at: "2026-12-17T23:59:00+03:00"
+        precision: exact
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/news/4597
+        source_url: https://mos.olimpiada.ru/news/4653
+      - id: mosh:astronomy-2026:final-theory
+        advancement_paths: [["mosh:astronomy-2026:schedule"]]
+        kind: final
+        title: "Заключительный этап — теоретический тур (предварительная дата)"
+        starts_at: "2027-01-24T00:00:00+03:00"
+        precision: date
+        status: tentative
+        format: "очно"
+        is_online: false
+        source_url: https://mos.olimpiada.ru/news/4653
+      - id: mosh:astronomy-2026:final-practical
+        advancement_paths: [["mosh:astronomy-2026:final-theory"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап — практический тур, 8–11 классы (предварительная дата)"
+        starts_at: "2027-03-16T00:00:00+03:00"
+        precision: date
+        status: tentative
+        format: "очно"
+        is_online: false
+        source_url: https://mos.olimpiada.ru/news/4653
 
   - id: mosh:biology-2026
     source_kind: MOSH
@@ -148,7 +169,7 @@ events:
   - id: mosh:probability-statistics-2026
     source_kind: MOSH
     title: "МОШ — вероятность и статистика"
-    description: "Московская олимпиада школьников 2026/27; дистанционный этап 18–24 ноября. Для 7 класса этап один (похвальные грамоты), для 8–11 — отборочный. Заключительный этап очно, предварительно 31 января 2027."
+    description: "Московская олимпиада школьников 2026/27; регистрация открыта 2 ноября, дистанционный этап с 10:00 18 ноября до 23:59 24 ноября МСК. Для 7 класса этап один (похвальные грамоты), для 8–11 — отборочный. Заключительный этап очно, предварительно 31 января 2027."
     category: mathematics
     tags: ["mosh", "probability", "statistics", "mathematics"]
     url: https://mos.olimpiada.ru/olimpiads
@@ -162,14 +183,14 @@ events:
       - id: mosh:probability-statistics-2026:schedule
         kind: qualifier
         title: "Дистанционный этап"
-        starts_at: "2026-11-18T00:00:00+03:00"
-        ends_at: "2026-11-25T00:00:00+03:00"
+        starts_at: "2026-11-18T10:00:00+03:00"
+        ends_at: "2026-11-24T23:59:00+03:00"
         results_at: "2026-12-08T20:00:00+03:00"
-        precision: window
+        precision: exact
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/schedule
+        source_url: https://mos.olimpiada.ru/news/4643
       - id: mosh:probability-statistics-2026:final
         kind: final
         title: "Заключительный этап, 8–11 классы (предварительная дата)"
@@ -419,11 +440,11 @@ events:
   - id: mosh:history-2026
     source_kind: MOSH
     title: "МОШ — история"
-    description: "Московская олимпиада школьников 2026/27; дистанционный этап 20 ноября — 15 декабря. Для 5 класса этап один (похвальные грамоты), для 6–11 — отборочный. Заключительный этап — в марте 2027, дата не объявлена."
+    description: "Московская олимпиада школьников 2026/27; регистрация открыта 9 ноября, дистанционный этап с 10:00 20 ноября до 23:59 15 декабря МСК. Для 5 класса этап один (похвальные грамоты), для 6–11 — отборочный. Заключительный этап предварительно 13 марта 2027."
     category: humanities
     tags: [mosh, history]
     url: https://moshist.ru/hist_mosh
-    source_url: https://mos.olimpiada.ru/news/4626
+    source_url: https://mos.olimpiada.ru/news/4657
     status: confirmed
     location: "Москва"
     restrictions: "5–11 классы"
@@ -433,18 +454,29 @@ events:
       - id: mosh:history-2026:schedule
         kind: qualifier
         title: "Дистанционный этап"
-        starts_at: "2026-11-20T00:00:00+03:00"
-        ends_at: "2026-12-16T00:00:00+03:00"
-        precision: window
+        starts_at: "2026-11-20T10:00:00+03:00"
+        ends_at: "2026-12-15T23:59:00+03:00"
+        precision: exact
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/news/4626
+        source_url: https://mos.olimpiada.ru/news/4657
+      - id: mosh:history-2026:final
+        advancement_paths: [["mosh:history-2026:schedule"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап (предварительная дата)"
+        starts_at: "2027-03-13T00:00:00+03:00"
+        precision: date
+        status: tentative
+        format: "очно"
+        is_online: false
+        source_url: https://mos.olimpiada.ru/news/4657
 
   - id: mosh:art-history-2026
     source_kind: MOSH
     title: "МОШ — история искусств"
-    description: "Направление Московской олимпиады школьников 2026/27; регистрация открывается 4 ноября (перенесена с 23 октября), отборочный этап дистанционно 14–22 ноября, один блок заданий на 180–240 минут. Проходной балл на заключительный этап — 23 декабря, финал в январе–феврале 2027."
+    description: "Направление Московской олимпиады школьников 2026/27; регистрация открыта 5 ноября (нужны учётная запись «Сириус.Онлайн» и заявка), отборочный этап дистанционно с 10:00 14 ноября до 23:59 22 ноября МСК, один блок заданий на 180–240 минут. Проходной балл на заключительный этап — 23 декабря, финал предварительно 17 января 2027."
     category: arts
     tags: ["mosh", "art-history", "art"]
     url: https://mos.olimpiada.ru/olymp/amxk
@@ -458,33 +490,36 @@ events:
       - id: mosh:art-history-2026:registration-open
         kind: registration_open
         title: "Открытие регистрации"
-        starts_at: "2026-11-04T00:00:00+03:00"
+        starts_at: "2026-11-05T00:00:00+03:00"
         precision: date
         status: confirmed
-        source_url: https://mos.olimpiada.ru/news/4632
+        source_url: https://mos.olimpiada.ru/news/4645
       - id: mosh:art-history-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
-        starts_at: "2026-11-14T00:00:00+03:00"
-        ends_at: "2026-11-23T00:00:00+03:00"
+        starts_at: "2026-11-14T10:00:00+03:00"
+        ends_at: "2026-11-22T23:59:00+03:00"
         results_at: "2026-12-23T20:00:00+03:00"
-        precision: window
+        precision: exact
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/news/4596
+        source_url: https://mos.olimpiada.ru/news/4645
       - id: mosh:art-history-2026:final
+        advancement_paths: [["mosh:art-history-2026:schedule"]]
+        terminal: true
         kind: final
-        title: "Заключительный этап — январь–февраль 2027, даты уточняются"
-        precision: unknown
-        status: tbd
+        title: "Заключительный этап (предварительная дата)"
+        starts_at: "2027-01-17T00:00:00+03:00"
+        precision: date
+        status: tentative
         is_online: false
-        source_url: https://arthistory.olimpiada.ru/
+        source_url: https://mos.olimpiada.ru/news/4645
 
   - id: mosh:complex-security-2026
     source_kind: MOSH
     title: "МОШ — комплексная безопасность"
-    description: "Московская олимпиада школьников 2026/27; отборочный этап дистанционно 12 декабря. Заключительный этап очно, предварительно: теоретический тур 19 марта, практический 20 марта 2027."
+    description: "Московская олимпиада школьников 2026/27; отборочный этап дистанционно 12 декабря с 10:00 до 22:00 МСК (регистрация открыта 6 ноября). Заключительный этап очно, предварительно: теоретический тур 19 марта, практический 20 марта 2027."
     category: safety
     tags: [mosh, complex-security, obzh, obzr]
     url: https://mos.olimpiada.ru/olimpiads
@@ -498,13 +533,13 @@ events:
       - id: mosh:complex-security-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
-        starts_at: "2026-12-12T00:00:00+03:00"
-        ends_at: "2026-12-13T00:00:00+03:00"
-        precision: date
+        starts_at: "2026-12-12T10:00:00+03:00"
+        ends_at: "2026-12-12T22:00:00+03:00"
+        precision: exact
         status: confirmed
         format: "дистанционно"
         is_online: true
-        source_url: https://mos.olimpiada.ru/schedule
+        source_url: https://mos.olimpiada.ru/news/4654
       - id: mosh:complex-security-2026:final-theory
         advancement_paths: [["mosh:complex-security-2026:schedule"]]
         terminal: true
@@ -667,7 +702,7 @@ events:
   - id: mosh:preprofessional-engineering-2026
     source_kind: MOSH
     title: "Московская предпрофессиональная олимпиада — инженерия"
-    description: "Московская предпрофессиональная олимпиада 2026/27; теоретический тур отборочного этапа дистанционно с 10:00 5 ноября до 23:59 22 ноября МСК (информатика, математика, физика, по 24 часа на предмет; нужны учётная запись «Сириус.Онлайн» и заявка, регистрация открыта 27 октября). Практический тур отбора — с декабря 2026 по февраль 2027, точные даты не опубликованы. Заключительный этап очно, предварительно 14 марта 2027; с этого сезона он проходит в один день, без практической командной части."
+    description: "Московская предпрофессиональная олимпиада 2026/27; теоретический тур отборочного этапа дистанционно с 10:00 5 ноября до 23:59 22 ноября МСК (информатика, математика, физика, по 24 часа на предмет; нужны учётная запись «Сириус.Онлайн» и заявка, регистрация открыта 27 октября). Практический тур отбора предварительно с 10 декабря 2026 по 1 февраля 2027. Заключительный этап очно, предварительно 14 марта 2027; с этого сезона он проходит в один день, без практической командной части."
     category: engineering
     tags: [mosh, preprofessional, engineering]
     url: https://mos.olimpiada.ru/olimpiads
@@ -688,6 +723,14 @@ events:
         format: "дистанционно"
         is_online: true
         source_url: https://mos.olimpiada.ru/news/4633
+      - id: mosh:preprofessional-engineering-2026:qualifier-practical
+        kind: qualifier
+        title: "Практический тур отборочного этапа (предварительные даты)"
+        starts_at: "2026-12-10T00:00:00+03:00"
+        ends_at: "2027-02-02T00:00:00+03:00"
+        precision: window
+        status: tentative
+        source_url: https://mos.olimpiada.ru/news/4646
       - id: mosh:preprofessional-engineering-2026:final
         kind: final
         title: "Заключительный этап (предварительная дата)"
@@ -700,7 +743,7 @@ events:
   - id: mosh:preprofessional-it-2026
     source_kind: MOSH
     title: "Московская предпрофессиональная олимпиада — информационные технологии"
-    description: "Московская предпрофессиональная олимпиада 2026/27; теоретический тур отборочного этапа дистанционно с 10:00 5 ноября до 23:59 22 ноября МСК (информатика, математика, физика, по 24 часа на предмет; нужны учётная запись «Сириус.Онлайн» и заявка, регистрация открыта 27 октября). Практический тур отбора — с декабря 2026 по февраль 2027, точные даты не опубликованы. Заключительный этап очно, предварительно 14 марта 2027; с этого сезона он проходит в один день, без практической командной части."
+    description: "Московская предпрофессиональная олимпиада 2026/27; теоретический тур отборочного этапа дистанционно с 10:00 5 ноября до 23:59 22 ноября МСК (информатика, математика, физика, по 24 часа на предмет; нужны учётная запись «Сириус.Онлайн» и заявка, регистрация открыта 27 октября). Практический тур отбора предварительно с 10 декабря 2026 по 1 февраля 2027. Заключительный этап очно, предварительно 14 марта 2027; с этого сезона он проходит в один день, без практической командной части."
     category: informatics
     tags: ["mosh", "preprofessional", "it", "informatics"]
     url: https://mos.olimpiada.ru/olimpiads
@@ -721,6 +764,14 @@ events:
         format: "дистанционно"
         is_online: true
         source_url: https://mos.olimpiada.ru/news/4633
+      - id: mosh:preprofessional-it-2026:qualifier-practical
+        kind: qualifier
+        title: "Практический тур отборочного этапа (предварительные даты)"
+        starts_at: "2026-12-10T00:00:00+03:00"
+        ends_at: "2027-02-02T00:00:00+03:00"
+        precision: window
+        status: tentative
+        source_url: https://mos.olimpiada.ru/news/4646
       - id: mosh:preprofessional-it-2026:final
         kind: final
         title: "Заключительный этап (предварительная дата)"
@@ -733,7 +784,7 @@ events:
   - id: mosh:preprofessional-research-2026
     source_kind: MOSH
     title: "Московская предпрофессиональная олимпиада — исследования"
-    description: "Московская предпрофессиональная олимпиада 2026/27; теоретический тур отборочного этапа дистанционно с 10:00 5 ноября до 23:59 22 ноября МСК (информатика, математика, физика, по 24 часа на предмет; нужны учётная запись «Сириус.Онлайн» и заявка, регистрация открыта 27 октября). Практический тур отбора — с декабря 2026 по февраль 2027, точные даты не опубликованы. Заключительный этап очно, предварительно 14 марта 2027; с этого сезона он проходит в один день, без практической командной части."
+    description: "Московская предпрофессиональная олимпиада 2026/27; теоретический тур отборочного этапа дистанционно с 10:00 5 ноября до 23:59 22 ноября МСК (информатика, математика, физика, по 24 часа на предмет; нужны учётная запись «Сириус.Онлайн» и заявка, регистрация открыта 27 октября). Практический тур отбора предварительно с 10 декабря 2026 по 1 февраля 2027. Заключительный этап очно, предварительно 14 марта 2027; с этого сезона он проходит в один день, без практической командной части."
     category: research
     tags: [mosh, preprofessional, research]
     url: https://mos.olimpiada.ru/olimpiads
@@ -754,6 +805,14 @@ events:
         format: "дистанционно"
         is_online: true
         source_url: https://mos.olimpiada.ru/news/4633
+      - id: mosh:preprofessional-research-2026:qualifier-practical
+        kind: qualifier
+        title: "Практический тур отборочного этапа (предварительные даты)"
+        starts_at: "2026-12-10T00:00:00+03:00"
+        ends_at: "2027-02-02T00:00:00+03:00"
+        precision: window
+        status: tentative
+        source_url: https://mos.olimpiada.ru/news/4646
       - id: mosh:preprofessional-research-2026:final
         kind: final
         title: "Заключительный этап (предварительная дата)"
@@ -766,7 +825,7 @@ events:
   - id: mosh:robotics-5-8-2026
     source_kind: MOSH
     title: "МОШ — робототехника (5–8 классы)"
-    description: "МОШ 2026/27: теоретический отбор 4–14 декабря онлайн; учитываются результаты обоих туров отбора. Для 5–8 классов практический отбор — диплом победителя/призёра осеннего РОБОСТЕП, предварительно 16–29 ноября. Финал предварительно (даты изменены 21 октября): теория 6 февраля 2027 в 10:00, практика 27 февраля 2027. Допуск также есть у дипломантов финала прошлого года."
+    description: "МОШ 2026/27: теоретический отбор 4–14 декабря онлайн; учитываются результаты обоих туров отбора. Для 5–8 классов практический отбор — диплом победителя/призёра осеннего РОБОСТЕП, 16–29 ноября очно (отдельная регистрация на турнир открыта 7 ноября). Регистрация на олимпиаду открыта 6 ноября, до 14 декабря (нужна и победителям/призёрам прошлого года). Финал предварительно (даты изменены 21 октября): теория 6 февраля 2027 в 10:00, практика 27 февраля 2027. Допуск также есть у дипломантов финала прошлого года."
     category: robotics
     tags: [mosh, robotics]
     url: https://mos.olimpiada.ru/olimpiads
@@ -791,7 +850,7 @@ events:
         title: "Практический отбор — осенний турнир РОБОСТЕП"
         precision: "window"
         status: "confirmed"
-        source_url: "https://mos.olimpiada.ru/schedule"
+        source_url: "https://mos.olimpiada.ru/news/4655"
         starts_at: "2026-11-16T00:00:00+03:00"
         ends_at: "2026-11-30T00:00:00+03:00"
       - id: mosh:robotics-5-8-2026:final-theory
@@ -814,7 +873,7 @@ events:
   - id: mosh:robotics-9-11-2026
     source_kind: MOSH
     title: "МОШ — робототехника (9–11 классы)"
-    description: "МОШ 2026/27: теоретический отбор 4–14 декабря онлайн; учитываются результаты обоих туров отбора. Для 9–11 классов практический отбор в симуляторе проходит одновременно с теоретическим, 4–14 декабря. Финал предварительно (даты изменены 21 октября): теория 6 февраля 2027 в 10:00, практика 27 февраля 2027. Допуск также есть у дипломантов финала прошлого года."
+    description: "МОШ 2026/27: теоретический отбор 4–14 декабря онлайн; учитываются результаты обоих туров отбора. Для 9–11 классов практический отбор в симуляторе 13–14 декабря. Регистрация на олимпиаду открыта 6 ноября, до 14 декабря (нужна и победителям/призёрам прошлого года). Финал предварительно (даты изменены 21 октября): теория 6 февраля 2027 в 10:00, практика 27 февраля 2027. Допуск также есть у дипломантов финала прошлого года."
     category: robotics
     tags: [mosh, robotics]
     url: https://mos.olimpiada.ru/olimpiads
@@ -839,8 +898,8 @@ events:
         title: "Практический тур отборочного этапа в симуляторе"
         precision: "window"
         status: "confirmed"
-        source_url: "https://mos.olimpiada.ru/schedule"
-        starts_at: "2026-12-04T00:00:00+03:00"
+        source_url: "https://mos.olimpiada.ru/news/4651"
+        starts_at: "2026-12-13T00:00:00+03:00"
         ends_at: "2026-12-15T00:00:00+03:00"
         is_online: true
       - id: mosh:robotics-9-11-2026:final-theory
@@ -1055,7 +1114,7 @@ events:
   - id: mosh:chemistry-2026
     source_kind: MOSH
     title: "МОШ — химия"
-    description: "Московская олимпиада школьников 2026/27; отборочный этап по химии дистанционно 26 ноября–16 декабря. Заключительный этап очно, по проекту: теоретический тур 14 февраля 2027 (11:00–15:00 МСК), практический 14 марта 2027."
+    description: "Московская олимпиада школьников 2026/27; регистрация открыта 6 ноября, отборочный этап по химии дистанционно с 10:00 26 ноября до 23:59 16 декабря МСК (300 минут на задания). Заключительный этап очно, предварительно: теоретический тур 14 февраля 2027 (11:00–15:00 МСК), практический 14 марта 2027."
     category: natural-science
     tags: [mosh, chemistry]
     url: https://mos.olimpiada.ru/olimpiads
@@ -1069,11 +1128,11 @@ events:
       - id: mosh:chemistry-2026:schedule
         kind: qualifier
         title: "Отборочный этап"
-        precision: "window"
+        precision: "exact"
         status: "confirmed"
-        source_url: https://mos.olimpiada.ru/schedule
-        starts_at: "2026-11-26T00:00:00+03:00"
-        ends_at: "2026-12-17T00:00:00+03:00"
+        source_url: https://mos.olimpiada.ru/news/4652
+        starts_at: "2026-11-26T10:00:00+03:00"
+        ends_at: "2026-12-16T23:59:00+03:00"
         format: "дистанционно"
         is_online: true
       - id: mosh:chemistry-2026:final-theory
