@@ -453,3 +453,57 @@ events:
         status: confirmed
         is_online: false
         source_url: https://olymp.hse.ru/mmo/
+
+  - id: rsosh:innopolis-open-informatics-2026
+    source_kind: RSOSH
+    title: "Innopolis Open — информатика"
+    description: "Международная олимпиада Университета Иннополис по информатике (II уровень РСОШ) для 7–11 классов и студентов 1–2 курсов СПО. Два независимых онлайн-тура отбора, баллы не суммируются: в финал проходят победители и призёры хотя бы одного тура. Первый тур — 18 октября; второй — 22 ноября (21 ноября пробный), заявки на него до 12:00 МСК 18 ноября. Обязательна запись экрана и веб-камеры. Заключительный этап очно 26–28 февраля 2027 в Университете Иннополис и на других площадках."
+    category: informatics
+    tags: [rsosh, innopolis, informatics, programming, algorithms]
+    url: https://dovuz.innopolis.university/innopolis-open/informatics
+    source_url: https://dovuz.innopolis.university/innopolis-open/informatics
+    status: confirmed
+    restrictions: "7–11 классы, студенты 1–2 курсов СПО"
+    min_grade: 7
+    max_grade: 11
+    milestones:
+      - id: rsosh:innopolis-open-informatics-2026:qualifier-1
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Первый отборочный тур"
+        starts_at: "2026-10-18T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://dovuz.innopolis.university/innopolis-open/informatics
+      - id: rsosh:innopolis-open-informatics-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание приёма заявок на второй отборочный тур"
+        starts_at: "2026-11-18T12:00:00+03:00"
+        precision: exact
+        status: confirmed
+        source_url: https://dovuz.innopolis.university/innopolis-open/informatics
+      - id: rsosh:innopolis-open-informatics-2026:qualifier-2
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Второй отборочный тур"
+        starts_at: "2026-11-22T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        is_online: true
+        source_url: https://dovuz.innopolis.university/innopolis-open/informatics
+      - id: rsosh:innopolis-open-informatics-2026:final
+        advancement_paths:
+          - [rsosh:innopolis-open-informatics-2026:qualifier-1]
+          - [rsosh:innopolis-open-informatics-2026:qualifier-2]
+        terminal: true
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-02-26T00:00:00+03:00"
+        ends_at: "2027-03-01T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        is_online: false
+        source_url: https://dovuz.innopolis.university/innopolis-open/informatics

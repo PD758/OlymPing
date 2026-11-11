@@ -284,3 +284,45 @@ events:
         precision: unknown
         status: tbd
         source_url: https://abit.itmo.ru/bachelor/olymp
+
+  - id: rsosh:itmo-open-physics-2026
+    source_kind: RSOSH
+    title: "Открытая олимпиада школьников ИТМО — физика"
+    description: "Открытая олимпиада школьников Университета ИТМО по физике, 2026/27. Отборочный этап дистанционно в два тура: первый 2–13 декабря 2026 (общий с научно-техническим профилем), второй 3–14 февраля 2027. Заключительный этап очно 21 марта 2027, площадки объявят позднее."
+    category: physics
+    tags: [rsosh, itmo, physics]
+    url: https://olymp.itmo.ru/p/physics2027/6356
+    source_url: https://olymp.itmo.ru/api/news/524
+    status: confirmed
+    milestones:
+      - id: rsosh:itmo-open-physics-2026:qualifier-1
+        advancement_paths: []
+        kind: qualifier
+        title: "Отборочный этап — первый тур"
+        starts_at: "2026-12-02T00:00:00+03:00"
+        ends_at: "2026-12-14T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://olymp.itmo.ru/api/news/524
+      - id: rsosh:itmo-open-physics-2026:qualifier-2
+        kind: qualifier
+        title: "Отборочный этап — второй тур"
+        starts_at: "2027-02-03T00:00:00+03:00"
+        ends_at: "2027-02-15T00:00:00+03:00"
+        precision: window
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://olymp.itmo.ru/api/news/524
+      - id: rsosh:itmo-open-physics-2026:final
+        terminal: true
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-03-21T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        format: "очно"
+        is_online: false
+        source_url: https://olymp.itmo.ru/api/news/524
