@@ -552,3 +552,38 @@ events:
         format: "очно"
         is_online: false
         source_url: https://ogn.spmi.ru/sites/default/files/manager/2027/Polizhenie_2026-27.pdf
+
+  - id: rsosh:rosatom-informatics-2026
+    source_kind: RSOSH
+    title: "Росатом — информатика"
+    description: "Отраслевая физико-математическая олимпиада школьников «Росатом» (НИЯУ МИФИ), профиль информатика, I уровень РСОШ, 9–11 классы. Дистанционный отбор с 14:00 11 ноября до 23:59 30 ноября 2026 МСК, задания доступны весь период. Для участия нужно зарегистрироваться на org.mephi.ru, заполнить анкету, создать аккаунт в Яндекс.Контесте и указать его логин в личном кабинете МИФИ. Финал — 30 января 2027."
+    category: informatics
+    tags: [rsosh, informatics, programming, rosatom, mephi]
+    url: https://olymp.mephi.ru/
+    source_url: https://olymp.mephi.ru/news/telegram-2026-1376
+    status: confirmed
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: rsosh:rosatom-informatics-2026:qualifier
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Дистанционный отборочный тур"
+        starts_at: "2026-11-11T14:00:00+03:00"
+        ends_at: "2026-11-30T23:59:00+03:00"
+        precision: exact
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://olymp.mephi.ru/news/telegram-2026-1376
+      - id: rsosh:rosatom-informatics-2026:final
+        advancement_paths: [["rsosh:rosatom-informatics-2026:qualifier"]]
+        terminal: true
+        kind: final
+        title: "Заключительный этап"
+        starts_at: "2027-01-30T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        source_url: https://olymp.mephi.ru/news/telegram-2026-1376
