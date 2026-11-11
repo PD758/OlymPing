@@ -264,7 +264,7 @@ events:
   - id: rsosh:step-future-informatics-2026
     source_kind: RSOSH
     title: "Шаг в будущее — информатика"
-    description: "Профиль олимпиады МГТУ имени Н. Э. Баумана по информатике для 6–11 классов. Включён в проект перечня РСОШ 2026/27."
+    description: "Профиль олимпиады МГТУ имени Н. Э. Баумана по информатике для 6–11 классов. Включён в проект перечня РСОШ 2026/27. Результаты первой волны отбора появились в личном кабинете 6 ноября; вторая волна — 5–7 декабря."
     category: informatics
     tags: [rsosh, informatics, programming, engineering, bmstu]
     url: https://olymp.bmstu.ru/

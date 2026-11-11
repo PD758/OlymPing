@@ -80,6 +80,7 @@ events:
         kind: qualifier
         title: "Первый отборочный тур"
         starts_at: "2026-10-25T00:00:00+03:00"
+        results_at: "2026-11-03T15:20:00+03:00"
         precision: date
         status: confirmed
         is_online: true
