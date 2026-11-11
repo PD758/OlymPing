@@ -507,3 +507,48 @@ events:
         status: confirmed
         is_online: false
         source_url: https://dovuz.innopolis.university/innopolis-open/informatics
+
+  - id: rsosh:granit-nauki-informatics-2026
+    source_kind: RSOSH
+    title: "Гранит науки — информатика"
+    description: "Олимпиада школьников «Гранит науки» Санкт-Петербургского горного университета (II уровень РСОШ по информатике) для 9–11 классов. Отборочный тур дистанционно с 5 октября 2026 до 23:59 13 января 2027: решить задания можно один раз в любое время, на это даётся 180 минут; регистрация открыта до конца отборочного тура, задания доступны сразу после неё. Результаты отбора — 15 января 2027. Заключительный тур по информатике очно 6 февраля 2027 на площадках олимпиады; список площадок, дата и время начала — на сайте."
+    category: informatics
+    tags: [rsosh, informatics, programming, spmi]
+    url: https://ogn.spmi.ru/
+    source_url: https://ogn.spmi.ru/sites/default/files/manager/2027/Polizhenie_2026-27.pdf
+    status: confirmed
+    restrictions: "9–11 классы"
+    min_grade: 9
+    max_grade: 11
+    milestones:
+      - id: rsosh:granit-nauki-informatics-2026:registration-deadline
+        kind: registration_deadline
+        title: "Окончание регистрации"
+        starts_at: "2027-01-13T23:59:00+03:00"
+        precision: exact
+        status: confirmed
+        source_url: https://ogn.spmi.ru/
+      - id: rsosh:granit-nauki-informatics-2026:qualifier
+        advancement_paths: []
+        terminal: false
+        kind: qualifier
+        title: "Отборочный тур"
+        starts_at: "2026-10-05T00:00:00+03:00"
+        ends_at: "2027-01-13T23:59:00+03:00"
+        results_at: "2027-01-15T20:00:00+03:00"
+        precision: exact
+        status: confirmed
+        format: "дистанционно"
+        is_online: true
+        source_url: https://ogn.spmi.ru/sites/default/files/manager/2027/Polizhenie_2026-27.pdf
+      - id: rsosh:granit-nauki-informatics-2026:final
+        advancement_paths: [["rsosh:granit-nauki-informatics-2026:qualifier"]]
+        terminal: true
+        kind: final
+        title: "Заключительный тур"
+        starts_at: "2027-02-06T00:00:00+03:00"
+        precision: date
+        status: confirmed
+        format: "очно"
+        is_online: false
+        source_url: https://ogn.spmi.ru/sites/default/files/manager/2027/Polizhenie_2026-27.pdf
