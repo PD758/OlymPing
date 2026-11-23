@@ -56,12 +56,14 @@ events:
     advancement_paths: [["nto:automation-business-processes-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал (даты могут измениться)
+    starts_at: '2027-03-15T00:00:00+03:00'
+    ends_at: '2027-03-21T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/avtomatizatsiya-bisnes-protsessov/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:intelligent-robotic-systems-2026
   source_kind: NTO
   title: НТО — интеллектуальные робототехнические системы
@@ -119,12 +121,14 @@ events:
     advancement_paths: [["nto:intelligent-robotic-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-02-22T00:00:00+03:00'
+    ends_at: '2027-02-28T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/intellektualnye-robototekhnicheskie-sistemy/
+    location: Санкт-Петербург
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:digital-sensor-systems-2026
   source_kind: NTO
   title: НТО — цифровые сенсорные системы
@@ -182,12 +186,14 @@ events:
     advancement_paths: [["nto:digital-sensor-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-22T00:00:00+03:00'
+    ends_at: '2027-03-28T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/tsifrovye-sensornye-sistemy/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:water-robotic-systems-2026
   source_kind: NTO
   title: НТО — водные робототехнические системы
@@ -245,12 +251,14 @@ events:
     advancement_paths: [["nto:water-robotic-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-02-15T00:00:00+10:00'
+    ends_at: '2027-02-21T00:00:00+10:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/vodnye-robototekhnicheskie-sistemy/
+    location: Владивосток
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:flexible-molecular-electronics-2026
   source_kind: NTO
   title: НТО — гибкая и молекулярная электроника
@@ -307,11 +315,13 @@ events:
     advancement_paths: [["nto:flexible-molecular-electronics-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-01T00:00:00+03:00'
-    ends_at: '2027-05-01T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-04-05T00:00:00+05:00'
+    ends_at: '2027-04-11T00:00:00+05:00'
     precision: window
-    status: tentative
+    status: confirmed
+    location: Уфа
+    is_online: false
     source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:chemical-industrial-technologies-2026
   source_kind: NTO
@@ -369,12 +379,14 @@ events:
     advancement_paths: [["nto:chemical-industrial-technologies-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-04-05T00:00:00+05:00'
+    ends_at: '2027-04-11T00:00:00+05:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-proizvodstva/khimicheskie-promtekhnologii/
+    location: Сургут
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:wireless-communications-2026
   source_kind: NTO
   title: НТО — технологии беспроводной связи
@@ -431,12 +443,14 @@ events:
     advancement_paths: [["nto:wireless-communications-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-15T00:00:00+03:00'
+    ends_at: '2027-03-22T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-bezopasnosti/tekhnologii-besprovodnoy-svyazi/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:genome-editing-2026
   source_kind: NTO
   title: НТО — геномное редактирование
@@ -493,12 +507,14 @@ events:
     advancement_paths: [["nto:genome-editing-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-29T00:00:00+07:00'
+    ends_at: '2027-04-04T00:00:00+07:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/genomnoe-redaktirovanie/
+    location: Новосибирск
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:nanosystems-chemical-engineering-2026
   source_kind: NTO
   title: НТО — наносистемы и химический инжиниринг
@@ -555,12 +571,14 @@ events:
     advancement_paths: [["nto:nanosystems-chemical-engineering-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-15T00:00:00+03:00'
+    ends_at: '2027-03-21T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/nanosistemy-i-khimicheskiy-inzhiniring/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:rehabilitation-engineering-2026
   source_kind: NTO
   title: НТО — реабилитационная инженерия
@@ -617,12 +635,14 @@ events:
     advancement_paths: [["nto:rehabilitation-engineering-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-22T00:00:00+07:00'
+    ends_at: '2027-03-28T00:00:00+07:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-meditsiny/reabilitatsionnaya-inzheneriya/
+    location: Новосибирск
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:engineering-biological-systems-2026
   source_kind: NTO
   title: НТО — инженерные биологические системы
@@ -679,12 +699,14 @@ events:
     advancement_paths: [["nto:engineering-biological-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-01T00:00:00+03:00'
+    ends_at: '2027-03-07T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/inzhenernye-biologicheskie-sistemy-agrobiotekhnologii/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:urbanistics-2026
   source_kind: NTO
   title: НТО — урбанистика
@@ -741,12 +763,14 @@ events:
     advancement_paths: [["nto:urbanistics-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-29T00:00:00+07:00'
+    ends_at: '2027-04-04T00:00:00+07:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/urbanistika/
+    location: Новосибирск
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:urban-engineering-networks-2026
   source_kind: NTO
   title: НТО — инженерные сети городов будущего
@@ -803,12 +827,14 @@ events:
     advancement_paths: [["nto:urban-engineering-networks-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-29T00:00:00+03:00'
+    ends_at: '2027-04-04T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/ingenet/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:modeling-biotechnologies-2026
   source_kind: NTO
   title: НТО — моделирование в биотехнологиях
@@ -867,12 +893,14 @@ events:
     advancement_paths: [["nto:modeling-biotechnologies-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-02-15T00:00:00+10:00'
+    ends_at: '2027-02-21T00:00:00+10:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/biotech/
+    location: Владивосток
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:agroecological-control-2026
   source_kind: NTO
   title: НТО — агроэкологический контроль
@@ -929,12 +957,14 @@ events:
     advancement_paths: [["nto:agroecological-control-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-29T00:00:00+07:00'
+    ends_at: '2027-04-04T00:00:00+07:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novoy-sredy-zhizni/agroekologicheskiy-kontrol/
+    location: Новосибирск
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:infochemistry-2026
   source_kind: NTO
   title: НТО — инфохимия
@@ -993,12 +1023,14 @@ events:
     advancement_paths: [["nto:infochemistry-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-15T00:00:00+03:00'
+    ends_at: '2027-03-21T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-po-iskusstvennomu-intellektu/infokhimiya/
+    location: Санкт-Петербург
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:virtual-reality-technologies-2026
   source_kind: NTO
   title: НТО — технологии виртуальной реальности
@@ -1056,12 +1088,14 @@ events:
     advancement_paths: [["nto:virtual-reality-technologies-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-15T00:00:00+03:00'
+    ends_at: '2027-03-21T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/vr/
+    location: Санкт-Петербург
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:computer-game-development-2026
   source_kind: NTO
   title: НТО — разработка компьютерных игр
@@ -1119,12 +1153,14 @@ events:
     advancement_paths: [["nto:computer-game-development-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-02-23T00:00:00+03:00'
+    ends_at: '2027-03-01T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/razrabotka-komputernih-igr/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:mobile-app-development-2026
   source_kind: NTO
   title: НТО — разработка мобильных приложений
@@ -1182,12 +1218,14 @@ events:
     advancement_paths: [["nto:mobile-app-development-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-01T00:00:00+03:00'
+    ends_at: '2027-03-07T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-sozdaniya-virtualnykh-mirov/mobile-apps-dev/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:intelligent-energy-systems-2026
   source_kind: NTO
   title: НТО — интеллектуальные энергетические системы
@@ -1245,12 +1283,14 @@ events:
     advancement_paths: [["nto:intelligent-energy-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-29T00:00:00+07:00'
+    ends_at: '2027-04-05T00:00:00+07:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/intellektualnye-energeticheskie-sistemy/
+    location: Новосибирск
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:nuclear-technologies-2026
   source_kind: NTO
   title: НТО — ядерные технологии
@@ -1307,12 +1347,14 @@ events:
     advancement_paths: [["nto:nuclear-technologies-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
+    title: Финал
     starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    ends_at: '2027-02-21T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/yadernye-tekhnologii/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:quantum-engineering-2026
   source_kind: NTO
   title: НТО — квантовый инжиниринг
@@ -1369,12 +1411,14 @@ events:
     advancement_paths: [["nto:quantum-engineering-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-22T00:00:00+03:00'
+    ends_at: '2027-03-28T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/kvant-ingineering/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:chemical-power-sources-2026
   source_kind: NTO
   title: НТО — химические источники тока
@@ -1431,12 +1475,14 @@ events:
     advancement_paths: [["nto:chemical-power-sources-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-04-12T00:00:00+02:00'
+    ends_at: '2027-04-18T00:00:00+02:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/energeticheskiy-proekt/khimicheskie-istochniki-toka/
+    location: Калининград
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:space-imagery-geodata-2026
   source_kind: NTO
   title: НТО — анализ космических снимков и геопространственных данных
@@ -1497,12 +1543,14 @@ events:
     advancement_paths: [["nto:space-imagery-geodata-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-01T00:00:00+03:00'
+    ends_at: '2027-03-07T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/analiz-kosmicheskikh-snimkov-i-geoprostranstvennykh-dannykh/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:satellite-systems-2026
   source_kind: NTO
   title: НТО — спутниковые системы
@@ -1561,12 +1609,14 @@ events:
     advancement_paths: [["nto:satellite-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-01T00:00:00+03:00'
+    ends_at: '2027-03-07T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/sputnikovye-sistemy/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:aerospace-systems-2026
   source_kind: NTO
   title: НТО — аэрокосмические системы
@@ -1625,12 +1675,14 @@ events:
     advancement_paths: [["nto:aerospace-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-01T00:00:00+03:00'
+    ends_at: '2027-03-07T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/kosmicheskiy-proekt/aerokosmicheskie-sistemy/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:autonomous-transport-systems-2026
   source_kind: NTO
   title: НТО — автономные транспортные системы
@@ -1690,12 +1742,14 @@ events:
     advancement_paths: [["nto:autonomous-transport-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
+    title: Финал
     starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    ends_at: '2027-02-21T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/avtonomnye-transportnye-sistemy/
+    location: Москва
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:unmanned-aircraft-systems-2026
   source_kind: NTO
   title: НТО — беспилотные авиационные системы
@@ -1753,12 +1807,14 @@ events:
     advancement_paths: [["nto:unmanned-aircraft-systems-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-15T00:00:00+04:00'
+    ends_at: '2027-03-21T00:00:00+04:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/bespilotnye-aviatsionnye-sistemy/
+    location: Самара
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
 - id: nto:flying-robotics-2026
   source_kind: NTO
   title: НТО — летающая робототехника
@@ -1817,9 +1873,11 @@ events:
     advancement_paths: [["nto:flying-robotics-2026:stage-2"]]
     terminal: true
     kind: final
-    title: Финал (общий период; точные профильные даты — в личном кабинете)
-    starts_at: '2027-02-15T00:00:00+03:00'
-    ends_at: '2027-04-16T00:00:00+03:00'
+    title: Финал
+    starts_at: '2027-03-08T00:00:00+03:00'
+    ends_at: '2027-03-14T00:00:00+03:00'
     precision: window
     status: confirmed
-    source_url: https://ntcontest.ru/tracks/nto-school/proekt-novogo-transporta/letayushchaya-robototekhnika/
+    location: Санкт-Петербург
+    is_online: false
+    source_url: https://ntcontest.ru/participants/schedule/
